@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useUser } from "@/contexts/user-context"
 import { Skeleton } from "@/components/ui/skeleton"
+import { appUrl } from "@/constants/appRoutes"
 
 export function DashboardHeader() {
   const { user, isLoading, logout, refreshUser } = useUser()
@@ -20,7 +21,7 @@ export function DashboardHeader() {
   const handleLogout = () => {
     logout()
     // Redirecionar para página de login se necessário
-    window.location.href = "https://up-dashboard-two.vercel.app/login"
+    window.location.href = appUrl.login
   }
 
   const handleRefresh = async () => {

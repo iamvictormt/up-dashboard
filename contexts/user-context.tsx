@@ -1,5 +1,6 @@
 'use client';
 
+import { appUrl } from '@/constants/appRoutes';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
@@ -176,7 +177,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const userString = getCookie('user');
 
         if (!token || !userString) {
-          router.push('https://up-dashboard-two.vercel.app/login');
+          router.push(appUrl.login);
           return;
         }
 
@@ -186,7 +187,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       } catch (err) {
         console.error('Erro ao carregar usuário:', err);
         setError('Erro ao carregar usuário');
-        router.push('https://up-dashboard-two.vercel.app/login');
+        router.push(appUrl.login);
       } finally {
         setIsLoading(false);
       }

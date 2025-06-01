@@ -2,7 +2,7 @@ import axios from 'axios';
 import { deleteCookie, getCookie } from 'cookies-next';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 api.interceptors.request.use((config) => {

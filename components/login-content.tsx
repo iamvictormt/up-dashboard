@@ -44,6 +44,8 @@ import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { PartnerSupplierData, ProfessionalData, RegisterDTO } from '@/types';
+import { appUrl } from '@/constants/appRoutes';
+import { appImages } from '@/constants/appImages';
 
 export default function LoginContent() {
   const router = useRouter();
@@ -224,7 +226,7 @@ export default function LoginContent() {
       Cookies.set('user', JSON.stringify(data.user), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      router.push(`https://up-dashboard-two.vercel.app/`);
+      router.push(appUrl.base);
     } catch (error: any) {
       console.error('Erro no login:', error);
       toast.error('Erro de indisponibilidade, contate o administrador.');
@@ -514,7 +516,7 @@ export default function LoginContent() {
           </Link>
           <div className="flex items-center gap-2 font-bold text-xl">
             <div className="relative w-16 h-16">
-              <Image src="/logo-up-completa.svg" alt="UP Club Logo" fill className="object-contain" priority />
+              <Image src={appImages.logoUpSvg.src}alt="UP Club Logo" fill className="object-contain" priority />
             </div>
           </div>
         </div>
@@ -538,7 +540,7 @@ export default function LoginContent() {
             <div className="flex justify-center">
               <div className="relative w-28 h-28">
                 <Image
-                  src="/logo.png?height=200&width=200"
+                  src={appImages.logoAbelha.src}
                   alt="UP Club Logo"
                   fill
                   className="object-contain"

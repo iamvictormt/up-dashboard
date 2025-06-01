@@ -21,6 +21,7 @@ import {
   Crown,
 } from 'lucide-react';
 import Image from 'next/image';
+import { appImages } from '@/constants/appImages';
 
 type SidebarItem = {
   title: string;
@@ -259,7 +260,13 @@ export function AppSidebar() {
                 <div className="flex flex-col ml-[5rem]">
                   <div className="flex items-center gap-2 font-bold text-xl">
                     <div className="relative w-24 h-24">
-                      <Image src="/logo-up-completa.svg" alt="UP Club Logo" fill className="object-contain" priority />
+                      <Image
+                        src={appImages.logoUpSvg.src}
+                        alt="UP Club Logo"
+                        fill
+                        className="object-contain"
+                        priority
+                      />
                     </div>
                   </div>
                 </div>
