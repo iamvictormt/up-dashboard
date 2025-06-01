@@ -17,11 +17,16 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register');
 
-  if (!token || (isTokenExpired(token) && !isAuthPage)) {
+  if (!isAuthPage && (!token || isTokenExpired(token))) {
     deleteCookie('token');
     deleteCookie('user');
+
     const url = new URL('/login', request.url);
-    url.searchParams.set('expired', 'true');
+
+    if (token && isTokenExpired(token)) {
+      url.searchParams.set('expired', 'true');
+    }
+
     return NextResponse.redirect(url);
   }
 

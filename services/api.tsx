@@ -24,7 +24,7 @@ api.interceptors.response.use(
 
       setTimeout(() => {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login?expired=true';
+          window.location.href = '/login';
         }
       }, 2000);
     }
