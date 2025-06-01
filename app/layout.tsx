@@ -4,7 +4,7 @@ import ClientLayout from './clientLayout';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'Eevo Platform',
+  title: 'UP Connection',
   description: 'Plataforma de conexão entre profissionais e clientes',
 };
 
