@@ -4,7 +4,7 @@ import { DashboardContent } from "@/components/dashboard-content"
 
 export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-[#FFEDC1] w-full">
+    <div className="min-h-screen bg-[#FFEDC1] w-full pt-20">
       <DashboardContent />
     </div>
   )

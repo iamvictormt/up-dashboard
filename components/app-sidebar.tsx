@@ -253,7 +253,7 @@ export function AppSidebar() {
         `}
       >
         {/* Sidebar Header */}
-        <div className="border-b border-white/10 p-4 pt-6 flex items-center justify-between">
+        <div className="p-4 pt-6 flex items-center justify-between mb-4">
           {isExpanded ? (
             <>
               <div className="flex items-center space-x-3">
@@ -303,7 +303,7 @@ export function AppSidebar() {
           </div>
 
           {/* Other Menu */}
-          <div className="py-4 border-t border-white/10">
+          <div className="py-4">
             {isExpanded && <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">OUTROS</div>}
             <div className="space-y-1">{otherMenuItems.map(renderMenuItem)}</div>
           </div>

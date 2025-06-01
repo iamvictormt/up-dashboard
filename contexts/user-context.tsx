@@ -1,6 +1,7 @@
 'use client';
 
 import { appUrl } from '@/constants/appRoutes';
+import { deleteCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
@@ -222,7 +223,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Função de logout
   const logout = () => {
-    localStorage.removeItem('auth_token');
+    deleteCookie('token');
+    deleteCookie('user');
     setUser(null);
     setError(null);
   };
