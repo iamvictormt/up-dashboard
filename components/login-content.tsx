@@ -201,7 +201,7 @@ export default function LoginContent() {
     setLoginError(null);
 
     try {
-      const response = await fetch('http://localhost:3002/api/auth/login', {
+      const response = await fetch('https://up-backend-edeta3b3hchmgkfj.southeastasia-01.azurewebsites.net/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ export default function LoginContent() {
       Cookies.set('user', JSON.stringify(data.user), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      router.push(`http://localhost:3000/${data.role === 'PROFESSIONAL' ? '' : ''}`);
+      router.push(`https://up-dashboard-two.vercel.app/`);
     } catch (error: any) {
       console.error('Erro no login:', error);
       toast.error('Erro de indisponibilidade, contate o administrador.');
@@ -306,7 +306,7 @@ export default function LoginContent() {
 
     const isProfessional = registerType === 'professional';
     const data = isProfessional ? professionalData : partnerSupplierData;
-    const url = `http://localhost:8080/api/${isProfessional ? 'professional' : 'partner-supplier'}`;
+    const url = `https://up-backend-edeta3b3hchmgkfj.southeastasia-01.azurewebsites.net/api/${isProfessional ? 'professional' : 'partner-supplier'}`;
 
     if (data.password !== data.confirmPassword) {
       toast.error('As senhas não coincidem.');

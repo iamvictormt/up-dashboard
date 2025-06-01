@@ -20,7 +20,7 @@ export function DashboardHeader() {
   const handleLogout = () => {
     logout()
     // Redirecionar para página de login se necessário
-    window.location.href = "http://localhost:3000/login"
+    window.location.href = "https://up-dashboard-two.vercel.app/login"
   }
 
   const handleRefresh = async () => {

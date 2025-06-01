@@ -176,7 +176,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const userString = getCookie('user');
 
         if (!token || !userString) {
-          router.push('http://localhost:3000/login');
+          router.push('https://up-dashboard-two.vercel.app/login');
           return;
         }
 
@@ -186,7 +186,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       } catch (err) {
         console.error('Erro ao carregar usuário:', err);
         setError('Erro ao carregar usuário');
-        router.push('http://localhost:3000/login');
+        router.push('https://up-dashboard-two.vercel.app/login');
       } finally {
         setIsLoading(false);
       }
