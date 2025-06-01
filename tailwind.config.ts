@@ -53,12 +53,25 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        chart: {
-          1: "hsl(var(--chart-1))",
-          2: "hsl(var(--chart-2))",
-          3: "hsl(var(--chart-3))",
-          4: "hsl(var(--chart-4))",
-          5: "hsl(var(--chart-5))",
+        magenta: {
+          DEFAULT: "hsl(331.95, 54.61%, 27.65%)",
+          light: "hsl(331.95, 54.61%, 37.65%)",
+          dark: "hsl(331.95, 54.61%, 17.65%)",
+        },
+        gold: {
+          DEFAULT: "hsl(37.97, 98.75%, 68.63%)",
+          light: "hsl(37.97, 98.75%, 78.63%)",
+          dark: "hsl(37.97, 98.75%, 58.63%)",
+        },
+        terracota: {
+          DEFAULT: "hsl(16.88, 65.57%, 52.16%)",
+          light: "hsl(16.88, 65.57%, 62.16%)",
+          dark: "hsl(16.88, 65.57%, 42.16%)",
+        },
+        ruby: {
+          DEFAULT: "hsl(355.03, 76.37%, 46.47%)",
+          light: "hsl(355.03, 76.37%, 56.47%)",
+          dark: "hsl(355.03, 76.37%, 36.47%)",
         },
       },
       borderRadius: {

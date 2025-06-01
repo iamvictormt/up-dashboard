@@ -11,7 +11,6 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 
@@ -19,17 +18,18 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     console.log('error.response: ', error.response);
+    
     if (error.response?.status === 401) {
       deleteCookie('token');
       deleteCookie('user');
 
-      toast.warning('Seu token expirou. Você será redirecionado para a página de login.');
       setTimeout(() => {
         if (typeof window !== 'undefined') {
-          window.location.href = 'http://localhost:3001/login';
+          window.location.href = '/login?expired=true';
         }
       }, 2000);
     }
+
     return Promise.reject(error);
   }
 );

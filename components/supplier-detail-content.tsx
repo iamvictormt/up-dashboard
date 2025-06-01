@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react';
 import {
   Star,
   MapPin,
@@ -19,190 +19,191 @@ import {
   MessageCircle,
   ExternalLink,
   X,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import Image from "next/image"
-import Link from "next/link"
+  PhoneCall,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface Supplier {
-  id: string
-  tradeName: string
-  companyName: string
-  document: string
-  stateRegistration: string
-  contact: string
-  profileImage: string
+  id: string;
+  tradeName: string;
+  companyName: string;
+  document: string;
+  stateRegistration: string;
+  contact: string;
+  profileImage: string;
   store: {
-    id: string
-    name: string
-    description: string | null
-    website: string | null
-    rating: number
-    openingHours: string | null
+    id: string;
+    name: string;
+    description: string | null;
+    website: string | null;
+    rating: number;
+    openingHours: string | null;
     address: {
-      state: string
-      city: string
-      district: string
-      street: string
-      complement: string | null
-      number: string
-      zipCode: string
-    }
-  }
-  category: string
-  mainImage: string
-  thumbnails: string[]
-  available: string
-  duration: string
-  contactName: string
-  reviews: number
-  status?: "available" | "unavailable"
+      state: string;
+      city: string;
+      district: string;
+      street: string;
+      complement: string | null;
+      number: string;
+      zipCode: string;
+    };
+  };
+  category: string;
+  mainImage: string;
+  thumbnails: string[];
+  available: string;
+  duration: string;
+  contactName: string;
+  reviews: number;
+  status?: 'available' | 'unavailable';
 }
 
 interface SupplierDetailContentProps {
-  supplierId: string
+  supplierId: string;
 }
 
 // Dados mockados expandidos
 const mockSuppliers: Supplier[] = [
   {
-    id: "5527e77a-d669-4872-b4c9-a46768c32f0e",
-    tradeName: "Super Soluções",
-    companyName: "Super Soluções LTDA",
-    document: "12.345.678/0001-90",
-    stateRegistration: "123.456.789",
-    contact: "+55 11 99999-8888",
-    profileImage: "enderecofoto.com.br",
+    id: '5527e77a-d669-4872-b4c9-a46768c32f0e',
+    tradeName: 'Super Soluções',
+    companyName: 'Super Soluções LTDA',
+    document: '12.345.678/0001-90',
+    stateRegistration: '123.456.789',
+    contact: '+55 11 99999-8888',
+    profileImage: 'enderecofoto.com.br',
     store: {
-      id: "d8821412-3cfc-4e1b-987b-b0760fe6240d",
-      name: "Super Soluções",
+      id: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
+      name: 'Super Soluções',
       description:
-        "Especialistas em soluções tecnológicas e consultoria empresarial para pequenas e médias empresas. Oferecemos serviços de TI, desenvolvimento de software, suporte técnico e consultoria em transformação digital com foco em resultados rápidos e eficientes.",
-      website: "www.supersolucoes.com.br",
+        'Especialistas em soluções tecnológicas e consultoria empresarial para pequenas e médias empresas. Oferecemos serviços de TI, desenvolvimento de software, suporte técnico e consultoria em transformação digital com foco em resultados rápidos e eficientes.',
+      website: 'www.supersolucoes.com.br',
       rating: 4.2,
-      openingHours: "Segunda a Sexta: 08:00 - 18:00 | Sábado: 08:00 - 12:00",
+      openingHours: 'Segunda a Sexta: 08:00 - 18:00 | Sábado: 08:00 - 12:00',
       address: {
-        state: "SP",
-        city: "São Paulo",
-        district: "Centro",
-        street: "Av. Principal",
-        complement: "Sala 101",
-        number: "100",
-        zipCode: "01000-000",
+        state: 'SP',
+        city: 'São Paulo',
+        district: 'Centro',
+        street: 'Av. Principal',
+        complement: 'Sala 101',
+        number: '100',
+        zipCode: '01000-000',
       },
     },
-    category: "Tecnologia",
-    mainImage: "/placeholder.svg?height=400&width=600",
+    category: 'Tecnologia',
+    mainImage: '/placeholder.svg?height=400&width=600',
     thumbnails: [
-      "/placeholder.svg?height=200&width=300",
-      "/placeholder.svg?height=200&width=300",
-      "/placeholder.svg?height=200&width=300",
-      "/placeholder.svg?height=200&width=300",
+      '/placeholder.svg?height=200&width=300',
+      '/placeholder.svg?height=200&width=300',
+      '/placeholder.svg?height=200&width=300',
+      '/placeholder.svg?height=200&width=300',
     ],
-    available: "Disponível para novos projetos",
-    duration: "Projetos de 1 semana a 6 meses",
-    contactName: "João Silva",
+    available: 'Disponível para novos projetos',
+    duration: 'Projetos de 1 semana a 6 meses',
+    contactName: 'João Silva',
     reviews: 234,
-    status: "available",
+    status: 'available',
   },
-]
+];
 
 // Mock de produtos/serviços
 const mockProducts = [
   {
-    id: "1",
-    name: "Consultoria em TI",
-    description: "Análise e planejamento de infraestrutura tecnológica",
-    price: "R$ 150/hora",
-    category: "Consultoria",
-    image: "/placeholder.svg?height=200&width=300",
+    id: '1',
+    name: 'Consultoria em TI',
+    description: 'Análise e planejamento de infraestrutura tecnológica',
+    price: 'R$ 150/hora',
+    category: 'Consultoria',
+    image: '/placeholder.svg?height=200&width=300',
   },
   {
-    id: "2",
-    name: "Desenvolvimento de Software",
-    description: "Criação de sistemas personalizados para sua empresa",
-    price: "A partir de R$ 5.000",
-    category: "Desenvolvimento",
-    image: "/placeholder.svg?height=200&width=300",
+    id: '2',
+    name: 'Desenvolvimento de Software',
+    description: 'Criação de sistemas personalizados para sua empresa',
+    price: 'A partir de R$ 5.000',
+    category: 'Desenvolvimento',
+    image: '/placeholder.svg?height=200&width=300',
   },
   {
-    id: "3",
-    name: "Suporte Técnico",
-    description: "Manutenção e suporte para sistemas existentes",
-    price: "R$ 80/hora",
-    category: "Suporte",
-    image: "/placeholder.svg?height=200&width=300",
+    id: '3',
+    name: 'Suporte Técnico',
+    description: 'Manutenção e suporte para sistemas existentes',
+    price: 'R$ 80/hora',
+    category: 'Suporte',
+    image: '/placeholder.svg?height=200&width=300',
   },
-]
+];
 
 // Mock de avaliações
 const mockReviews = [
   {
-    id: "1",
-    author: "Maria Santos",
+    id: '1',
+    author: 'Maria Santos',
     rating: 5,
-    date: "15 Jan 2025",
-    comment: "Excelente trabalho! Entregaram o projeto no prazo e com qualidade excepcional.",
-    project: "Sistema de Gestão",
+    date: '15 Jan 2025',
+    comment: 'Excelente trabalho! Entregaram o projeto no prazo e com qualidade excepcional.',
+    project: 'Sistema de Gestão',
   },
   {
-    id: "2",
-    author: "Carlos Oliveira",
+    id: '2',
+    author: 'Carlos Oliveira',
     rating: 4,
-    date: "10 Jan 2025",
-    comment: "Muito profissionais e atenciosos. Recomendo!",
-    project: "Consultoria em TI",
+    date: '10 Jan 2025',
+    comment: 'Muito profissionais e atenciosos. Recomendo!',
+    project: 'Consultoria em TI',
   },
   {
-    id: "3",
-    author: "Ana Costa",
+    id: '3',
+    author: 'Ana Costa',
     rating: 5,
-    date: "05 Jan 2025",
-    comment: "Superaram nossas expectativas. Equipe muito competente.",
-    project: "Desenvolvimento Web",
+    date: '05 Jan 2025',
+    comment: 'Superaram nossas expectativas. Equipe muito competente.',
+    project: 'Desenvolvimento Web',
   },
-]
+];
 
 export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps) {
-  const [supplier, setSupplier] = useState<Supplier | null>(null)
-  const [selectedImage, setSelectedImage] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(true)
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isFavorited, setIsFavorited] = useState(false)
+  const [supplier, setSupplier] = useState<Supplier | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFavorited, setIsFavorited] = useState(false);
 
-  const allImages = supplier ? [supplier.mainImage, ...supplier.thumbnails] : []
+  const allImages = supplier ? [supplier.mainImage, ...supplier.thumbnails] : [];
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const foundSupplier = mockSuppliers.find((s) => s.id === supplierId)
-      setSupplier(foundSupplier || null)
+      const foundSupplier = mockSuppliers.find((s) => s.id === supplierId);
+      setSupplier(foundSupplier || null);
       if (foundSupplier) {
-        setSelectedImage(foundSupplier.mainImage)
+        setSelectedImage(foundSupplier.mainImage);
       }
-      setIsLoading(false)
-    }, 1000)
+      setIsLoading(false);
+    }, 1000);
 
-    return () => clearTimeout(timer)
-  }, [supplierId])
+    return () => clearTimeout(timer);
+  }, [supplierId]);
 
   const openGallery = (imageIndex: number) => {
-    setCurrentImageIndex(imageIndex)
-    setIsGalleryOpen(true)
-  }
+    setCurrentImageIndex(imageIndex);
+    setIsGalleryOpen(true);
+  };
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % allImages.length)
-  }
+    setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+  };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length)
-  }
+    setCurrentImageIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+  };
 
   if (isLoading) {
     return (
@@ -210,7 +211,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
         <Loader2 className="h-12 w-12 text-[#511A2B] animate-spin mb-4" />
         <p className="text-[#511A2B] text-lg font-medium">Carregando detalhes...</p>
       </div>
-    )
+    );
   }
 
   if (!supplier) {
@@ -221,7 +222,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
           <Button className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl">Voltar para Fornecedores</Button>
         </Link>
       </div>
-    )
+    );
   }
 
   return (
@@ -233,11 +234,11 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
           size="icon"
           className={`rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 ${
             isFavorited
-              ? "bg-red-500 hover:bg-red-600 text-white"
-              : "bg-white/90 hover:bg-white text-gray-700 border border-gray-200"
+              ? 'bg-red-500 hover:bg-red-600 text-white'
+              : 'bg-white/90 hover:bg-white text-gray-700 border border-gray-200'
           }`}
         >
-          <Heart className={`w-5 h-5 ${isFavorited ? "fill-current" : ""}`} />
+          <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
         </Button>
 
         <Button
@@ -254,16 +255,16 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Logo/Imagem Principal */}
             <div className="relative w-32 h-32 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-lg flex-shrink-0 mx-auto lg:mx-0">
-              <Image src={selectedImage || "/placeholder.svg"} alt={supplier.tradeName} fill className="object-cover" />
+              <Image src={selectedImage || '/placeholder.svg'} alt={supplier.tradeName} fill className="object-cover" />
               <div className="absolute top-2 right-2">
                 <Badge
                   className={`${
-                    supplier.status === "available"
-                      ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-red-500 hover:bg-red-600 text-white"
+                    supplier.status === 'available'
+                      ? 'bg-green-500 hover:bg-green-600 text-white'
+                      : 'bg-red-500 hover:bg-red-600 text-white'
                   } shadow-lg text-xs`}
                 >
-                  {supplier.status === "available" ? "ATIVO" : "INATIVO"}
+                  {supplier.status === 'available' ? 'ATIVO' : 'INATIVO'}
                 </Badge>
               </div>
             </div>
@@ -288,7 +289,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                       <Star
                         key={i}
                         className={`w-5 h-5 ${
-                          i < Math.floor(supplier.store.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                          i < Math.floor(supplier.store.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
                         }`}
                       />
                     ))}
@@ -309,22 +310,18 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
 
               {/* Botões de Ação */}
               <div className="flex flex-col md:flex-row flex-wrap gap-3">
-                <Button className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6">
+                <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Entrar em Contato
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
-                >
-                  <Phone className="w-4 h-4 mr-2" />
+
+                <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
+                  <PhoneCall className="w-4 h-4 mr-2" />
                   Ligar Agora
                 </Button>
+
                 {supplier.store.website && (
-                  <Button
-                    variant="outline"
-                    className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
-                  >
+                  <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
                     <ExternalLink className="w-4 h-4 mr-2" />
                     Visitar Site
                   </Button>
@@ -457,7 +454,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                       className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 hover:border-[#511A2B]/50 transition-all duration-200 hover:scale-105"
                     >
                       <Image
-                        src={image || "/placeholder.svg"}
+                        src={image || '/placeholder.svg'}
                         alt={`${supplier.tradeName} - Imagem ${index + 1}`}
                         fill
                         className="object-cover"
@@ -480,7 +477,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                   <CardContent className="p-6">
                     <div className="relative aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100">
                       <Image
-                        src={product.image || "/placeholder.svg"}
+                        src={product.image || '/placeholder.svg'}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -525,7 +522,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                         {supplier.store.address.complement && `, ${supplier.store.address.complement}`}
                       </p>
                       <p className="text-[#511A2B]">
-                        {supplier.store.address.district}, {supplier.store.address.city} -{" "}
+                        {supplier.store.address.district}, {supplier.store.address.city} -{' '}
                         {supplier.store.address.state}
                       </p>
                       <p className="text-[#511A2B]">CEP: {supplier.store.address.zipCode}</p>
@@ -559,7 +556,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                         <Star
                           key={i}
                           className={`w-5 h-5 ${
-                            i < Math.floor(supplier.store.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                            i < Math.floor(supplier.store.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
                           }`}
                         />
                       ))}
@@ -578,7 +575,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                           />
                         </div>
                         <span className="text-sm text-gray-500 w-8">
-                          {stars === 5 ? "70%" : stars === 4 ? "20%" : "5%"}
+                          {stars === 5 ? '70%' : stars === 4 ? '20%' : '5%'}
                         </span>
                       </div>
                     ))}
@@ -601,7 +598,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                               <Star
                                 key={i}
                                 className={`w-4 h-4 ${
-                                  i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                                  i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'
                                 }`}
                               />
                             ))}
@@ -641,7 +638,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                     <div>
                       <p className="text-sm text-[#511A2B]/70">E-mail</p>
                       <p className="font-medium text-[#511A2B] break-all">
-                        contato@{supplier.store.website?.replace("www.", "")}
+                        contato@{supplier.store.website?.replace('www.', '')}
                       </p>
                     </div>
                   </div>
@@ -750,7 +747,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
           <div className="relative w-full h-full flex items-center justify-center p-4">
             <div className="relative max-w-full max-h-full">
               <Image
-                src={allImages[currentImageIndex] || "/placeholder.svg"}
+                src={allImages[currentImageIndex] || '/placeholder.svg'}
                 alt={`${supplier.tradeName} - Image ${currentImageIndex + 1}`}
                 width={800}
                 height={600}
@@ -766,5 +763,5 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

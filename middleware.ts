@@ -9,22 +9,25 @@ function isTokenExpired(token: string): boolean {
     return payload.exp < currentTime;
   } catch (error) {
     console.error('Erro ao decodificar o token:', error);
-    return true; // Se não conseguir decodificar, trata como expirado
+    return true;
   }
 }
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register');
 
-  if (!token || isTokenExpired(token)) {
+  if (!token || (isTokenExpired(token) && !isAuthPage)) {
     deleteCookie('token');
     deleteCookie('user');
-    return NextResponse.redirect(new URL('http://localhost:3001/login', request.url));
+    const url = new URL('/login', request.url);
+    url.searchParams.set('expired', 'true');
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/((?!_next|favicon.ico|api).*)',
+  matcher: '/((?!_next|favicon.ico|api|login).*)',
 };

@@ -231,7 +231,7 @@ export function AppSidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidebar}
-        className="fixed top-4 left-4 z-[60] md:hidden bg-[#511A2B] text-white p-2 rounded-lg shadow-lg"
+        className="fixed top-4 left-4 z-[60] md:hidden bg-background text-white p-2 rounded-lg shadow-lg"
         style={{ top: '20px', left: '20px' }}
       >
         {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -245,7 +245,7 @@ export function AppSidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen bg-[#511A2B] z-50
+          fixed top-0 left-0 h-screen bg-background z-50
           transition-all duration-300 ease-in-out flex flex-col
           ${isExpanded ? 'w-72' : 'w-24'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

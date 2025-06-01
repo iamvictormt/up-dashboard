@@ -33,11 +33,11 @@ export function DashboardHeader() {
         {/* Elemento de curvatura - apenas desktop */}
       <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24 mt-[64px]">
         <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#511A2B" />
+          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#46142B" />
         </svg>
       </div>
 
-        <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-[#511A2B] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
+        <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-background transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
           <div className="flex items-center space-x-4 ml-12 md:ml-0">
             <Skeleton className="h-6 w-32 bg-white/20" />
           </div>
@@ -58,24 +58,11 @@ export function DashboardHeader() {
         {/* Elemento de curvatura - apenas desktop */}
       <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24 mt-[64px]">
         <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#511A2B" />
+          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#46142B" />
         </svg>
       </div>
 
-        <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-[#511A2B] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
-          <div className="flex items-center space-x-4 ml-12 md:ml-0">
-            <h1 className="text-lg md:text-xl font-semibold text-white">Dashboard</h1>
-          </div>
-
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <Button
-              variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 rounded-xl"
-              onClick={() => (window.location.href = "/login")}
-            >
-              Fazer Login
-            </Button>
-          </div>
+        <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-background transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
         </header>
       </>
     )
@@ -86,11 +73,11 @@ export function DashboardHeader() {
       {/* Elemento de curvatura - apenas desktop */}
       <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24 mt-[64px]">
         <svg width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#511A2B" />
+          <path d="M0,100 V0 H100 A100,100 0 0 0 0,100" fill="#46142B" />
         </svg>
       </div>
 
-      <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-[#511A2B] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
+      <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-background transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
         <div className="flex items-center space-x-4 ml-12 md:ml-0">
           <h1 className="text-lg md:text-xl font-semibold text-white">Dashboard</h1>
         </div>
