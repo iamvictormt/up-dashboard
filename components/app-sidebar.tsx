@@ -6,7 +6,8 @@ import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Home,
+  MessageSquare,
+  LayoutDashboard,
   Users,
   Store,
   Calendar,
@@ -20,8 +21,6 @@ import {
   X,
   Crown,
 } from 'lucide-react';
-import Image from 'next/image';
-import { appImages } from '@/constants/appImages';
 
 type SidebarItem = {
   title: string;
@@ -79,12 +78,17 @@ export function AppSidebar() {
     }
   };
 
-  // Menu principal com a nova aba "Meus Benefícios"
+  // Menu principal atualizado com Mural como primeira opção
   const mainMenuItems: SidebarItem[] = [
     {
-      title: 'Dashboard',
-      icon: Home,
+      title: 'Mural',
+      icon: MessageSquare,
       url: '/',
+    },
+    {
+      title: 'Dashboard',
+      icon: LayoutDashboard,
+      url: '/dashboard',
     },
     {
       title: 'Profissionais',
@@ -229,46 +233,45 @@ export function AppSidebar() {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={toggleMobileSidebar}
-        className="fixed top-4 left-4 z-[60] md:hidden bg-background text-white p-2 rounded-lg shadow-lg"
-        style={{ top: '20px', left: '20px' }}
-      >
-        {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+      {/* Mobile Menu Button - Melhor posicionamento */}
+      {!isMobileOpen ? (
+        <button
+          onClick={toggleMobileSidebar}
+          className="fixed top-2 left-2 z-[60] md:hidden bg-[#511A2B] text-white p-3 rounded-xl shadow-lg border border-white/20"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      ) : null}
 
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMobileOpen(false)} />
+        <div
+          className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
+          onClick={() => setIsMobileOpen(false)}
+        />
       )}
 
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen bg-background z-50
+          fixed top-0 left-0 h-screen bg-[#511A2B] z-50
           transition-all duration-300 ease-in-out flex flex-col
           ${isExpanded ? 'w-72' : 'w-24'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          shadow-2xl md:shadow-none
         `}
       >
         {/* Sidebar Header */}
-        <div className="p-4 pt-6 flex items-center justify-between mb-4">
+        <div className="border-b border-white/10 p-4 pt-6 flex items-center justify-between">
           {isExpanded ? (
             <>
               <div className="flex items-center space-x-3">
-                <div className="flex flex-col ml-[5rem]">
-                  <div className="flex items-center gap-2 font-bold text-xl">
-                    <div className="relative w-24 h-24">
-                      <Image
-                        src={appImages.logoUpSvg.src}
-                        alt="UP Club Logo"
-                        fill
-                        className="object-contain"
-                        priority
-                      />
-                    </div>
-                  </div>
+                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                  <span className="text-[#46142B] font-bold text-lg">UP</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[white] font-semibold text-lg">Connection</span>
+                  <span className="text-gray-300 text-xs">Conectando talentos</span>
                 </div>
               </div>
               <div className="flex items-center space-x-1">
@@ -277,6 +280,13 @@ export function AppSidebar() {
                   className="hidden md:flex w-8 h-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg items-center justify-center transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
+                </button>
+                {/* Botão de fechar no mobile */}
+                <button
+                  onClick={toggleMobileSidebar}
+                  className="md:hidden w-8 h-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             </>
@@ -303,7 +313,7 @@ export function AppSidebar() {
           </div>
 
           {/* Other Menu */}
-          <div className="py-4">
+          <div className="py-4 border-t border-white/10">
             {isExpanded && <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">OUTROS</div>}
             <div className="space-y-1">{otherMenuItems.map(renderMenuItem)}</div>
           </div>

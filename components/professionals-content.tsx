@@ -47,7 +47,7 @@ export function ProfessionalsContent() {
       try {
         setIsLoading(true);
 
-        const response = await api.get('/listed-professionals');
+        const response = await api.get('/recommended-professionals');
         setProfessionals(response.data);
       } catch (err) {
         console.error(err);

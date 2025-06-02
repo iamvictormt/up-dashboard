@@ -19,7 +19,6 @@ import {
   MessageCircle,
   ExternalLink,
   X,
-  PhoneCall,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -113,31 +112,34 @@ const mockSuppliers: Supplier[] = [
   },
 ];
 
-// Mock de produtos/serviços
+// Atualizar a interface mockProducts para usar a nova estrutura:
 const mockProducts = [
   {
     id: '1',
     name: 'Consultoria em TI',
     description: 'Análise e planejamento de infraestrutura tecnológica',
-    price: 'R$ 150/hora',
-    category: 'Consultoria',
-    image: '/placeholder.svg?height=200&width=300',
+    price: 150.0,
+    link: 'https://example.com/consultoria-ti',
+    featured: true,
+    promotion: false,
   },
   {
     id: '2',
     name: 'Desenvolvimento de Software',
     description: 'Criação de sistemas personalizados para sua empresa',
-    price: 'A partir de R$ 5.000',
-    category: 'Desenvolvimento',
-    image: '/placeholder.svg?height=200&width=300',
+    price: 5000.0,
+    link: 'https://example.com/desenvolvimento',
+    featured: false,
+    promotion: true,
   },
   {
     id: '3',
     name: 'Suporte Técnico',
     description: 'Manutenção e suporte para sistemas existentes',
-    price: 'R$ 80/hora',
-    category: 'Suporte',
-    image: '/placeholder.svg?height=200&width=300',
+    price: 80.0,
+    link: 'https://example.com/suporte',
+    featured: false,
+    promotion: false,
   },
 ];
 
@@ -310,18 +312,22 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
 
               {/* Botões de Ação */}
               <div className="flex flex-col md:flex-row flex-wrap gap-3">
-                <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
+                <Button className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Entrar em Contato
                 </Button>
-
-                <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
-                  <PhoneCall className="w-4 h-4 mr-2" />
+                <Button
+                  variant="outline"
+                  className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+                >
+                  <Phone className="w-4 h-4 mr-2" />
                   Ligar Agora
                 </Button>
-
                 {supplier.store.website && (
-                  <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
+                  <Button
+                    variant="outline"
+                    className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+                  >
                     <ExternalLink className="w-4 h-4 mr-2" />
                     Visitar Site
                   </Button>
@@ -477,25 +483,48 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
                   <CardContent className="p-6">
                     <div className="relative aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100">
                       <Image
-                        src={product.image || '/placeholder.svg'}
+                        src="/placeholder.svg?height=200&width=300"
                         alt={product.name}
                         fill
                         className="object-cover"
                       />
+                      {product.featured && (
+                        <Badge className="absolute top-2 left-2 bg-[#FEC460] text-[#511A2B] hover:bg-[#FEC460]/90">
+                          Destaque
+                        </Badge>
+                      )}
+                      {product.promotion && (
+                        <Badge className="absolute top-2 right-2 bg-red-500 text-white hover:bg-red-600">
+                          Promoção
+                        </Badge>
+                      )}
                     </div>
-                    <Badge className="bg-[#FEC460]/20 text-[#D56235] hover:bg-[#FEC460]/30 rounded-lg mb-3">
-                      {product.category}
-                    </Badge>
+
                     <h3 className="font-bold text-[#511A2B] mb-2">{product.name}</h3>
                     <p className="text-sm text-[#511A2B]/80 mb-4">{product.description}</p>
+
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[#511A2B] text-sm md:text-base">{product.price}</span>
-                      <Button
-                        size="sm"
-                        className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-lg text-xs md:text-sm"
-                      >
-                        Solicitar Orçamento
-                      </Button>
+                      <span className="font-semibold text-[#511A2B] text-sm md:text-base">
+                        R$ {product.price.toFixed(2).replace('.', ',')}
+                      </span>
+                      <div className="flex space-x-2">
+                        {product.link && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-lg text-xs"
+                            onClick={() => window.open(product.link, '_blank')}
+                          >
+                            Ver Mais
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-lg text-xs md:text-sm"
+                        >
+                          Solicitar Orçamento
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

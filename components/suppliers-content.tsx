@@ -172,7 +172,7 @@ export function SuppliersContent() {
       try {
         setIsLoading(true);
 
-        const response = await api.get('/partner-supplier');
+        const response = await api.get('/partner-suppliers');
         setSuppliers(response.data);
       } catch (err) {
         console.error(err);

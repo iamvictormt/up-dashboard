@@ -18,21 +18,15 @@ import {
   LogIn,
   Building2,
   Phone,
-  Pin,
   IdCard,
   Fingerprint,
   Building,
   Tickets,
   PhoneCall,
-  MapPinHouse,
-  Map,
-  MapPinned,
-  Milestone,
-  Warehouse,
-  Compass,
   UploadCloud,
   X,
   Heart,
+  Instagram,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -43,15 +37,17 @@ import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask, applyZipCodeM
 import Image from 'next/image';
 import Cookies from 'js-cookie';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { PartnerSupplierData, ProfessionalData, RegisterDTO } from '@/types';
+import { RegisterDTO } from '@/types';
 import { appUrl } from '@/constants/appRoutes';
 import { appImages } from '@/constants/appImages';
+import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
+import { AddressForm } from './address-form';
 
 export default function LoginContent() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('login');
-  const [registerType, setRegisterType] = useState<'professional' | 'partnerSupplier' | 'loveDecoration'>(
-    'loveDecoration'
+  const [registerType, setRegisterType] = useState<'professionals' | 'partner-suppliers' | 'love-decorations'>(
+    'love-decorations'
   );
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
@@ -133,17 +129,10 @@ export default function LoginContent() {
     name: '',
     contact: '',
     email: '',
+    tiktok: '',
+    instagram: '',
     password: '',
     confirmPassword: '',
-    address: {
-      state: '',
-      city: '',
-      district: '',
-      street: '',
-      complement: '',
-      number: '',
-      zipCode: '',
-    },
   });
 
   const [professionalData, setProfessionalData] = useState({
@@ -157,15 +146,6 @@ export default function LoginContent() {
     email: '',
     password: '',
     confirmPassword: '',
-    address: {
-      state: '',
-      city: '',
-      district: '',
-      street: '',
-      complement: '',
-      number: '',
-      zipCode: '',
-    },
   });
 
   const [partnerSupplierData, setPartnerSupplierData] = useState({
@@ -177,15 +157,16 @@ export default function LoginContent() {
     email: '',
     password: '',
     confirmPassword: '',
-    address: {
-      state: '',
-      city: '',
-      district: '',
-      street: '',
-      complement: '',
-      number: '',
-      zipCode: '',
-    },
+  });
+
+  const [addressData, setAddressData] = useState({
+    state: '',
+    city: '',
+    district: '',
+    street: '',
+    complement: '',
+    number: '',
+    zipCode: '',
   });
 
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
@@ -203,7 +184,7 @@ export default function LoginContent() {
     setLoginError(null);
 
     try {
-      const response = await fetch('https://up-backend-edeta3b3hchmgkfj.southeastasia-01.azurewebsites.net/api/auth/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -226,7 +207,9 @@ export default function LoginContent() {
       Cookies.set('user', JSON.stringify(data.user), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      router.push(appUrl.base);
+      setTimeout(() => {
+        window.location.href = appUrl.base;
+      }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);
       toast.error('Erro de indisponibilidade, contate o administrador.');
@@ -239,16 +222,7 @@ export default function LoginContent() {
   const handleProfessionalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name.startsWith('address.')) {
-      const addressField = name.split('.')[1];
-      setProfessionalData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          [addressField]: value,
-        },
-      }));
-    } else if (name === 'phone') {
+    if (name === 'phone') {
       setProfessionalData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
     } else if (name === 'document') {
       setProfessionalData((prev) => ({ ...prev, [name]: applyDocumentMask(value) }));
@@ -259,21 +233,19 @@ export default function LoginContent() {
 
   const handleLoveDecorationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    console.log(name, value);
 
-    if (name.startsWith('address.')) {
-      const addressField = name.split('.')[1];
-      setProfessionalData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          [addressField]: value,
-        },
-      }));
-    } else if (name === 'phone') {
-      setProfessionalData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
+    if (name === 'contact') {
+      setLoveDecorationData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
     } else {
-      setProfessionalData((prev) => ({ ...prev, [name]: value }));
+      setLoveDecorationData((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setAddressData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleProfessionalSelectChange = (value: string) => {
@@ -284,16 +256,7 @@ export default function LoginContent() {
   const handlePartnerSupplierChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name.startsWith('address.')) {
-      const addressField = name.split('.')[1];
-      setPartnerSupplierData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          [addressField]: value,
-        },
-      }));
-    } else if (name === 'contact') {
+    if (name === 'contact') {
       setPartnerSupplierData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
     } else if (name === 'document') {
       setPartnerSupplierData((prev) => ({ ...prev, [name]: applyDocumentCnpjMask(value) }));
@@ -302,13 +265,51 @@ export default function LoginContent() {
     }
   };
 
+  const uploadImage = async (file: string): Promise<string | null> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error?.message || 'Erro ao fazer upload da imagem');
+      }
+
+      return result.secure_url;
+    } catch (error: any) {
+      console.error('Erro no upload da imagem:', error);
+      toast.error('Erro ao salvar a foto de perfil. O cadastro continuará sem a foto.');
+      return null;
+    }
+  };
+
+  const buildAddress = (address: any) => ({
+    city: address.city,
+    complement: address.complement,
+    district: address.district,
+    number: address.number,
+    state: address.state,
+    street: address.street,
+    zipCode: address.zipCode,
+  });
+
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsRegisterLoading(true);
 
-    const isProfessional = registerType === 'professional';
-    const data = isProfessional ? professionalData : partnerSupplierData;
-    const url = `https://up-backend-edeta3b3hchmgkfj.southeastasia-01.azurewebsites.net/api/${isProfessional ? 'professional' : 'partner-supplier'}`;
+    const data =
+      registerType === 'professionals'
+        ? professionalData
+        : registerType === 'partner-suppliers'
+        ? partnerSupplierData
+        : loveDecorationData;
 
     if (data.password !== data.confirmPassword) {
       toast.error('As senhas não coincidem.');
@@ -316,83 +317,49 @@ export default function LoginContent() {
       return;
     }
 
-    let uploadedImageUrl: string | null = null;
-
-    if (photo) {
-      try {
-        const formData = new FormData();
-        formData.append('file', photo);
-        formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
-
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-          {
-            method: 'POST',
-            body: formData,
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.error?.message || 'Erro ao fazer upload da imagem');
-        }
-
-        uploadedImageUrl = result.secure_url;
-      } catch (error: any) {
-        console.error('Erro no upload da imagem:', error);
-        toast.error('Erro ao salvar a foto de perfil. O cadastro continuará sem a foto.');
-      }
-    }
+    const uploadedImageUrl = photo ? await uploadImage(photo) : null;
 
     const payload: RegisterDTO = {
       user: {
         email: data.email,
         password: data.password,
+        profileImage: uploadedImageUrl || '',
+        address: buildAddress(addressData),
       },
     };
 
-    if (isProfessional) {
-      const prof = data as ProfessionalData;
+    if (isProfessional(data)) {
       payload.professional = {
-        name: prof.name,
-        officeName: prof.officeName,
-        profession: prof.profession,
-        document: prof.document,
-        generalRegister: prof.generalRegister,
-        registrationAgency: prof.registrationAgency,
-        phone: prof.phone,
-        profileImage: uploadedImageUrl || '',
-        address: {
-          city: prof.address.city,
-          complement: prof.address.complement,
-          district: prof.address.district,
-          number: prof.address.number,
-          state: prof.address.state,
-          street: prof.address.street,
-          zipCode: prof.address.zipCode,
-        },
+        name: data.name,
+        officeName: data.officeName,
+        profession: data.profession,
+        document: data.document,
+        generalRegister: data.generalRegister,
+        registrationAgency: data.registrationAgency,
+        phone: data.phone,
+      };
+    } else if (isPartnerSupplier(data)) {
+      payload.partnerSupplier = {
+        tradeName: data.tradeName,
+        companyName: data.companyName,
+        document: data.document,
+        stateRegistration: data.stateRegistration,
+        contact: data.contact,
+      };
+    } else if (isLoveDecoration(data)) {
+      payload.loveDecoration = {
+        name: data.name,
+        contact: data.contact,
+        tiktok: data.tiktok,
+        instagram: data.instagram,
       };
     } else {
-      const partner = data as PartnerSupplierData;
-      payload.partnerSupplier = {
-        tradeName: partner.tradeName,
-        companyName: partner.companyName,
-        document: partner.document,
-        stateRegistration: partner.stateRegistration,
-        contact: partner.contact,
-        profileImage: uploadedImageUrl || '',
-        address: {
-          city: partner.address.city,
-          complement: partner.address.complement,
-          district: partner.address.district,
-          number: partner.address.number,
-          state: partner.address.state,
-          street: partner.address.street,
-          zipCode: partner.address.zipCode,
-        },
-      };
+      toast.error('Tipo de cadastro inválido.');
+      setIsRegisterLoading(false);
+      return;
     }
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/${registerType}`;
 
     try {
       const res = await fetch(url, {
@@ -401,10 +368,14 @@ export default function LoginContent() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error((await res.json()).message || 'Erro no cadastro.');
+      if (!res.ok) {
+        const result = await res.json();
+        throw new Error(result.message || 'Erro no cadastro.');
+      }
 
       toast.success('Cadastro realizado com sucesso! Redirecionando para o login...');
       setRegisterSuccess(true);
+
       setTimeout(() => {
         setActiveTab('login');
         setRegisterSuccess(false);
@@ -417,15 +388,24 @@ export default function LoginContent() {
     }
   };
 
-  const handleZipCodeChange = async (zipCode: string, updateAddressCallback: (data: any) => void) => {
-    zipCode = zipCode.replace(/\D/g, '');
-    if (zipCode.length === 8) {
-      const address = await fetchAddressByZipCode(zipCode);
-      if (address) {
-        updateAddressCallback(address);
-      }
+  useEffect(() => {
+    const zip = addressData.zipCode.replace(/\D/g, '');
+
+    if (zip.length === 8) {
+      const fetchAddress = async () => {
+        const address = await fetchAddressByZipCode(zip);
+        if (address) {
+          setAddressData((prev) => ({
+            ...prev,
+            ...address,
+            zipCode: prev.zipCode,
+          }));
+        }
+      };
+
+      fetchAddress();
     }
-  };
+  }, [addressData.zipCode]);
 
   const fetchAddressByZipCode = async (zipCode: string) => {
     try {
@@ -446,36 +426,8 @@ export default function LoginContent() {
   };
 
   useEffect(() => {
-    const zip = professionalData.address.zipCode;
-    handleZipCodeChange(zip, (address) => {
-      setProfessionalData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          ...address,
-          zipCode: zip,
-        },
-      }));
-    });
-  }, [professionalData.address.zipCode]);
-
-  useEffect(() => {
     removePhoto();
   }, [registerType]);
-
-  useEffect(() => {
-    const zip = partnerSupplierData.address.zipCode;
-    handleZipCodeChange(zip, (address) => {
-      setPartnerSupplierData((prev) => ({
-        ...prev,
-        address: {
-          ...prev.address,
-          ...address,
-          zipCode: zip,
-        },
-      }));
-    });
-  }, [partnerSupplierData.address.zipCode]);
 
   const searchParams = useSearchParams();
 
@@ -516,7 +468,7 @@ export default function LoginContent() {
           </Link>
           <div className="flex items-center gap-2 font-bold text-xl">
             <div className="relative w-16 h-16">
-              <Image src={appImages.logoUpSvg.src}alt="UP Club Logo" fill className="object-contain" priority />
+              <Image src={appImages.logoUpSvg.src} alt="UP Club Logo" fill className="object-contain" priority />
             </div>
           </div>
         </div>
@@ -526,7 +478,7 @@ export default function LoginContent() {
       <main className="flex-1 container flex items-center justify-center py-8 ">
         <div
           className={cn(
-            'flex w-full max-w-4xl rounded-xl overflow-hidden shadow-2xl border border-border/50',
+            'flex w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl border border-border/50',
             isMobile ? 'flex-col' : 'flex-row h-[600px]'
           )}
         >
@@ -539,13 +491,7 @@ export default function LoginContent() {
           >
             <div className="flex justify-center">
               <div className="relative w-28 h-28">
-                <Image
-                  src={appImages.logoAbelha.src}
-                  alt="UP Club Logo"
-                  fill
-                  className="object-contain"
-                  priority
-                />
+                <Image src={appImages.logoAbelha.src} alt="UP Club Logo" fill className="object-contain" priority />
               </div>
             </div>
             <h2 className={cn('text-2xl font-bold mb-6 text-center mt-2', isMobile ? 'hidden' : 'block')}>
@@ -724,13 +670,13 @@ export default function LoginContent() {
                   <div className="flex gap-4 mb-6"></div>
 
                   {/* Register Type Selector */}
-                  <div className="col-12 flex gap-4 mb-6">
+                  <div className="col-12 flex gap-4 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <button
                       type="button"
-                      onClick={() => setRegisterType('loveDecoration')}
+                      onClick={() => setRegisterType('love-decorations')}
                       className={cn(
                         'flex-1 flex flex-col items-center gap-2 p-4 rounded-lg border transition-all duration-300',
-                        registerType === 'loveDecoration'
+                        registerType === 'love-decorations'
                           ? 'bg-primary/20 border-primary shadow-md'
                           : 'bg-card/30 border-border/50 hover:bg-card/50'
                       )}
@@ -738,13 +684,13 @@ export default function LoginContent() {
                       <div
                         className={cn(
                           'flex items-center justify-center h-12 w-12 rounded-full',
-                          registerType === 'loveDecoration' ? 'bg-primary/30' : 'bg-primary/10'
+                          registerType === 'love-decorations' ? 'bg-primary/30' : 'bg-primary/10'
                         )}
                       >
                         <Heart
                           className={cn(
                             'h-6 w-6',
-                            registerType === 'loveDecoration' ? 'text-primary-foreground' : 'text-primary'
+                            registerType === 'love-decorations' ? 'text-primary-foreground' : 'text-primary'
                           )}
                         />
                       </div>
@@ -755,10 +701,10 @@ export default function LoginContent() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setRegisterType('professional')}
+                      onClick={() => setRegisterType('professionals')}
                       className={cn(
                         'flex-1 flex flex-col items-center gap-2 p-4 rounded-lg border transition-all duration-300',
-                        registerType === 'professional'
+                        registerType === 'professionals'
                           ? 'bg-primary/20 border-primary shadow-md'
                           : 'bg-card/30 border-border/50 hover:bg-card/50'
                       )}
@@ -766,13 +712,13 @@ export default function LoginContent() {
                       <div
                         className={cn(
                           'flex items-center justify-center h-12 w-12 rounded-full',
-                          registerType === 'professional' ? 'bg-primary/30' : 'bg-primary/10'
+                          registerType === 'professionals' ? 'bg-primary/30' : 'bg-primary/10'
                         )}
                       >
                         <User
                           className={cn(
                             'h-6 w-6',
-                            registerType === 'professional' ? 'text-primary-foreground' : 'text-primary'
+                            registerType === 'professionals' ? 'text-primary-foreground' : 'text-primary'
                           )}
                         />
                       </div>
@@ -784,10 +730,10 @@ export default function LoginContent() {
 
                     <button
                       type="button"
-                      onClick={() => setRegisterType('partnerSupplier')}
+                      onClick={() => setRegisterType('partner-suppliers')}
                       className={cn(
                         'flex-1 flex flex-col items-center gap-2 p-4 rounded-lg border transition-all duration-300',
-                        registerType === 'partnerSupplier'
+                        registerType === 'partner-suppliers'
                           ? 'bg-primary/20 border-primary shadow-md'
                           : 'bg-card/30 border-border/50 hover:bg-card/50'
                       )}
@@ -795,13 +741,13 @@ export default function LoginContent() {
                       <div
                         className={cn(
                           'flex items-center justify-center h-12 w-12 rounded-full',
-                          registerType === 'partnerSupplier' ? 'bg-primary/30' : 'bg-primary/10'
+                          registerType === 'partner-suppliers' ? 'bg-primary/30' : 'bg-primary/10'
                         )}
                       >
                         <Building2
                           className={cn(
                             'h-6 w-6',
-                            registerType === 'partnerSupplier' ? 'text-primary-foreground' : 'text-primary'
+                            registerType === 'partner-suppliers' ? 'text-primary-foreground' : 'text-primary'
                           )}
                         />
                       </div>
@@ -813,14 +759,14 @@ export default function LoginContent() {
                   </div>
 
                   {/* Love Decoration Registration Form */}
-                  {registerType === 'loveDecoration' && (
+                  {registerType === 'love-decorations' && (
                     <form onSubmit={handleRegisterSubmit} className="space-y-6">
                       <div className="space-y-4">
                         <div className="space-y-4">
                           <div className="flex flex-col items-center">
                             {!photo ? (
                               <div
-                                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-full cursor-pointer hover:border-primary transition-colors"
+                                className="border-2 border-dashed border-gray-300 rounded-full p-6 text-center w-64 h-64 cursor-pointer hover:border-primary transition-colors"
                                 onClick={triggerFileInput}
                               >
                                 <input
@@ -830,7 +776,7 @@ export default function LoginContent() {
                                   onChange={handleFileChange}
                                   className="hidden"
                                 />
-                                <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto" />
+                                <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto mt-12" />
                                 <p className="text-sm text-gray-300">Clique para enviar sua foto de perfil</p>
                               </div>
                             ) : (
@@ -891,7 +837,7 @@ export default function LoginContent() {
                                 onChange={handleLoveDecorationChange}
                                 onBlur={(e) => {
                                   e.target.value.length !== 15
-                                    ? setProfessionalData((prev) => ({ ...prev, phone: '' }))
+                                    ? setLoveDecorationData((prev) => ({ ...prev, contact: '' }))
                                     : '';
                                 }}
                                 className="pl-10 bg-card/50 border-border/50 focus:border-primary"
@@ -904,12 +850,12 @@ export default function LoginContent() {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="professional-email" className="text-sm font-medium">
+                            <Label htmlFor="email" className="text-sm font-medium">
                               Email
                             </Label>
                             <div className="relative">
                               <Input
-                                id="professional-email"
+                                id="email"
                                 name="email"
                                 type="email"
                                 value={loveDecorationData.email}
@@ -927,163 +873,64 @@ export default function LoginContent() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="address.zipCode" className="text-sm font-medium">
-                              CEP
+                            <Label htmlFor="instagram" className="text-sm font-medium">
+                              Instagram
                             </Label>
                             <div className="relative">
                               <Input
-                                id="address.zipCode"
-                                name="address.zipCode"
+                                id="instagram"
+                                name="instagram"
                                 type="text"
-                                value={loveDecorationData.address.zipCode}
-                                onChange={(e) => {
-                                  const masked = applyZipCodeMask(e.target.value);
-                                  setLoveDecorationData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      zipCode: masked,
-                                    },
-                                  }));
-                                }}
-                                maxLength={9}
+                                value={loveDecorationData.instagram}
+                                onChange={handleLoveDecorationChange}
                                 className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 00000-000"
+                                placeholder="Ex: @AnaAMS"
                                 required
                                 disabled={registerSuccess}
                               />
-                              <Pin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <Instagram className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                             </div>
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="address.state" className="text-sm font-medium">
-                              Estado
+                            <Label htmlFor="tiktok" className="text-sm font-medium">
+                              Tiktok
                             </Label>
                             <div className="relative">
                               <Input
-                                id="address.state"
-                                name="address.state"
-                                value={loveDecorationData.address.state}
+                                id="tiktok"
+                                name="tiktok"
+                                type="text"
+                                value={loveDecorationData.tiktok}
                                 onChange={handleLoveDecorationChange}
                                 className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
+                                placeholder="Ex: @AnaAMS"
                                 required
-                                disabled={true}
-                              />
-                              <MapPinHouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.city" className="text-sm font-medium">
-                              Cidade
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.city"
-                                name="address.city"
-                                value={loveDecorationData.address.city}
-                                onChange={handleLoveDecorationChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
-                                required
-                                disabled={true}
-                              />
-                              <Map className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.district" className="text-sm font-medium">
-                              Bairro
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.district"
-                                name="address.district"
-                                value={loveDecorationData.address.district}
-                                onChange={handleLoveDecorationChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bela Vista"
-                                required
-                                maxLength={2}
+                                maxLength={55}
                                 disabled={registerSuccess}
                               />
-                              <MapPinned className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-tiktok absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z" />
+                              </svg>
                             </div>
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <Label htmlFor="address.street" className="text-sm font-medium">
-                            Rua
-                          </Label>
-                          <div className="relative">
-                            <Input
-                              id="address.street"
-                              name="address.street"
-                              value={loveDecorationData.address.street}
-                              onChange={handleLoveDecorationChange}
-                              className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                              placeholder="Ex: Bela Vista"
-                              required
-                              maxLength={60}
-                              disabled={registerSuccess}
-                            />
-                            <Milestone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="address.number" className="text-sm font-medium">
-                              Número
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.number"
-                                name="address.number"
-                                value={loveDecorationData.address.number}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/\D/g, '');
-                                  setLoveDecorationData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      number: value,
-                                    },
-                                  }));
-                                }}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 30"
-                                required
-                                maxLength={6}
-                                disabled={registerSuccess}
-                              />
-                              <Warehouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.complement" className="text-sm font-medium">
-                              Complemento
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.complement"
-                                name="address.complement"
-                                value={loveDecorationData.address.complement}
-                                onChange={handleLoveDecorationChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bloco B, Apto 12"
-                                maxLength={60}
-                                disabled={registerSuccess}
-                              />
-                              <Compass className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
+                        <AddressForm
+                          addressData={addressData}
+                          setAddressData={setAddressData}
+                          handleAddressChange={handleAddressChange}
+                          registerSuccess={registerSuccess}
+                          applyZipCodeMask={applyZipCodeMask}
+                          isLogin={true}
+                        />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">
@@ -1139,14 +986,14 @@ export default function LoginContent() {
                   )}
 
                   {/* Professional Registration Form */}
-                  {registerType === 'professional' && (
+                  {registerType === 'professionals' && (
                     <form onSubmit={handleRegisterSubmit} className="space-y-6">
                       <div className="space-y-4">
                         <div className="space-y-4">
                           <div className="flex flex-col items-center">
                             {!photo ? (
                               <div
-                                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-full cursor-pointer hover:border-primary transition-colors"
+                                className="border-2 border-dashed border-gray-300 rounded-full w-64 h-64 p-6 text-center cursor-pointer hover:border-primary transition-colors"
                                 onClick={triggerFileInput}
                               >
                                 <input
@@ -1156,7 +1003,7 @@ export default function LoginContent() {
                                   onChange={handleFileChange}
                                   className="hidden"
                                 />
-                                <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto" />
+                                <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto mt-12" />
                                 <p className="text-sm text-gray-300">Clique para enviar sua foto de perfil</p>
                               </div>
                             ) : (
@@ -1366,165 +1213,14 @@ export default function LoginContent() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="address.zipCode" className="text-sm font-medium">
-                              CEP
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.zipCode"
-                                name="address.zipCode"
-                                type="text"
-                                value={professionalData.address.zipCode}
-                                onChange={(e) => {
-                                  const masked = applyZipCodeMask(e.target.value);
-                                  setProfessionalData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      zipCode: masked,
-                                    },
-                                  }));
-                                }}
-                                maxLength={9}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 00000-000"
-                                required
-                                disabled={registerSuccess}
-                              />
-                              <Pin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.state" className="text-sm font-medium">
-                              Estado
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.state"
-                                name="address.state"
-                                value={professionalData.address.state}
-                                onChange={handleProfessionalChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
-                                required
-                                disabled={true}
-                              />
-                              <MapPinHouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.city" className="text-sm font-medium">
-                              Cidade
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.city"
-                                name="address.city"
-                                value={professionalData.address.city}
-                                onChange={handleProfessionalChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
-                                required
-                                disabled={true}
-                              />
-                              <Map className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.district" className="text-sm font-medium">
-                              Bairro
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.district"
-                                name="address.district"
-                                value={professionalData.address.district}
-                                onChange={handleProfessionalChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bela Vista"
-                                required
-                                maxLength={2}
-                                disabled={registerSuccess}
-                              />
-                              <MapPinned className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="address.street" className="text-sm font-medium">
-                            Rua
-                          </Label>
-                          <div className="relative">
-                            <Input
-                              id="address.street"
-                              name="address.street"
-                              value={professionalData.address.street}
-                              onChange={handleProfessionalChange}
-                              className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                              placeholder="Ex: Bela Vista"
-                              required
-                              maxLength={60}
-                              disabled={registerSuccess}
-                            />
-                            <Milestone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="address.number" className="text-sm font-medium">
-                              Número
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.number"
-                                name="address.number"
-                                value={professionalData.address.number}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/\D/g, '');
-                                  setProfessionalData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      number: value,
-                                    },
-                                  }));
-                                }}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 30"
-                                required
-                                maxLength={6}
-                                disabled={registerSuccess}
-                              />
-                              <Warehouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.complement" className="text-sm font-medium">
-                              Complemento
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.complement"
-                                name="address.complement"
-                                value={professionalData.address.complement}
-                                onChange={handleProfessionalChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bloco B, Apto 12"
-                                maxLength={60}
-                                disabled={registerSuccess}
-                              />
-                              <Compass className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
+                        <AddressForm
+                          addressData={addressData}
+                          setAddressData={setAddressData}
+                          handleAddressChange={handleAddressChange}
+                          registerSuccess={registerSuccess}
+                          applyZipCodeMask={applyZipCodeMask}
+                          isLogin={true}
+                        />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">
@@ -1580,13 +1276,13 @@ export default function LoginContent() {
                   )}
 
                   {/* Partner Supplier Registration Form */}
-                  {registerType === 'partnerSupplier' && (
+                  {registerType === 'partner-suppliers' && (
                     <form onSubmit={handleRegisterSubmit} className="space-y-6">
                       <div className="space-y-4">
                         <div className="flex flex-col items-center">
                           {!photo ? (
                             <div
-                              className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center w-full cursor-pointer hover:border-primary transition-colors"
+                              className="border-2 border-dashed border-gray-300 w-64 h-64 rounded-full p-6 text-center cursor-pointer hover:border-primary transition-colors"
                               onClick={triggerFileInput}
                             >
                               <input
@@ -1596,7 +1292,7 @@ export default function LoginContent() {
                                 onChange={handleFileChange}
                                 className="hidden"
                               />
-                              <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto" />
+                              <UploadCloud className="h-12 w-12 text-gray-300 mb-2 mx-auto mt-12" />
                               <p className="text-sm text-gray-300">Clique para enviar sua foto de perfil</p>
                             </div>
                           ) : (
@@ -1758,165 +1454,14 @@ export default function LoginContent() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="address.zipCode" className="text-sm font-medium">
-                              CEP
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.zipCode"
-                                name="address.zipCode"
-                                type="text"
-                                value={partnerSupplierData.address.zipCode}
-                                onChange={(e) => {
-                                  const masked = applyZipCodeMask(e.target.value);
-                                  setPartnerSupplierData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      zipCode: masked,
-                                    },
-                                  }));
-                                }}
-                                maxLength={9}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 00000-000"
-                                required
-                                disabled={registerSuccess}
-                              />
-                              <Pin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.state" className="text-sm font-medium">
-                              Estado
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.state"
-                                name="address.state"
-                                value={partnerSupplierData.address.state}
-                                onChange={handlePartnerSupplierChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
-                                required
-                                disabled={true}
-                              />
-                              <MapPinHouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.city" className="text-sm font-medium">
-                              Cidade
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.city"
-                                name="address.city"
-                                value={partnerSupplierData.address.city}
-                                onChange={handlePartnerSupplierChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: São Paulo"
-                                required
-                                disabled={true}
-                              />
-                              <Map className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.district" className="text-sm font-medium">
-                              Bairro
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.district"
-                                name="address.district"
-                                value={partnerSupplierData.address.district}
-                                onChange={handlePartnerSupplierChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bela Vista"
-                                required
-                                maxLength={2}
-                                disabled={registerSuccess}
-                              />
-                              <MapPinned className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="address.street" className="text-sm font-medium">
-                            Rua
-                          </Label>
-                          <div className="relative">
-                            <Input
-                              id="address.street"
-                              name="address.street"
-                              value={partnerSupplierData.address.street}
-                              onChange={handlePartnerSupplierChange}
-                              className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                              placeholder="Ex: Bela Vista"
-                              required
-                              maxLength={60}
-                              disabled={registerSuccess}
-                            />
-                            <Milestone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="address.number" className="text-sm font-medium">
-                              Número
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.number"
-                                name="address.number"
-                                value={partnerSupplierData.address.number}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/\D/g, '');
-                                  setPartnerSupplierData((prev) => ({
-                                    ...prev,
-                                    address: {
-                                      ...prev.address,
-                                      number: value,
-                                    },
-                                  }));
-                                }}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: 30"
-                                required
-                                maxLength={6}
-                                disabled={registerSuccess}
-                              />
-                              <Warehouse className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label htmlFor="address.complement" className="text-sm font-medium">
-                              Complemento
-                            </Label>
-                            <div className="relative">
-                              <Input
-                                id="address.complement"
-                                name="address.complement"
-                                value={partnerSupplierData.address.complement}
-                                onChange={handlePartnerSupplierChange}
-                                className="pl-10 bg-card/50 border-border/50 focus:border-primary"
-                                placeholder="Ex: Bloco B, Apto 12"
-                                maxLength={60}
-                                disabled={registerSuccess}
-                              />
-                              <Compass className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            </div>
-                          </div>
-                        </div>
+                        <AddressForm
+                          addressData={addressData}
+                          setAddressData={setAddressData}
+                          handleAddressChange={handleAddressChange}
+                          registerSuccess={registerSuccess}
+                          applyZipCodeMask={applyZipCodeMask}
+                          isLogin={true}
+                        />
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-2">

@@ -9,7 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { EventForm } from "@/components/event-form"
 import Image from "next/image"
+import { ProductForm } from "@/components/product-form"
 
 interface StoreData {
   id: string
@@ -32,17 +34,29 @@ interface StoreData {
   email?: string
   images?: string[]
   category?: string
+  products?: Product[]
+}
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  link: string
+  featured: boolean
+  promotion: boolean
 }
 
 export function MyStoreContent() {
   const [isEditing, setIsEditing] = useState(false)
+  const [showEventForm, setShowEventForm] = useState(false)
   const [storeData, setStoreData] = useState<StoreData>({
     id: "d8821412-3cfc-4e1b-987b-b0760fe6240d",
     name: "Super Soluções",
-    description: "Especialistas em soluções tecnológicas e consultoria empresarial para pequenas e médias empresas.",
-    website: "www.supersolucoes.com.br",
-    rating: 4.2,
-    openingHours: "08:00 - 18:00",
+    description: null,
+    website: null,
+    rating: 0,
+    openingHours: null,
     phone: "+55 11 99999-8888",
     email: "contato@supersolucoes.com.br",
     category: "Tecnologia",
@@ -61,9 +75,21 @@ export function MyStoreContent() {
       number: "100",
       zipCode: "01000-000",
     },
+    products: [
+      {
+        id: "971ca975-b0d0-4df0-8539-56a243b67ac9",
+        name: "Produto X",
+        description: "Descrição do Produto X",
+        price: 199.99,
+        link: "https://example.com/produto-x",
+        featured: true,
+        promotion: false,
+      },
+    ],
   })
 
   const [editData, setEditData] = useState<StoreData>(storeData)
+  const [showProductForm, setShowProductForm] = useState(false)
 
   const handleSave = () => {
     setStoreData(editData)
@@ -102,6 +128,28 @@ export function MyStoreContent() {
   const removeImage = (index: number) => {
     const newImages = editData.images?.filter((_, i) => i !== index) || []
     setEditData({ ...editData, images: newImages })
+  }
+
+  const handleEventCreated = (eventData: any) => {
+    console.log("Evento criado:", eventData)
+    setShowEventForm(false)
+    // Aqui você pode atualizar a lista de eventos ou mostrar uma mensagem de sucesso
+  }
+
+  const handleProductCreated = (productData: any) => {
+    const newProduct = {
+      id: Date.now().toString(),
+      ...productData,
+      storeId: storeData.id,
+    }
+
+    setStoreData((prev) => ({
+      ...prev,
+      products: [...(prev.products || []), newProduct],
+    }))
+
+    setShowProductForm(false)
+    console.log("Produto criado:", newProduct)
   }
 
   return (
@@ -193,12 +241,24 @@ export function MyStoreContent() {
         {/* Tabs */}
         <Tabs defaultValue="info" className="w-full">
           <div className="overflow-x-auto">
-            <TabsList className="grid grid-cols-4 bg-white/80 rounded-2xl p-1 mb-8 min-w-max w-full">
+            <TabsList className="grid grid-cols-6 bg-white/80 rounded-2xl p-1 mb-8 min-w-max w-full">
               <TabsTrigger
                 value="info"
                 className="rounded-xl data-[state=active]:bg-[#511A2B] data-[state=active]:text-white text-xs md:text-sm px-2 md:px-3"
               >
                 Informações
+              </TabsTrigger>
+              <TabsTrigger
+                value="products"
+                className="rounded-xl data-[state=active]:bg-[#511A2B] data-[state=active]:text-white text-xs md:text-sm px-2 md:px-3"
+              >
+                Produtos
+              </TabsTrigger>
+              <TabsTrigger
+                value="events"
+                className="rounded-xl data-[state=active]:bg-[#511A2B] data-[state=active]:text-white text-xs md:text-sm px-2 md:px-3"
+              >
+                Eventos
               </TabsTrigger>
               <TabsTrigger
                 value="gallery"
@@ -456,6 +516,154 @@ export function MyStoreContent() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Produtos Tab */}
+          <TabsContent value="products" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-[#511A2B]">Gerenciar Produtos/Serviços</h2>
+              <Button
+                onClick={() => setShowProductForm(true)}
+                className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Adicionar Produto
+              </Button>
+            </div>
+
+            {storeData.products && storeData.products.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {storeData.products.map((product) => (
+                  <Card
+                    key={product.id}
+                    className="bg-white/80 border-[#511A2B]/10 rounded-2xl hover:shadow-lg transition-shadow"
+                  >
+                    <CardContent className="p-6">
+                      <div className="relative aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100">
+                        <Image
+                          src="/placeholder.svg?height=200&width=300"
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                        {product.featured && (
+                          <Badge className="absolute top-2 left-2 bg-[#FEC460] text-[#511A2B] hover:bg-[#FEC460]/90">
+                            Destaque
+                          </Badge>
+                        )}
+                        {product.promotion && (
+                          <Badge className="absolute top-2 right-2 bg-red-500 text-white hover:bg-red-600">
+                            Promoção
+                          </Badge>
+                        )}
+                      </div>
+
+                      <h3 className="font-bold text-[#511A2B] mb-2">{product.name}</h3>
+                      <p className="text-sm text-[#511A2B]/80 mb-4 line-clamp-2">{product.description}</p>
+
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="font-semibold text-[#511A2B] text-lg">
+                          R$ {product.price.toFixed(2).replace(".", ",")}
+                        </span>
+                        {product.link && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-lg text-xs"
+                            onClick={() => window.open(product.link, "_blank")}
+                          >
+                            Ver Link
+                          </Button>
+                        )}
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-lg text-xs"
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-red-300 text-red-600 hover:bg-red-50 rounded-lg text-xs"
+                        >
+                          Excluir
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
+                <CardContent className="p-6">
+                  <div className="text-center py-8">
+                    <Store className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 mb-4">Nenhum produto cadastrado ainda</p>
+                    <Button
+                      onClick={() => setShowProductForm(true)}
+                      variant="outline"
+                      className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+                    >
+                      Adicionar Primeiro Produto
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Modal de criação de produto */}
+            {showProductForm && (
+              <ProductForm
+                storeId={storeData.id}
+                onProductCreated={handleProductCreated}
+                onClose={() => setShowProductForm(false)}
+              />
+            )}
+          </TabsContent>
+
+          {/* Eventos Tab */}
+          <TabsContent value="events" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-[#511A2B]">Gerenciar Eventos</h2>
+              <Button
+                onClick={() => setShowEventForm(true)}
+                className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Criar Evento
+              </Button>
+            </div>
+
+            {/* Lista de eventos existentes */}
+            <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
+              <CardContent className="p-6">
+                <div className="text-center py-8">
+                  <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-4">Nenhum evento cadastrado ainda</p>
+                  <Button
+                    onClick={() => setShowEventForm(true)}
+                    variant="outline"
+                    className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+                  >
+                    Criar Primeiro Evento
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Modal de criação de evento */}
+            {showEventForm && (
+              <EventForm
+                storeId={storeData.id}
+                storeAddress={storeData.address}
+                onEventCreated={handleEventCreated}
+                onClose={() => setShowEventForm(false)}
+              />
+            )}
           </TabsContent>
 
           {/* Gallery Tab */}

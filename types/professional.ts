@@ -1,4 +1,3 @@
-import { AddressData } from './address';
 import { UserData } from './user';
 
 export interface ProfessionalData extends UserData {
@@ -8,7 +7,5 @@ export interface ProfessionalData extends UserData {
   document: string;
   generalRegister: string;
   registrationAgency: string;
-  address: AddressData;
   phone: string;
-  profileImage: string;
 }

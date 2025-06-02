@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-translate {
+    @apply hover:transform-none !important;
+  }
+
+  .hover\:transform-none:hover {
+    transform: none !important;
+  }
+
+  .hover\:translate-y-0:hover {
+    --tw-translate-y: 0px !important;
+    transform: translate(var(--tw-translate-x), 0px) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x))
+      skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 331.95 54.61% 17.65%;
+    --foreground: 0 0% 98%;
+    --primary: 37.97 90% 60%;
+    --primary-foreground: 355.03 76.37% 26.47%;
+    --secondary: 16.88 65.57% 42.16%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 355.03 76.37% 36.47%;
+    --accent-foreground: 0 0% 98%;
+    --card: 331.95 54.61% 12.65%;
+    --card-foreground: 0 0% 98%;
+    --popover: 331.95 54.61% 12.65%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 331.95 30% 20%;
+    --muted-foreground: 37.97 70% 75%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 331.95 30% 25%;
+    --input: 331.95 30% 25%;
+    --ring: 37.97 90% 60%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 331.95 54.61% 17.65%;
+    --foreground: 0 0% 98%;
+    --primary: 37.97 90% 60%;
+    --primary-foreground: 355.03 76.37% 26.47%;
+    --secondary: 16.88 65.57% 42.16%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 355.03 76.37% 36.47%;
+    --accent-foreground: 0 0% 98%;
+    --card: 331.95 54.61% 12.65%;
+    --card-foreground: 0 0% 98%;
+    --popover: 331.95 54.61% 12.65%;
+    --popover-foreground: 0 0% 98%;
+    --muted: 331.95 30% 20%;
+    --muted-foreground: 37.97 70% 75%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 331.95 30% 25%;
+    --input: 331.95 30% 25%;
+    --ring: 37.97 90% 60%;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.card {
+  @apply shadow-lg border border-border/50;
+}
+
+.header-gradient {
+  @apply bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-sm;
+}
+
+.section-alt {
+  @apply bg-secondary/20;
+}
+
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 text-primary-foreground font-medium;
+}
+
+.btn-secondary {
+  @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground font-medium;
+}
+
+.btn-accent {
+  @apply bg-accent hover:bg-accent/90 text-accent-foreground font-medium;
+}
+
+.button-primary {
+  @apply bg-primary text-primary-foreground hover:bg-gold-dark hover:shadow-lg transition-all duration-300;
+}
+
+.button-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-terracota-dark hover:shadow-lg transition-all duration-300;
+}
+
+.button-accent {
+  @apply bg-accent text-accent-foreground hover:bg-ruby-dark hover:shadow-lg transition-all duration-300;
+}
+
+:where(.button, [class*='Button']):not(.no-translate) {
+  @apply transition-all duration-300;
+}
+
+:where(.button, [class*='Button']):not(.no-translate):hover {
+  @apply shadow-md transform -translate-y-0.5;
+  filter: brightness(0.9) saturate(1.2);
+}
+
+.icon-primary {
+  @apply text-primary;
+}
+
+.icon-secondary {
+  @apply text-secondary;
+}
+
+.icon-accent {
+  @apply text-accent;
+}
+
+.highlight-text {
+  @apply text-primary font-medium;
+}
+
+.accent-text {
+  @apply text-accent font-medium;
+}
+
+.border-highlight {
+  @apply border-primary/50;
+}
+
+.border-accent {
+  @apply border-accent/50;
+}
+
+.bg-gradient-primary {
+  @apply bg-gradient-to-r from-primary/20 to-secondary/20;
+}
+
+.bg-gradient-accent {
+  @apply bg-gradient-to-r from-secondary/20 to-accent/20;
+}

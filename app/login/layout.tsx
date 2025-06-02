@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "../globals.css"
+import "./styles/login.css"
 
 export const metadata: Metadata = {
   title: "UP Connection",
