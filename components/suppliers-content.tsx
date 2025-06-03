@@ -194,91 +194,96 @@ export function SuppliersContent() {
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Fornecedores Parceiros</h1>
-            <p className="text-[#511A2B]/70">Descubra empresas parceiras de confiança</p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#511A2B]/50 w-4 h-4" />
-              <Input
-                placeholder="Buscar fornecedores..."
-                className="pl-10 w-full sm:w-64 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Fornecedores Parceiros</h1>
+              <p className="text-[#511A2B]/70">Descubra empresas parceiras de confiança</p>
             </div>
-                  <Button size="lg" className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6">
-              <Filter className="w-4 h-4 mr-2" />
-              Filtrar
-            </Button>
-          </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="relative w-full sm:w-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#511A2B]/50 w-4 h-4" />
+                <Input
+                  placeholder="Buscar fornecedores..."
+                  className="pl-10 w-full sm:w-64 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Button
+                size="lg"
+                className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6"
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Filtrar
+              </Button>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {isLoading ? (
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
+                    <Skeleton className="h-8 w-16 mb-2" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
+                  <div className="text-2xl font-bold text-[#511A2B]">{suppliers.length}</div>
+                  <div className="text-sm text-[#511A2B]/70">Total Fornecedores</div>
+                </div>
+                <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
+                  <div className="text-2xl font-bold text-green-600">
+                    {suppliers.filter((s) => s.store.rating > 4.0).length}
+                  </div>
+                  <div className="text-sm text-[#511A2B]/70">Bem Avaliados</div>
+                </div>
+                <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
+                  <div className="text-2xl font-bold text-[#FEC460]">
+                    {(suppliers.reduce((acc, s) => acc + s.store.rating, 0) / suppliers.length).toFixed(1)}
+                  </div>
+                  <div className="text-sm text-[#511A2B]/70">Avaliação Média</div>
+                </div>
+                <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
+                  <div className="text-2xl font-bold text-[#D56235]">
+                    {new Set(suppliers.map((s) => s.category)).size}
+                  </div>
+                  <div className="text-sm text-[#511A2B]/70">Categorias</div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Loading State */}
           {isLoading ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                  <Skeleton className="h-8 w-16 mb-2" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
-              ))}
-            </>
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="h-12 w-12 text-[#511A2B] animate-spin mb-4" />
+              <p className="text-[#511A2B] text-lg font-medium">Carregando fornecedores...</p>
+              <p className="text-[#511A2B]/70 text-sm">Buscando as melhores opções para você</p>
+            </div>
           ) : (
-            <>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#511A2B]">{suppliers.length}</div>
-                <div className="text-sm text-[#511A2B]/70">Total Fornecedores</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-green-600">
-                  {suppliers.filter((s) => s.store.rating > 4.0).length}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Bem Avaliados</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#FEC460]">
-                  {(suppliers.reduce((acc, s) => acc + s.store.rating, 0) / suppliers.length).toFixed(1)}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Avaliação Média</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#D56235]">
-                  {new Set(suppliers.map((s) => s.category)).size}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Categorias</div>
-              </div>
-            </>
+            /* Suppliers Grid */
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {filteredSuppliers.map((supplier) => (
+                <SupplierCard key={supplier.id} supplier={supplier} />
+              ))}
+            </div>
+          )}
+
+          {!isLoading && filteredSuppliers.length === 0 && searchQuery && (
+            <div className="text-center py-12">
+              <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum fornecedor encontrado</p>
+              <p className="text-[#511A2B]/70">Tente ajustar sua busca ou remover os filtros</p>
+            </div>
           )}
         </div>
-
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-12 w-12 text-[#511A2B] animate-spin mb-4" />
-            <p className="text-[#511A2B] text-lg font-medium">Carregando fornecedores...</p>
-            <p className="text-[#511A2B]/70 text-sm">Buscando as melhores opções para você</p>
-          </div>
-        ) : (
-          /* Suppliers Grid */
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredSuppliers.map((supplier) => (
-              <SupplierCard key={supplier.id} supplier={supplier} />
-            ))}
-          </div>
-        )}
-
-        {!isLoading && filteredSuppliers.length === 0 && searchQuery && (
-          <div className="text-center py-12">
-            <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum fornecedor encontrado</p>
-            <p className="text-[#511A2B]/70">Tente ajustar sua busca ou remover os filtros</p>
-          </div>
-        )}
       </div>
     </div>
   );

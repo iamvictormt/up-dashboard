@@ -94,7 +94,7 @@ export function DashboardHeader() {
 
         <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-[#511A2B] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
           <div className="flex items-center space-x-4 ml-12 md:ml-0">
-            <h1 className="text-lg md:text-xl font-semibold text-white">Eevo Platform</h1>
+            <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
           </div>
 
           <div className="flex items-center space-x-2 md:space-x-4">
@@ -117,7 +117,7 @@ export function DashboardHeader() {
       <header className="fixed top-0 z-40 h-16 flex items-center justify-between bg-[#511A2B] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
         <div className="flex items-center space-x-4 ml-12 md:ml-0">
           <div className="flex flex-col">
-            <h1 className="text-lg md:text-xl font-semibold text-white">Eevo Platform</h1>
+            <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
             <p className="text-xs text-white/70 hidden md:block">{getUserType()}</p>
           </div>
         </div>

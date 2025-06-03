@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -21,6 +21,8 @@ import {
   X,
   Crown,
 } from 'lucide-react';
+import { useUser } from '@/contexts/user-context';
+import { Skeleton } from './ui/skeleton';
 
 type SidebarItem = {
   title: string;
@@ -34,15 +36,18 @@ type SidebarItem = {
     url: string;
     indicator?: 'purple' | 'red' | 'blue' | 'green';
   }[];
+  roles?: string[];
 };
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { user, isLoading, role } = useUser();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  console.log(role)
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -78,48 +83,48 @@ export function AppSidebar() {
     }
   };
 
-  // Menu principal atualizado com Mural como primeira opção
   const mainMenuItems: SidebarItem[] = [
     {
       title: 'Mural',
       icon: MessageSquare,
       url: '/',
-    },
-    {
-      title: 'Dashboard',
-      icon: LayoutDashboard,
-      url: '/dashboard',
+      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {
       title: 'Profissionais',
       icon: Users,
       url: '/professionals',
+      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {
       title: 'Fornecedores',
       icon: Store,
       url: '/suppliers',
-      badge: '3',
+      roles: ['professional'],
     },
     {
       title: 'Workshops',
       icon: GraduationCap,
       url: '/workshops',
+      roles: ['professional'],
     },
     {
       title: 'Eventos',
       icon: Calendar,
       url: '/events',
+      roles: ['professional'],
     },
     {
       title: 'Minha Loja',
       icon: Briefcase,
       url: '/my-store',
+      roles: ['partnerSupplier'],
     },
     {
       title: 'Meus Benefícios',
       icon: Crown,
       url: '/benefits',
+      roles: ['partnerSupplier'],
     },
   ];
 
@@ -135,6 +140,22 @@ export function AppSidebar() {
       url: '/settings',
     },
   ];
+
+  const MenuItemSkeleton = () => (
+    <div className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
+      <div
+        className={`
+          w-full flex items-center h-12 rounded-lg
+          ${isExpanded ? 'justify-between px-4' : 'justify-center'}
+        `}
+      >
+        <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
+          <Skeleton className="w-5 h-5 bg-white/20" />
+          {isExpanded && <Skeleton className="h-4 w-20 bg-white/20" />}
+        </div>
+      </div>
+    </div>
+  );
 
   const renderMenuItem = (item: SidebarItem) => {
     const isActive = item.url === pathname;
@@ -307,21 +328,39 @@ export function AppSidebar() {
           {/* Main Menu */}
           <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
             {isExpanded && (
-              <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-2">PRINCIPAL</div>
+              <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-2">
+                {isLoading ? <Skeleton className="h-3 w-16 bg-white/20" /> : 'PRINCIPAL'}
+              </div>
             )}
-            <div className="space-y-1">{mainMenuItems.map(renderMenuItem)}</div>
+            <div className="space-y-1">
+              {isLoading
+                ? // Mostra skeletons enquanto carrega
+                  Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
+                : // Mostra itens reais após carregar
+                  mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+            </div>
           </div>
 
           {/* Other Menu */}
           <div className="py-4 border-t border-white/10">
-            {isExpanded && <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">OUTROS</div>}
-            <div className="space-y-1">{otherMenuItems.map(renderMenuItem)}</div>
+            {isExpanded && (
+              <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">
+                {isLoading ? <Skeleton className="h-3 w-12 bg-white/20" /> : 'OUTROS'}
+              </div>
+            )}
+            <div className="space-y-1">
+              {isLoading
+                ? // Mostra skeletons para seção "Outros"
+                  Array.from({ length: 2 }).map((_, index) => <MenuItemSkeleton key={`skeleton-other-${index}`} />)
+                : // Mostra itens reais
+                  otherMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+            </div>
           </div>
         </div>
       </aside>
 
       {/* Tooltips Portal */}
-      {!isExpanded && hoveredItem && (
+      {!isLoading && !isExpanded && hoveredItem && (
         <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
           {mainMenuItems.concat(otherMenuItems).map((item, index) => {
             if (item.title !== hoveredItem) return null;

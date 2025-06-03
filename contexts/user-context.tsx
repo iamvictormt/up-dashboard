@@ -68,6 +68,7 @@ interface UserContextType {
   isLoading: boolean;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  role: string;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -95,6 +96,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [role, setRole] = useState<string>('');
 
   const router = useRouter();
 
@@ -127,6 +129,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     loadUser();
   }, [router]);
 
+  useEffect(() => {
+    const roleFromCookie = Cookies.get('role');
+    if (roleFromCookie) setRole(JSON.parse(roleFromCookie));
+  }, []);
+
   const logout = () => {
     deleteCookie('token');
     deleteCookie('user');
@@ -154,6 +161,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     isLoading,
     logout,
     updateUser,
+    role,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
@@ -167,51 +175,3 @@ export const useAuth = () => {
     user,
   };
 };
-
-// Hook para acessar dados do plano
-// export const usePlan = () => {
-//   const { user } = useUser();
-//   return {
-//     plan: user?.plan || null,
-//     usage: user?.usage || null,
-//     canUseFeature: (feature: keyof User['plan']['features'], currentUsage?: number) => {
-//       if (!user?.plan) return false;
-
-//       const limit = user.plan.features[feature];
-//       if (typeof limit === 'boolean') return limit;
-//       if (typeof limit === 'number' && currentUsage !== undefined) {
-//         return currentUsage < limit;
-//       }
-//       return true;
-//     },
-//     getRemainingUsage: (feature: keyof User['usage']) => {
-//       if (!user?.plan || !user?.usage) return 0;
-
-//       const limit = user.plan.features[feature as keyof User['plan']['features']];
-//       const used = user.usage[feature];
-
-//       if (typeof limit === 'number') {
-//         return Math.max(0, limit - used);
-//       }
-//       return 0;
-//     },
-//   };
-// };
-
-// Hook para estatísticas do usuário
-// export const useUserStats = () => {
-//   const { user } = useUser();
-//   return {
-//     stats: user?.stats || null,
-//     addPoints: (points: number) => {
-//       if (user) {
-//         const updatedStats = {
-//           ...user.stats,
-//           points: user.stats.points + points,
-//           totalActions: user.stats.totalActions + 1,
-//         };
-// updateUser({ stats: updatedStats })
-//       }
-//     },
-//   };
-// };
