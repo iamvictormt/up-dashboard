@@ -28,6 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import Link from 'next/link';
+import api from '@/services/api';
 
 interface Supplier {
   id: string;
@@ -179,19 +180,18 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
 
-  const allImages = supplier ? [supplier.mainImage, ...supplier.thumbnails] : [];
+  const allImages = supplier ? [supplier.profileImage] : [];
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const foundSupplier = mockSuppliers.find((s) => s.id === supplierId);
-      setSupplier(foundSupplier || null);
-      if (foundSupplier) {
-        setSelectedImage(foundSupplier.mainImage);
+    const loadSupplier = async () => {
+      const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/partner-suppliers/${supplierId}`);
+      setSupplier(response.data);
+      if (response) {
+        setSelectedImage(supplier?.profileImage || '');
       }
       setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    };
+    loadSupplier();
   }, [supplierId]);
 
   const openGallery = (imageIndex: number) => {
