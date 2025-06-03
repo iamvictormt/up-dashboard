@@ -66,15 +66,15 @@ export function ProfessionalsContent() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Professionals</h1>
-              <p className="text-[#511A2B]/70">Find and connect with healthcare professionals</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Profissionais recomendados</h1>
+              <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais de confiança, cuidadosamente recomendados por nós.</p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#511A2B]/50 w-4 h-4" />
                 <Input
-                  placeholder="Search professionals..."
+                  placeholder="Buscar profissionais..."
                   className="pl-10 w-full sm:w-64 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -105,21 +105,21 @@ export function ProfessionalsContent() {
               <>
                 <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                   <div className="text-2xl font-bold text-[#511A2B]">{professionals.length}</div>
-                  <div className="text-sm text-[#511A2B]/70">Total Professionals</div>
+                  <div className="text-sm text-[#511A2B]/70">Total de profissionais</div>
                 </div>
                 <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                   <div className="text-2xl font-bold text-green-600">
                     {professionals.filter((p) => p.available).length}
                   </div>
-                  <div className="text-sm text-[#511A2B]/70">Available Now</div>
+                  <div className="text-sm text-[#511A2B]/70">Disponíveis agora</div>
                 </div>
                 <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                   <div className="text-2xl font-bold text-[#FEC460]">4.9</div>
-                  <div className="text-sm text-[#511A2B]/70">Average Rating</div>
+                  <div className="text-sm text-[#511A2B]/70">Média de avaliação</div>
                 </div>
                 <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                   <div className="text-2xl font-bold text-[#D56235]">5</div>
-                  <div className="text-sm text-[#511A2B]/70">Specialties</div>
+                  <div className="text-sm text-[#511A2B]/70">Especialidades</div>
                 </div>
               </>
             )}
