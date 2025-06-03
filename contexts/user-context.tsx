@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import Cookies from 'js-cookie';
+import api from '@/services/api';
 
 // Tipos para o usuário
 interface User {
@@ -16,6 +17,7 @@ interface User {
   updatedAt: string;
   profileImage?: string;
   address: {
+    id: string;
     state: string;
     city: string;
     district: string;
@@ -132,12 +134,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setError(null);
   };
 
-  const updateUser = (userData: Partial<User>) => {
+  const updateUser = async () => {
     if (user) {
-      const updatedUser = { ...user, ...userData };
-      setUser(updatedUser);
-      deleteCookie('user');
-      Cookies.set('user', JSON.stringify(updatedUser), { expires: 1 / 24 });
+      try {
+        setIsLoading(true);
+        const response = await api.get(`/users/${user.id}`);
+        setUser(response.data);
+        Cookies.set('user', JSON.stringify(response.data));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
