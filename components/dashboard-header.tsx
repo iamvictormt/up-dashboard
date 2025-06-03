@@ -52,7 +52,7 @@ export function DashboardHeader() {
     } else if (user?.partnerSupplier) {
       return 'Fornecedor Parceiro';
     } else if (user?.loveDecoration) {
-      return 'Love Decoration';
+      return 'Eu amo decoração';
     }
     return 'Usuário';
   };

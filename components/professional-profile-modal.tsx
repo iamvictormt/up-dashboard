@@ -225,7 +225,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {experience && (
+                {/* {experience && (
                   <div className="flex items-center justify-between p-3 bg-[#511A2B]/5 rounded-xl">
                     <div className="flex items-center space-x-2">
                       <Clock className="w-4 h-4 text-[#511A2B]/70" />
@@ -233,8 +233,8 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     </div>
                     <span className="font-medium text-[#511A2B]">{experience}</span>
                   </div>
-                )}
-
+                )} */}
+{/* 
                 {price && (
                   <div className="flex items-center justify-between p-3 bg-[#511A2B]/5 rounded-xl">
                     <div className="flex items-center space-x-2">
@@ -243,7 +243,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     </div>
                     <span className="font-semibold text-[#511A2B] text-lg">{price}</span>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -269,8 +269,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
 
                   {socialMedia.instagram && (
                     <Button
-                      variant="outline"
-                      className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl flex-1 md:flex-none"
+                      className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3 md:flex-none"
                       onClick={() =>
                         window.open(`https://instagram.com/${socialMedia.instagram.replace("@", "")}`, "_blank")
                       }
@@ -295,10 +294,10 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             </>
           )}
 
-          <Separator className="bg-[#511A2B]/10" />
+          {/* <Separator className="bg-[#511A2B]/10" /> */}
 
           {/* Ações */}
-          <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">
+          {/* <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">
             <Button
               className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3"
               disabled={!available}
@@ -328,7 +327,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                 E-mail
               </Button>
             )}
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>

@@ -281,8 +281,8 @@ export function MuralContent() {
 
   if (loading) {
     return (
-      <div className="p-4 md:p-6 lg:p-8 w-full">
-        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-4 md:p-6 lg:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="p-6 md:p-8 w-full">
+        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full max-w-7xl mx-auto">
           <div className="max-w-7xl mx-auto">
             {/* Header skeleton */}
             <div className="mb-8">
@@ -293,7 +293,7 @@ export function MuralContent() {
             {/* Posts skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Card key={i} className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl h-[450px]">
+                <Card key={i} className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl h-[360px]">
                   <CardHeader className="pb-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-[#511A2B]/10 rounded-full"></div>
@@ -358,7 +358,7 @@ export function MuralContent() {
                         </Avatar>
                         <div>
                           <p className="font-medium text-[#511A2B]">{getUserName()}</p>
-                          <p className="text-sm text-[#511A2B]/60">{getUserRole()}</p>
+                          {/* <p className="text-sm text-[#511A2B]/60">{getUserRole()}</p> */}
                         </div>
                       </div>
 
@@ -414,18 +414,18 @@ export function MuralContent() {
             {posts.map((post) => (
               <Card
                 key={post.id}
-                className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl shadow-sm hover:shadow-md transition-all h-[450px] flex flex-col"
+                className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl shadow-sm hover:shadow-md transition-all h-[360px] flex flex-col"
               >
                 {/* Header - Altura fixa */}
                 <CardHeader className="pb-3 flex-shrink-0 h-[80px]">
                   <div className="flex items-center space-x-3">
                     <Avatar className="w-10 h-10">
-                      <AvatarImage src={post.author.profileImage || "/placeholder.svg"} />
+                      <AvatarImage src={post.author.profileImage || '/placeholder.svg'} />
                       <AvatarFallback className="bg-[#511A2B] text-white">
                         {post.author.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")}
+                          .join('')}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
@@ -435,7 +435,7 @@ export function MuralContent() {
                           <Badge className="bg-[#FEC460] text-[#511A2B] text-xs">{post.author.level}</Badge>
                         )}
                       </div>
-                      <p className="text-xs text-[#511A2B]/60 truncate">{post.author.role}</p>
+                      {/* <p className="text-xs text-[#511A2B]/60 truncate">{post.author.role}</p> */}
                       <div className="flex items-center space-x-1 mt-1">
                         <Calendar className="w-3 h-3 text-[#511A2B]/50" />
                         <span className="text-xs text-[#511A2B]/50">{formatDate(post.createdAt)}</span>
@@ -489,7 +489,7 @@ export function MuralContent() {
                   </div>
 
                   {/* Botões - Altura fixa */}
-                  <div className="flex items-center justify-between pt-3 border-t border-[#511A2B]/10 h-[50px]">
+                  <div className="flex items-center justify-between pt-2 pb-2 border-t border-[#511A2B]/10 h-[50px]">
                     <div className="flex items-center space-x-3">
                       <Button
                         variant="ghost"
@@ -497,13 +497,13 @@ export function MuralContent() {
                         onClick={() => handleLike(post.id)}
                         disabled={likingPosts.has(post.id)}
                         className={`flex items-center space-x-1 text-xs transition-all duration-200 ${
-                          post.isLiked ? "text-red-500 hover:text-red-600" : "text-[#511A2B]/60 hover:text-[#511A2B]"
-                        } ${likingPosts.has(post.id) ? "scale-110" : ""}`}
+                          post.isLiked ? 'text-red-500 hover:text-red-600' : 'text-[#511A2B]/60 hover:text-[#511A2B]'
+                        } ${likingPosts.has(post.id) ? 'scale-110' : ''}`}
                       >
                         <Heart
                           className={`w-4 h-4 transition-all duration-200 ${
-                            post.isLiked ? "fill-current scale-110" : ""
-                          } ${likingPosts.has(post.id) ? "animate-pulse" : ""}`}
+                            post.isLiked ? 'fill-current scale-110' : ''
+                          } ${likingPosts.has(post.id) ? 'animate-pulse' : ''}`}
                         />
                         <span>{post.likes}</span>
                       </Button>
@@ -518,13 +518,13 @@ export function MuralContent() {
                         <span>{post.comments}</span>
                       </Button>
 
-                      <Button
+                      {/* <Button
                         variant="ghost"
                         size="sm"
                         className="flex items-center space-x-1 text-xs text-[#511A2B]/60 hover:text-[#511A2B]"
                       >
                         <Share2 className="w-4 h-4" />
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </CardContent>
@@ -548,17 +548,17 @@ export function MuralContent() {
                   <div className="border-b border-[#511A2B]/10 pb-4 mb-4">
                     <div className="flex items-center space-x-3 mb-3">
                       <Avatar className="w-10 h-10">
-                        <AvatarImage src={selectedPost.author.profileImage || "/placeholder.svg"} />
+                        <AvatarImage src={selectedPost.author.profileImage || '/placeholder.svg'} />
                         <AvatarFallback className="bg-[#511A2B] text-white">
                           {selectedPost.author.name
-                            .split(" ")
+                            .split(' ')
                             .map((n) => n[0])
-                            .join("")}
+                            .join('')}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <h4 className="font-medium text-[#511A2B]">{selectedPost.author.name}</h4>
-                        <p className="text-sm text-[#511A2B]/60">{selectedPost.author.role}</p>
+                        {/* <p className="text-sm text-[#511A2B]/60">{selectedPost.author.role}</p> */}
                       </div>
                     </div>
                     {selectedPost.title && <h3 className="font-semibold text-[#511A2B] mb-2">{selectedPost.title}</h3>}
@@ -587,12 +587,12 @@ export function MuralContent() {
                       comments.map((comment) => (
                         <div key={comment.id} className="flex space-x-3">
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={comment.author.profileImage || "/placeholder.svg"} />
+                            <AvatarImage src={comment.author.profileImage || '/placeholder.svg'} />
                             <AvatarFallback className="bg-[#FEC460] text-[#511A2B] text-xs">
                               {comment.author.name
-                                .split(" ")
+                                .split(' ')
                                 .map((n) => n[0])
-                                .join("")}
+                                .join('')}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
@@ -614,12 +614,12 @@ export function MuralContent() {
                     <div className="border-t border-[#511A2B]/10 pt-4">
                       <div className="flex space-x-3">
                         <Avatar className="w-8 h-8">
-                          <AvatarImage src={getUserProfileImage() || "/placeholder.svg"} />
+                          <AvatarImage src={getUserProfileImage() || '/placeholder.svg'} />
                           <AvatarFallback className="bg-[#511A2B] text-white text-xs">
                             {getUserName()
-                              .split(" ")
+                              .split(' ')
                               .map((n) => n[0])
-                              .join("")
+                              .join('')
                               .slice(0, 2)}
                           </AvatarFallback>
                         </Avatar>

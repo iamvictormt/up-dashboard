@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
+import { appImages } from '@/constants/appImages';
+import Image from 'next/image';
 
 type SidebarItem = {
   title: string;
@@ -47,7 +49,7 @@ export function AppSidebar() {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  console.log(role)
+  console.log(role);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -134,11 +136,11 @@ export function AppSidebar() {
       icon: HelpCircle,
       url: '/help',
     },
-    {
-      title: 'Configurações',
-      icon: Settings,
-      url: '/settings',
-    },
+    // {
+    //   title: 'Configurações',
+    //   icon: Settings,
+    //   url: '/settings',
+    // },
   ];
 
   const MenuItemSkeleton = () => (
@@ -287,12 +289,14 @@ export function AppSidebar() {
           {isExpanded ? (
             <>
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-[#46142B] font-bold text-lg">UP</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[white] font-semibold text-lg">Connection</span>
-                  <span className="text-gray-300 text-xs">Conectando talentos</span>
+                <div className="relative w-24 h-24">
+                  <Image
+                    src={appImages.logoUpSvg.src}
+                    alt="UP Club Logo"
+                    fill
+                    className="object-contain ml-[8vh]"
+                    priority
+                  />
                 </div>
               </div>
               <div className="flex items-center space-x-1">

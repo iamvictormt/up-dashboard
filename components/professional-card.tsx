@@ -68,8 +68,6 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
     description,
     rating = 5.0,
     reviews = 0,
-    experience = 'N/A',
-    price = 'N/A',
     avatar,
     available = true,
     city,
@@ -83,7 +81,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
       <Card className="bg-white/80 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl hover:border-[#511A2B]/30 transition-all duration-300 shadow-sm hover:shadow-md">
         <CardContent className="p-6">
           <div className="flex items-start space-x-4 mb-4">
-            <Avatar className="w-16 h-16 rounded-xl">
+            <Avatar className="w-24 h-24 rounded-xl">
               <AvatarImage src={avatar || '/placeholder.svg'} />
               <AvatarFallback className="rounded-xl bg-[#511A2B] text-white text-lg">
                 {name
@@ -140,7 +138,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
               </div>
             )}
 
-            {experience && (
+            {/* {experience && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4 text-[#511A2B]/60" />
@@ -158,14 +156,14 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                 </div>
                 <span className="text-sm text-[#511A2B] font-semibold">{price}</span>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Social Media */}
           <div className="flex space-x-2 mb-4">
             <Button
               disabled={socialMedia && !socialMedia.linkedin}
-              className="w-8 h-8 p-0 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
+              className="w-8 h-8 p-0 transition-all duration-300 bg-[#FEC460] hover:bg-[#FEC460]/80 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
               onClick={() => window.open(socialMedia?.linkedin, '_blank')}
             >
               <Linkedin className="w-4 h-4" />
@@ -173,7 +171,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             </Button>
             <Button
               disabled={socialMedia && !socialMedia.instagram}
-              className="w-8 h-8 p-0 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
+              className="w-8 h-8 p-0 transition-all duration-300 bg-[#FEC460] hover:bg-[#FEC460]/80 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
               onClick={() => window.open(`https://instagram.com/${socialMedia.instagram.replace('@', '')}`, '_blank')}
             >
               <Instagram className="w-4 h-4" />
@@ -181,7 +179,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             </Button>
             <Button
               disabled={socialMedia && !socialMedia.whatsapp}
-              className="w-8 h-8 p-0 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
+              className="w-8 h-8 p-0 transition-all duration-300 bg-[#FEC460] hover:bg-[#FEC460]/80 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-full"
               onClick={() => window.open(`tel:${professional.phone}`, '_blank')}
             >
               <Phone className="w-4 h-4" />
