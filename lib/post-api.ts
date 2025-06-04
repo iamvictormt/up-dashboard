@@ -36,7 +36,7 @@ export async function updatePost(
   postId: string,
   data: { title?: string; content?: string; hashtags?: string[]; image?: string | null }
 ): Promise<Post> {
-  const response = await api.patch('posts', data);
+  const response = await api.patch(`posts/${postId}`, data);
 
   if (!response.data) {
     throw new Error(`Post with ID ${postId} not found`);

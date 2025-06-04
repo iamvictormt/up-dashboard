@@ -6,6 +6,10 @@ export interface CreateCommentData {
   content: string;
 }
 
+export interface UpdateCommentData {
+  content: string;
+}
+
 export interface Comment {
   id: string;
   content: string;
@@ -31,8 +35,8 @@ export async function createComment(data: CreateCommentData): Promise<Comment> {
   return response.data;
 }
 
-export async function updateComment(commentId: string, content: string): Promise<Comment> {
-  const response = await api.patch(`comments/${commentId}`, content);
+export async function updateComment(commentId: string, UpdateCommentData: UpdateCommentData): Promise<Comment> {
+  const response = await api.patch(`comments/${commentId}`, UpdateCommentData);
   return response.data;
 }
 

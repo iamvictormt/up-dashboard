@@ -85,7 +85,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
     try {
       setSubmitting(true);
-      const updatedComment = await updateComment(editingComment.id, editContent.trim());
+      const updatedComment = await updateComment(editingComment.id, { content: editContent.trim() });
 
       setComments((prev) => prev.map((comment) => (comment.id === updatedComment.id ? updatedComment : comment)));
       setEditingComment(null);
@@ -240,7 +240,12 @@ export function CommentSection({ postId }: CommentSectionProps) {
                       <Button variant="outline" size="sm" onClick={cancelEditing} disabled={submitting}>
                         Cancelar
                       </Button>
-                      <Button size="sm" onClick={handleEditComment} disabled={!editContent.trim() || submitting}>
+                      <Button
+                        size="sm"
+                        onClick={handleEditComment}
+                        disabled={!editContent.trim() || submitting}
+                        className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
+                      >
                         Salvar
                       </Button>
                     </div>
