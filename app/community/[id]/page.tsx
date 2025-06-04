@@ -8,7 +8,7 @@ export default function CommunityPage() {
   const communityId = params.id as string
 
   return (
-    <div className="min-h-screen bg-[#FFEDC1] w-full">
+    <div className="min-h-screen bg-[#FFEDC1] w-full pt-20">
       <MuralContent communityId={communityId} />
     </div>
   )

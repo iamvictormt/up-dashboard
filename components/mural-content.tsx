@@ -27,14 +27,11 @@ import {
   UserPlus,
   Users,
   Home,
-  Hammer,
-  Palette,
-  TreePine,
-  Wrench,
   Filter,
   TrendingUp,
   Clock,
   Menu,
+  BookOpen,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { useRouter } from 'next/navigation';
@@ -49,58 +46,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-
-interface Community {
-  id: string;
-  name: string;
-  description?: string;
-  memberCount: number;
-  imageUrl?: string;
-  color: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  authorId: string;
-  communityId: string;
-  hashtags: string[];
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: string;
-    name: string;
-    role: string;
-    avatar?: string;
-    level?: string;
-  };
-  community: {
-    id: string;
-    name: string;
-    color?: string;
-  };
-  likes: number;
-  comments: number;
-  isLiked: boolean;
-  imageUrl?: string;
-}
-
-interface Comment {
-  id: string;
-  userId: string;
-  postId: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: string;
-    name: string;
-    role: string;
-    avatar?: string;
-  };
-}
+import { iconMap } from '@/constants/appIcons';
+import api from '@/services/api';
+import { CommentModal } from './comments-modal';
+import { CommunityFilters } from './community-filters';
+import { CreatePostDialog } from './create-post-modal';
+import { toast } from 'sonner';
 
 // Mock data para comunidades com ícones
 const mockCommunities: Community[] = [
@@ -108,264 +59,48 @@ const mockCommunities: Community[] = [
     id: 'c1',
     name: 'Arquitetura & Design',
     description: 'Comunidade para arquitetos e designers compartilharem projetos e ideias',
-    memberCount: 1245,
+    postsCount: 1245,
     imageUrl: '/placeholder.svg?height=40&width=40',
     color: '#FF6B6B',
-    icon: Home,
+    icon: 'home',
   },
   {
     id: 'c2',
     name: 'Construção Civil',
     description: 'Discussões sobre técnicas, materiais e projetos de construção civil',
-    memberCount: 3782,
+    postsCount: 3782,
     imageUrl: '/placeholder.svg?height=40&width=40',
     color: '#4ECDC4',
-    icon: Hammer,
+    icon: 'hammer',
   },
   {
     id: 'c3',
     name: 'Decoração de Interiores',
     description: 'Dicas e inspirações para decoração de ambientes internos',
-    memberCount: 2156,
+    postsCount: 2156,
     imageUrl: '/placeholder.svg?height=40&width=40',
     color: '#FFD166',
-    icon: Palette,
+    icon: 'palette',
   },
   {
     id: 'c4',
     name: 'Paisagismo',
     description: 'Tudo sobre jardins, plantas e áreas externas',
-    memberCount: 987,
+    postsCount: 987,
     imageUrl: '/placeholder.svg?height=40&width=40',
     color: '#06D6A0',
-    icon: TreePine,
+    icon: 'treepine',
   },
   {
     id: 'c5',
     name: 'Reformas & DIY',
     description: 'Compartilhe suas reformas e projetos faça-você-mesmo',
-    memberCount: 4521,
+    postsCount: 4521,
     imageUrl: '/placeholder.svg?height=40&width=40',
     color: '#118AB2',
-    icon: Wrench,
+    icon: 'wrench',
   },
 ];
-
-// Mock data para posts (mesmo do anterior)
-const generateMockPosts = (): Post[] => {
-  const basePosts = [
-    {
-      id: '1',
-      title: 'Projeto de Reforma Concluído!',
-      content:
-        'Acabei de finalizar um projeto incrível! Reforma completa de uma casa de 200m². O cliente ficou muito satisfeito com o resultado. Gratidão por mais essa oportunidade! 🏠✨',
-      authorId: 'user1',
-      communityId: 'c2',
-      hashtags: ['reforma', 'sucesso', 'gratidao'],
-      createdAt: '2025-01-06T10:00:00Z',
-      updatedAt: '2025-01-06T10:00:00Z',
-      author: {
-        id: 'user1',
-        name: 'Carlos Pereira',
-        role: 'Pedreiro',
-        level: 'GOLD',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c2',
-        name: 'Construção Civil',
-        color: '#4ECDC4',
-      },
-      likes: 28,
-      comments: 8,
-      isLiked: false,
-      imageUrl: '/placeholder.svg?height=400&width=600',
-    },
-    {
-      id: '2',
-      title: '',
-      content:
-        'Pessoal, alguém tem indicação de fornecedor de material elétrico na zona sul? Preciso para um projeto grande. Obrigada! ⚡',
-      authorId: 'user2',
-      communityId: 'c2',
-      hashtags: ['duvida', 'fornecedor', 'eletrica'],
-      createdAt: '2025-01-05T16:30:00Z',
-      updatedAt: '2025-01-05T16:30:00Z',
-      author: {
-        id: 'user2',
-        name: 'Ana Silva',
-        role: 'Eletricista',
-        level: 'SILVER',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c2',
-        name: 'Construção Civil',
-        color: '#4ECDC4',
-      },
-      likes: 12,
-      comments: 23,
-      isLiked: false,
-    },
-    {
-      id: '3',
-      title: 'Nova Parceria Firmada',
-      content:
-        'Muito feliz em anunciar nossa nova parceria com uma construtora renomada da cidade! Vamos fornecer todos os materiais para um condomínio de 50 casas. 🎉',
-      authorId: 'user3',
-      communityId: 'c5',
-      hashtags: ['parceria', 'negocios', 'crescimento'],
-      createdAt: '2025-01-05T14:30:00Z',
-      updatedAt: '2025-01-05T14:30:00Z',
-      author: {
-        id: 'user3',
-        name: 'Materiais São Paulo',
-        role: 'Fornecedor Parceiro',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c5',
-        name: 'Reformas & DIY',
-        color: '#118AB2',
-      },
-      likes: 45,
-      comments: 15,
-      isLiked: true,
-    },
-    {
-      id: '4',
-      title: 'Dica de Decoração',
-      content:
-        'Plantas são vida! 🌱 Acabei de decorar um apartamento pequeno usando apenas plantas e alguns elementos naturais. O resultado ficou incrível e o cliente amou!',
-      authorId: 'user4',
-      communityId: 'c3',
-      hashtags: ['decoracao', 'plantas', 'sustentavel'],
-      createdAt: '2025-01-04T11:15:00Z',
-      updatedAt: '2025-01-04T11:15:00Z',
-      author: {
-        id: 'user4',
-        name: 'Marina Decorações',
-        role: 'Love Decoration',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c3',
-        name: 'Decoração de Interiores',
-        color: '#FFD166',
-      },
-      likes: 67,
-      comments: 12,
-      isLiked: false,
-      imageUrl: '/placeholder.svg?height=400&width=600',
-    },
-    {
-      id: '5',
-      title: 'Curso de Soldagem Concluído',
-      content:
-        'Finalizei mais um curso de aperfeiçoamento! Agora estou certificado em soldagem TIG. Sempre buscando evoluir na profissão! 💪',
-      authorId: 'user5',
-      communityId: 'c2',
-      hashtags: ['curso', 'certificacao', 'soldagem'],
-      createdAt: '2025-01-03T09:20:00Z',
-      updatedAt: '2025-01-03T09:20:00Z',
-      author: {
-        id: 'user5',
-        name: 'Roberto Santos',
-        role: 'Soldador',
-        level: 'PLATINUM',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c2',
-        name: 'Construção Civil',
-        color: '#4ECDC4',
-      },
-      likes: 34,
-      comments: 6,
-      isLiked: false,
-    },
-    {
-      id: '6',
-      title: '',
-      content:
-        'Alguém sabe onde encontrar azulejos vintage para um projeto especial? Cliente quer algo bem específico dos anos 70. Aceito sugestões! 🔍',
-      authorId: 'user6',
-      communityId: 'c1',
-      hashtags: ['azulejos', 'vintage', 'ajuda'],
-      createdAt: '2025-01-02T15:45:00Z',
-      updatedAt: '2025-01-02T15:45:00Z',
-      author: {
-        id: 'user6',
-        name: 'Lucia Arquitetura',
-        role: 'Arquiteta',
-        level: 'GOLD',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c1',
-        name: 'Arquitetura & Design',
-        color: '#FF6B6B',
-      },
-      likes: 19,
-      comments: 31,
-      isLiked: false,
-    },
-    {
-      id: '7',
-      title: 'Promoção Especial',
-      content:
-        '🔥 PROMOÇÃO: 20% de desconto em todos os pisos laminados até o final do mês! Aproveitem, pessoal. Estoque limitado!',
-      authorId: 'user7',
-      communityId: 'c5',
-      hashtags: ['promocao', 'pisos', 'desconto'],
-      createdAt: '2025-01-01T12:00:00Z',
-      updatedAt: '2025-01-01T12:00:00Z',
-      author: {
-        id: 'user7',
-        name: 'Pisos & Revestimentos',
-        role: 'Fornecedor Parceiro',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c5',
-        name: 'Reformas & DIY',
-        color: '#118AB2',
-      },
-      likes: 89,
-      comments: 24,
-      isLiked: true,
-    },
-    {
-      id: '8',
-      title: 'Projeto Sustentável',
-      content:
-        'Acabei de finalizar um projeto 100% sustentável! Casa com energia solar, captação de água da chuva e materiais reciclados. O futuro é verde! 🌍♻️',
-      authorId: 'user8',
-      communityId: 'c1',
-      hashtags: ['sustentavel', 'energia-solar', 'reciclagem'],
-      createdAt: '2024-12-30T08:30:00Z',
-      updatedAt: '2024-12-30T08:30:00Z',
-      author: {
-        id: 'user8',
-        name: 'João Engenheiro',
-        role: 'Engenheiro Civil',
-        level: 'PLATINUM',
-        avatar: '/placeholder.svg?height=40&width=40',
-      },
-      community: {
-        id: 'c1',
-        name: 'Arquitetura & Design',
-        color: '#FF6B6B',
-    },
-      likes: 156,
-      comments: 42,
-      isLiked: false,
-      imageUrl: '/placeholder.svg?height=400&width=600',
-    },
-  ];
-
-  return basePosts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-};
 
 interface MuralContentProps {
   communityId?: string;
@@ -380,7 +115,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [newPost, setNewPost] = useState({ title: '', content: '', hashtags: '', communityId: '', imageUrl: '' });
+  const [newPost, setNewPost] = useState({ title: '', content: '', hashtags: '', communityId: '' });
   const [newComment, setNewComment] = useState('');
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
@@ -392,30 +127,33 @@ export function MuralContent({ communityId }: MuralContentProps) {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Simular carregamento inicial
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setCommunities(mockCommunities);
-      const allPosts = generateMockPosts();
-      const filteredPosts = communityId ? allPosts.filter((post) => post.communityId === communityId) : allPosts;
-
-      setPosts(filteredPosts);
-
-      if (communityId) {
-        const community = mockCommunities.find((c) => c.id === communityId);
-        if (community) {
-          setSelectedCommunity(community);
-        }
-      }
-
-      setLoading(false);
-    };
-
     loadData();
   }, [communityId]);
+
+  const loadData = async () => {
+    setLoading(true);
+
+    const responseCommunities = await api.get(`/communities`);
+    setCommunities(responseCommunities.data);
+
+    let responsePosts;
+    if (!communityId) {
+      responsePosts = await api.get(`/posts`);
+    } else {
+      responsePosts = await api.get(`/posts/community/${communityId}`);
+    }
+    setPosts(responsePosts.data);
+
+    if (communityId) {
+      const community = responseCommunities.data.find((c: Community) => c.id === communityId);
+      if (community) {
+        setSelectedCommunity(community);
+      }
+    }
+
+    setLoading(false);
+  };
 
   // Configurar o observador de interseção para carregamento infinito
   useEffect(() => {
@@ -448,19 +186,15 @@ export function MuralContent({ communityId }: MuralContentProps) {
   }, [loading, isLoadingMore, posts.length]);
 
   const loadMorePosts = async () => {
-    if (posts.length >= 20) return;
-
-    setIsLoadingMore(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const morePosts = generateMockPosts()
-      .map((post) => ({ ...post, id: `new-${post.id}-${Date.now()}` }))
-      .slice(0, 5);
-
-    const filteredMorePosts = communityId ? morePosts.filter((post) => post.communityId === communityId) : morePosts;
-
-    setPosts((prev) => [...prev, ...filteredMorePosts]);
-    setIsLoadingMore(false);
+    // if (posts.length >= 20) return;
+    // setIsLoadingMore(true);
+    // await new Promise((resolve) => setTimeout(resolve, 1500));
+    // const morePosts = generateMockPosts()
+    //   .map((post) => ({ ...post, id: `new-${post.id}-${Date.now()}` }))
+    //   .slice(0, 5);
+    // const filteredMorePosts = communityId ? morePosts.filter((post) => post.communityId === communityId) : morePosts;
+    // setPosts((prev) => [...prev, ...filteredMorePosts]);
+    // setIsLoadingMore(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -482,14 +216,6 @@ export function MuralContent({ communityId }: MuralContentProps) {
     return user.email.split('@')[0];
   };
 
-  const getUserRole = () => {
-    if (!user) return 'Usuário';
-    if (user.professional) return `${user.professional.profession} • ${user.professional.level}`;
-    if (user.partnerSupplier) return 'Fornecedor Parceiro';
-    if (user.loveDecoration) return 'Love Decoration';
-    return 'Usuário';
-  };
-
   const getUserAvatar = () => {
     if (user?.profileImage) return user.profileImage;
     return '/placeholder.svg?height=40&width=40';
@@ -505,42 +231,19 @@ export function MuralContent({ communityId }: MuralContentProps) {
         .map((tag) => tag.trim())
         .filter((tag) => tag.length > 0);
 
-      const selectedCommunityData = communities.find((c) => c.id === newPost.communityId);
-
       const postData = {
         title: newPost.title.trim(),
         content: newPost.content.trim(),
         authorId: user.id,
         communityId: newPost.communityId,
         hashtags,
-        imageUrl: newPost.imageUrl || undefined,
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await api.post('/posts', postData);
 
-      const newPostResponse = {
-        id: `new-${Date.now()}`,
-        ...postData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        author: {
-          id: user.id,
-          name: getUserName(),
-          role: getUserRole(),
-          avatar: getUserAvatar(),
-        },
-        community: {
-          id: selectedCommunityData?.id || '',
-          name: selectedCommunityData?.name || '',
-          color: selectedCommunityData?.color,
-        },
-        likes: 0,
-        comments: 0,
-        isLiked: false,
-      };
+      loadData();
 
-      setPosts((prev) => [newPostResponse, ...prev]);
-      setNewPost({ title: '', content: '', hashtags: '', communityId: '', imageUrl: '' });
+      setNewPost({ title: '', content: '', hashtags: '', communityId: '' });
       setIsPostDialogOpen(false);
     } catch (error) {
       console.error('Erro ao criar post:', error);
@@ -549,20 +252,30 @@ export function MuralContent({ communityId }: MuralContentProps) {
     }
   };
 
-  const handleLike = async (postId: string) => {
-    if (!user || likingPosts.has(postId)) return;
+  const handleLike = async (post: Post) => {
+    if (!user || likingPosts.has(post.id)) return;
 
-    setLikingPosts((prev) => new Set(prev).add(postId));
+    setLikingPosts((prev) => new Set(prev).add(post.id));
 
     try {
-      const post = posts.find((p) => p.id === postId);
       if (!post) return;
 
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      if (post.isLiked) {
+        await api.delete(`likes/${post.likeId}`);
+        toast.info(`Você removeu sua curtida do post de ${post.author.name.split(' ')[0]}!`);
+      } else {
+        const likePostData = {
+          userId: user.id,
+          postId: post.id,
+        };
+        const response = await api.post('likes', likePostData);
+        post.likeId = response.data.id;
+        toast.success(`Você curtiu o post de ${post.author.name.split(' ')[0]}!`);
+      }
 
       setPosts((prev) =>
         prev.map((p) =>
-          p.id === postId
+          p.id === post.id
             ? {
                 ...p,
                 isLiked: !p.isLiked,
@@ -576,7 +289,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
     } finally {
       setLikingPosts((prev) => {
         const newSet = new Set(prev);
-        newSet.delete(postId);
+        newSet.delete(post.id);
         return newSet;
       });
     }
@@ -588,40 +301,8 @@ export function MuralContent({ communityId }: MuralContentProps) {
     setLoadingComments(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const mockComments: Comment[] = [
-        {
-          id: 'c1',
-          userId: 'user5',
-          postId: post.id,
-          content: 'Ficou incrível! Parabéns pelo trabalho.',
-          createdAt: new Date(new Date().getTime() - 3600000).toISOString(),
-          updatedAt: new Date(new Date().getTime() - 3600000).toISOString(),
-          author: {
-            id: 'user5',
-            name: 'Roberto Santos',
-            role: 'Soldador',
-            avatar: '/placeholder.svg?height=40&width=40',
-          },
-        },
-        {
-          id: 'c2',
-          userId: 'user2',
-          postId: post.id,
-          content: 'Que legal! Você usou quais materiais?',
-          createdAt: new Date(new Date().getTime() - 7200000).toISOString(),
-          updatedAt: new Date(new Date().getTime() - 7200000).toISOString(),
-          author: {
-            id: 'user2',
-            name: 'Ana Silva',
-            role: 'Eletricista',
-            avatar: '/placeholder.svg?height=40&width=40',
-          },
-        },
-      ];
-
-      setComments(mockComments);
+      const response = await api.get(`comments/post/${post.id}`)
+      setComments(response.data);
     } catch (error) {
       console.error('Erro ao carregar comentários:', error);
       setComments([]);
@@ -635,24 +316,13 @@ export function MuralContent({ communityId }: MuralContentProps) {
 
     setSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      const newCommentData = {
-        id: `comment-${Date.now()}`,
+      const commentData = {
         userId: user.id,
         postId: selectedPost.id,
-        content: newComment.trim(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        author: {
-          id: user.id,
-          name: getUserName(),
-          role: getUserRole(),
-          avatar: getUserAvatar(),
-        },
+        content: newComment,
       };
-
-      setComments((prev) => [...prev, newCommentData]);
+      const response = await api.post('comments', commentData);
+      setComments((prev) => [...prev, response.data]);
       setNewComment('');
       setPosts((prev) => prev.map((p) => (p.id === selectedPost.id ? { ...p, comments: p.comments + 1 } : p)));
     } catch (error) {
@@ -668,7 +338,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
     if (community) {
       router.push(`/community/${community.id}`);
     } else {
-      router.push('/timeline');
+      router.push('/mural');
     }
   };
 
@@ -678,131 +348,6 @@ export function MuralContent({ communityId }: MuralContentProps) {
     }
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
-
-  // Componente do filtro lateral
-  const CommunityFilters = ({ className = '' }: { className?: string }) => (
-    <div className={cn('space-y-4', className)}>
-      <div className="flex items-center gap-2 mb-4">
-        <Filter className="w-5 h-5 text-[#511A2B]" />
-        <h3 className="font-semibold text-[#511A2B]">Filtrar por Comunidade</h3>
-      </div>
-
-      {/* Opção "Todas" */}
-      <Button
-        variant={selectedCommunity === null ? 'default' : 'ghost'}
-        className={cn(
-          'w-full justify-start h-auto p-3 transition-all duration-200',
-          selectedCommunity === null
-            ? 'bg-[#511A2B] text-white shadow-md'
-            : 'hover:bg-[#511A2B]/5 text-[#511A2B]/80 hover:text-[#511A2B]'
-        )}
-        onClick={() => handleCommunityFilter(null)}
-      >
-        <div className="flex items-center gap-3 w-full">
-          <div
-            className={cn(
-              'w-10 h-10 rounded-xl flex items-center justify-center transition-all',
-              selectedCommunity === null ? 'bg-white/20' : 'bg-gradient-to-br from-[#511A2B]/10 to-[#511A2B]/20'
-            )}
-          >
-            <Users className="w-5 h-5" />
-          </div>
-          <div className="flex-1 text-left">
-            <div className="font-medium">Todas as Comunidades</div>
-            <div className="text-xs opacity-70">Timeline completa</div>
-          </div>
-        </div>
-      </Button>
-
-      {/* Filtros de ordenação */}
-      <div className="border-t border-[#511A2B]/10 pt-4 space-y-2">
-        <h4 className="text-sm font-medium text-[#511A2B]/70 mb-2">Ordenar por:</h4>
-        <div className="flex flex-col gap-1">
-          <Button
-            variant={sortBy === 'recent' ? 'default' : 'ghost'}
-            size="sm"
-            className={cn(
-              'justify-start h-8 text-sm',
-              sortBy === 'recent'
-                ? 'bg-[#511A2B] text-white'
-                : 'hover:bg-[#511A2B]/5 text-[#511A2B]/70 hover:text-[#511A2B]'
-            )}
-            onClick={() => setSortBy('recent')}
-          >
-            <Clock className="w-4 h-4 mr-2" />
-            Mais Recentes
-          </Button>
-          <Button
-            variant={sortBy === 'popular' ? 'default' : 'ghost'}
-            size="sm"
-            className={cn(
-              'justify-start h-8 text-sm',
-              sortBy === 'popular'
-                ? 'bg-[#511A2B] text-white'
-                : 'hover:bg-[#511A2B]/5 text-[#511A2B]/70 hover:text-[#511A2B]'
-            )}
-            onClick={() => setSortBy('popular')}
-          >
-            <TrendingUp className="w-4 h-4 mr-2" />
-            Mais Populares
-          </Button>
-        </div>
-      </div>
-
-      {/* Lista de comunidades */}
-      <div className="space-y-2">
-        {communities.map((community) => {
-          const Icon = community.icon;
-          const isSelected = selectedCommunity?.id === community.id;
-
-          return (
-            <Button
-              key={community.id}
-              variant={isSelected ? 'default' : 'ghost'}
-              className={cn(
-                'w-full justify-start h-auto p-3 transition-all duration-200',
-                isSelected ? 'text-white shadow-md' : 'hover:bg-[#511A2B]/5 text-[#511A2B]/80 hover:text-[#511A2B]'
-              )}
-              style={
-                isSelected
-                  ? {
-                      backgroundColor: community.color,
-                    }
-                  : {}
-              }
-              onClick={() => handleCommunityFilter(community)}
-            >
-              <div className="flex items-center gap-3 w-full">
-                <div
-                  className={cn(
-                    'w-10 h-10 rounded-xl flex items-center justify-center transition-all',
-                    isSelected ? 'bg-white/20' : 'bg-white shadow-sm'
-                  )}
-                  style={
-                    !isSelected
-                      ? {
-                          backgroundColor: `${community.color}15`,
-                          color: community.color,
-                        }
-                      : {}
-                  }
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="font-medium text-sm">{community.name}</div>
-                  <div className="text-xs opacity-70 flex items-center gap-1">
-                    <Users className="w-3 h-3" />
-                    {community.memberCount.toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            </Button>
-          );
-        })}
-      </div>
-    </div>
-  );
 
   if (loading) {
     return (
@@ -853,13 +398,11 @@ export function MuralContent({ communityId }: MuralContentProps) {
           <CardHeader>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B]">
-                  {selectedCommunity ? selectedCommunity.name : 'Timeline da Comunidade'}
-                </h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B]">{'Mural da Comunidade'}</h1>
                 <p className="text-[#511A2B]/70 text-sm md:text-base">
                   {selectedCommunity
                     ? selectedCommunity.description ||
-                      `Comunidade com ${selectedCommunity.memberCount.toLocaleString()} membros`
+                      `Comunidade com ${selectedCommunity.postsCount.toLocaleString()} posts compartilhados`
                     : 'Acompanhe as últimas publicações de todas as comunidades'}
                 </p>
               </div>
@@ -870,117 +413,37 @@ export function MuralContent({ communityId }: MuralContentProps) {
                   {/* Filtro mobile */}
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="lg:hidden border-[#511A2B]/20 text-[#511A2B]">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="lg:hidden border-[#511A2B]/20 text-[#511A2B] mt-4"
+                      >
                         <Menu className="w-4 h-4" />
                       </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-80">
-                      <CommunityFilters className="mt-6" />
+                      <CommunityFilters
+                        selectedCommunity={selectedCommunity}
+                        communities={communities}
+                        sortBy={sortBy}
+                        handleCommunityFilter={handleCommunityFilter}
+                        setSortBy={setSortBy}
+                        className="mt-6"
+                      />
                     </SheetContent>
                   </Sheet>
 
-                  <Dialog open={isPostDialogOpen} onOpenChange={setIsPostDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-4 md:px-6 py-2 md:py-3 flex items-center gap-2">
-                        <Plus className="w-4 h-4" />
-                        <span className="hidden md:inline">Criar Post</span>
-                        <span className="md:hidden">Post</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg">
-                      <DialogHeader>
-                        <DialogTitle className="text-[#511A2B]">Criar Nova Publicação</DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={getUserAvatar() || '/placeholder.svg'} />
-                            <AvatarFallback className="bg-[#511A2B] text-white">
-                              {getUserName()
-                                .split(' ')
-                                .map((n) => n[0])
-                                .join('')
-                                .slice(0, 2)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium text-[#511A2B]">{getUserName()}</p>
-                            <p className="text-sm text-[#511A2B]/60">{getUserRole()}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[#511A2B]">Selecione uma comunidade</label>
-                          <select
-                            className="w-full rounded-md border border-[#511A2B]/20 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#511A2B]/30"
-                            value={newPost.communityId}
-                            onChange={(e) => setNewPost((prev) => ({ ...prev, communityId: e.target.value }))}
-                            required
-                          >
-                            <option value="" disabled>
-                              Selecione uma comunidade
-                            </option>
-                            {communities.map((community) => (
-                              <option key={community.id} value={community.id}>
-                                {community.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <Input
-                          placeholder="Título (opcional)"
-                          value={newPost.title}
-                          onChange={(e) => setNewPost((prev) => ({ ...prev, title: e.target.value }))}
-                          className="border-[#511A2B]/20 focus:border-[#511A2B]"
-                        />
-
-                        <Textarea
-                          placeholder="Compartilhe uma experiência, tire uma dúvida ou conte sobre seu trabalho..."
-                          value={newPost.content}
-                          onChange={(e) => setNewPost((prev) => ({ ...prev, content: e.target.value }))}
-                          className="min-h-[120px] border-[#511A2B]/20 focus:border-[#511A2B]"
-                          maxLength={500}
-                        />
-
-                        <div className="relative">
-                          <Hash className="absolute left-3 top-3 w-4 h-4 text-[#511A2B]/50" />
-                          <Input
-                            placeholder="hashtags separadas por vírgula (ex: reforma, dica, ajuda)"
-                            value={newPost.hashtags}
-                            onChange={(e) => setNewPost((prev) => ({ ...prev, hashtags: e.target.value }))}
-                            className="pl-10 border-[#511A2B]/20 focus:border-[#511A2B]"
-                          />
-                        </div>
-
-                        <div className="relative">
-                          <ImageIcon className="absolute left-3 top-3 w-4 h-4 text-[#511A2B]/50" />
-                          <Input
-                            placeholder="URL da imagem (opcional)"
-                            value={newPost.imageUrl}
-                            onChange={(e) => setNewPost((prev) => ({ ...prev, imageUrl: e.target.value }))}
-                            className="pl-10 border-[#511A2B]/20 focus:border-[#511A2B]"
-                          />
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-[#511A2B]/50">{newPost.content.length}/500</span>
-                          <Button
-                            onClick={handleCreatePost}
-                            disabled={!newPost.content.trim() || !newPost.communityId || submitting}
-                            className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-                          >
-                            {submitting ? (
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : (
-                              <Send className="w-4 h-4 mr-2" />
-                            )}
-                            Publicar
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                  <CreatePostDialog
+                    isOpen={isPostDialogOpen}
+                    setIsOpen={setIsPostDialogOpen}
+                    newPost={newPost}
+                    setNewPost={setNewPost}
+                    communities={communities}
+                    getUserAvatar={getUserAvatar}
+                    getUserName={getUserName}
+                    handleCreatePost={handleCreatePost}
+                    submitting={submitting}
+                  />
                 </div>
               )}
             </div>
@@ -991,7 +454,14 @@ export function MuralContent({ communityId }: MuralContentProps) {
               {/* Filtros laterais - Desktop */}
               <div className="hidden lg:block lg:col-span-1">
                 <div className="sticky top-6">
-                  <CommunityFilters />
+                  <CommunityFilters
+                    selectedCommunity={selectedCommunity}
+                    communities={communities}
+                    sortBy={sortBy}
+                    handleCommunityFilter={handleCommunityFilter}
+                    setSortBy={setSortBy}
+                    className="mt-6"
+                  />
                 </div>
               </div>
 
@@ -1026,7 +496,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center space-x-3">
                               <Avatar className="w-10 h-10">
-                                <AvatarImage src={post.author.avatar || '/placeholder.svg'} />
+                                <AvatarImage src={post.author.profileImage || '/placeholder.svg'} />
                                 <AvatarFallback className="bg-[#511A2B] text-white">
                                   {post.author.name
                                     .split(' ')
@@ -1037,20 +507,18 @@ export function MuralContent({ communityId }: MuralContentProps) {
                               <div>
                                 <div className="flex items-center space-x-2">
                                   <h3 className="font-semibold text-[#511A2B] text-sm">{post.author.name}</h3>
-                                  {post.author.level && (
+                                  {/* {post.author.level && (
                                     <Badge className="bg-[#FEC460] text-[#511A2B] text-xs">{post.author.level}</Badge>
-                                  )}
+                                  )} */}
                                 </div>
                                 <div className="flex items-center text-xs text-[#511A2B]/60 space-x-2">
-                                  <span>{post.author.role}</span>
-                                  <span>•</span>
                                   <span>{formatDate(post.createdAt)}</span>
                                 </div>
                               </div>
                             </div>
 
                             <div className="flex items-center space-x-2">
-                              <Link href={`/community/${post.communityId}`}>
+                              <Link href={`/community/${post.community.id}`}>
                                 <Badge
                                   className="hover:bg-opacity-80 transition-all cursor-pointer"
                                   style={{
@@ -1069,15 +537,6 @@ export function MuralContent({ communityId }: MuralContentProps) {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56">
-                                  <DropdownMenuItem className="cursor-pointer">
-                                    <Bookmark className="mr-2 h-4 w-4" />
-                                    <span>Salvar post</span>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="cursor-pointer">
-                                    <UserPlus className="mr-2 h-4 w-4" />
-                                    <span>Seguir {post.author.name}</span>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuSeparator />
                                   <DropdownMenuItem className="cursor-pointer text-red-600">
                                     <Flag className="mr-2 h-4 w-4" />
                                     <span>Denunciar</span>
@@ -1126,7 +585,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => handleLike(post.id)}
+                                onClick={() => handleLike(post)}
                                 disabled={likingPosts.has(post.id)}
                                 className={`flex items-center space-x-1 text-sm transition-all duration-200 ${
                                   post.isLiked
@@ -1168,7 +627,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
                                 onClick={() => openCommentModal(post)}
                                 className="text-sm text-[#511A2B]/60 hover:text-[#511A2B]"
                               >
-                                {post.comments > 0 ? `Ver ${post.comments} comentários` : 'Comentar'}
+                                {post.comments > 0 ? `Ver ${post.comments} comentário${post.comments > 1 ? 's' : ''}` : 'Comentar'}
                               </Button>
                             </div>
                           </div>
@@ -1178,7 +637,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
                   )}
 
                   {/* Indicador de carregamento de mais posts */}
-                  {sortedPosts.length > 0 && (
+                  {/* {sortedPosts.length > 0 && (
                     <div ref={loadMoreRef} className="py-4 flex justify-center">
                       {isLoadingMore ? (
                         <div className="flex items-center space-x-2">
@@ -1189,7 +648,7 @@ export function MuralContent({ communityId }: MuralContentProps) {
                         <div className="h-8" />
                       )}
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -1197,170 +656,21 @@ export function MuralContent({ communityId }: MuralContentProps) {
         </Card>
       </div>
       {/* Modal de Comentários */}
-      <Dialog open={isCommentModalOpen} onOpenChange={setIsCommentModalOpen}>
-        <DialogTitle></DialogTitle>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle className="text-[#511A2B]">Comentários</DialogTitle>
-            <Button variant="ghost" size="sm" onClick={() => setIsCommentModalOpen(false)} className="h-6 w-6 p-0">
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogHeader>
-
-          {selectedPost && (
-            <div className="flex-1 overflow-hidden flex flex-col">
-              {/* Post original */}
-              <div className="border-b border-[#511A2B]/10 pb-4 mb-4">
-                <div className="flex items-center space-x-3 mb-3">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={selectedPost.author.avatar || '/placeholder.svg'} />
-                    <AvatarFallback className="bg-[#511A2B] text-white">
-                      {selectedPost.author.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <h4 className="font-medium text-[#511A2B]">{selectedPost.author.name}</h4>
-                      <Badge
-                        style={{
-                          backgroundColor: selectedPost.community.color || '#511A2B',
-                          color: '#fff',
-                        }}
-                      >
-                        {selectedPost.community.name}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-[#511A2B]/60">{selectedPost.author.role}</p>
-                  </div>
-                </div>
-                {selectedPost.title && <h3 className="font-semibold text-[#511A2B] mb-2">{selectedPost.title}</h3>}
-                <p className="text-[#511A2B]/80">{selectedPost.content}</p>
-
-                {selectedPost.imageUrl && (
-                  <div className="mt-3 rounded-lg overflow-hidden">
-                    <img
-                      src={selectedPost.imageUrl || '/placeholder.svg'}
-                      alt="Imagem do post"
-                      className="w-full h-auto object-cover max-h-[300px]"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Lista de comentários */}
-              <ScrollArea className="flex-1 pr-4">
-                <div className="space-y-4 mb-4">
-                  {loadingComments ? (
-                    <div className="space-y-4">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex space-x-3">
-                          <div className="w-8 h-8 bg-[#511A2B]/10 rounded-full"></div>
-                          <div className="flex-1 space-y-2">
-                            <div className="bg-[#511A2B]/5 rounded-lg p-3 space-y-2">
-                              <div className="h-3 bg-[#511A2B]/10 rounded w-24"></div>
-                              <div className="h-4 bg-[#511A2B]/10 rounded w-full"></div>
-                              <div className="h-4 bg-[#511A2B]/10 rounded w-3/4"></div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : comments.length === 0 ? (
-                    <div className="text-center py-8">
-                      <MessageCircle className="w-12 h-12 text-[#511A2B]/20 mx-auto mb-3" />
-                      <p className="text-[#511A2B]/60">Seja o primeiro a comentar</p>
-                    </div>
-                  ) : (
-                    comments.map((comment) => (
-                      <div key={comment.id} className="flex space-x-3">
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={comment.author.avatar || '/placeholder.svg'} />
-                          <AvatarFallback className="bg-[#FEC460] text-[#511A2B] text-xs">
-                            {comment.author.name
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="bg-[#511A2B]/5 rounded-lg p-3">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <span className="font-medium text-[#511A2B] text-sm">{comment.author.name}</span>
-                              <span className="text-xs text-[#511A2B]/50">{formatDate(comment.createdAt)}</span>
-                            </div>
-                            <p className="text-[#511A2B]/80 text-sm">{comment.content}</p>
-                          </div>
-                          <div className="flex items-center space-x-4 mt-1 ml-2">
-                            <button className="text-xs text-[#511A2B]/50 hover:text-[#511A2B] transition-colors">
-                              Curtir
-                            </button>
-                            <button className="text-xs text-[#511A2B]/50 hover:text-[#511A2B] transition-colors">
-                              Responder
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
-
-              {/* Formulário de novo comentário */}
-              {user && (
-                <div className="border-t border-[#511A2B]/10 pt-4 mt-auto">
-                  <div className="flex space-x-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={getUserAvatar() || '/placeholder.svg'} />
-                      <AvatarFallback className="bg-[#511A2B] text-white text-xs">
-                        {getUserName()
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')
-                          .slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 space-y-2">
-                      <div className="relative">
-                        <Textarea
-                          placeholder="Escreva um comentário..."
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
-                          className="min-h-[80px] border-[#511A2B]/20 focus:border-[#511A2B] pr-10"
-                          maxLength={300}
-                        />
-                        <div className="absolute right-3 bottom-3 flex space-x-2">
-                          <button className="text-[#511A2B]/50 hover:text-[#511A2B] transition-colors">
-                            <Smile className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-[#511A2B]/50">{newComment.length}/300</span>
-                        <Button
-                          onClick={handleAddComment}
-                          disabled={!newComment.trim() || submitting}
-                          size="sm"
-                          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-                        >
-                          {submitting ? (
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          ) : (
-                            <Send className="w-4 h-4 mr-2" />
-                          )}
-                          Comentar
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <CommentModal
+        isOpen={isCommentModalOpen}
+        onOpenChange={setIsCommentModalOpen}
+        selectedPost={selectedPost}
+        comments={comments}
+        loadingComments={loadingComments}
+        newComment={newComment}
+        setNewComment={setNewComment}
+        submitting={submitting}
+        handleAddComment={handleAddComment}
+        user={user}
+        getUserAvatar={getUserAvatar}
+        getUserName={getUserName}
+        formatDate={formatDate}
+      />
     </div>
   );
 }

@@ -184,7 +184,7 @@ export function SupplierDetailContent({ supplierId }: SupplierDetailContentProps
 
   useEffect(() => {
     const loadSupplier = async () => {
-      const response = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/partner-suppliers/${supplierId}`);
+      const response = await api.get(`/partner-suppliers/${supplierId}`);
       setSupplier(response.data);
       if (response) {
         setSelectedImage(supplier?.profileImage || '');
