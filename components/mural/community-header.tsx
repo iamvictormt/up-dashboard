@@ -37,7 +37,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
             <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
               <div className="flex items-center gap-1">
                 <Users className="h-3.5 w-3.5" />
-                <span>2.4k membros</span>
+                <span>{community.postsCount} posts publicados</span>
               </div>
 
               <TooltipProvider>

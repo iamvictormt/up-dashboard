@@ -4,4 +4,5 @@ export interface Community {
   description?: string;
   color: string;
   icon: string;
+  postsCount?: number;
 }

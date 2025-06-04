@@ -209,7 +209,7 @@ export default function LoginContent() {
 
       toast.success('Login realizado com sucesso!');
       setTimeout(() => {
-        window.location.href = appUrl.base;
+        window.location.href = appUrl.mural;
       }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);

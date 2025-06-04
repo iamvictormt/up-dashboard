@@ -382,7 +382,7 @@ export function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
           {/* Profissional */}
           {user?.professional && (
             <div className="space-y-4">
-              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações Profissionais</h3>
+              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -468,7 +468,7 @@ export function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
           {/* Fornecedor */}
           {user?.partnerSupplier && (
             <div className="space-y-4">
-              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações da Empresa</h3>
+              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -538,7 +538,7 @@ export function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
           {/* Love Decoration */}
           {user?.loveDecoration && (
             <div className="space-y-4">
-              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações Love Decoration</h3>
+              <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

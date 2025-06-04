@@ -89,7 +89,7 @@ export function AppSidebar() {
     {
       title: 'Mural',
       icon: MessageSquare,
-      url: '/',
+      url: '/mural',
       roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {

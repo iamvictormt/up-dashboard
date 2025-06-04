@@ -71,7 +71,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
         userId: user.id,
       });
 
-      setComments((prev) => [...prev, comment]);
+      setComments((prev) => [comment,...prev]);
       setNewComment('');
     } catch (error) {
       console.error('Error submitting comment:', error);
