@@ -20,8 +20,10 @@ export interface Post {
   comments: number;
 
   likes: number;
-  isLiked?: boolean;
   likeId?: string;
+  isLiked?: boolean;
+  
+  isMine?: boolean;
 }
 
 export interface CreatePost {

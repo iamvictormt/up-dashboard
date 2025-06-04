@@ -20,20 +20,36 @@ import type { LucideIcon } from 'lucide-react';
 import { Post } from '@/types/post';
 import { CommentSection } from './comment-section';
 import { ReportModal } from './report-modal';
-import { likePost, unlikePost } from '@/lib/post-api';
+import { deletePost, likePost, unlikePost } from '@/lib/post-api';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../ui/alert-dialog';
+import { EditPostModal } from './edit-post-modal';
 
 interface PostCardProps {
   post: Post;
+  onPostDeleted?: (postId: string) => void;
+  onPostUpdated?: (post: Post) => void;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, onPostUpdated, onPostDeleted }: PostCardProps) {
   const { user } = useUser();
   const { selectedCommunity } = useCommunity();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likes || 0);
   const [showComments, setShowComments] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   // Function to dynamically get icon from string name
   const getIconByName = (iconName: string): LucideIcon => {
@@ -67,6 +83,21 @@ export function PostCard({ post }: PostCardProps) {
 
   const handleCommentToggle = () => {
     setShowComments(!showComments);
+  };
+
+  const handleDeletePost = async () => {
+    try {
+      setIsDeleteLoading(true);
+      await deletePost(post.id);
+      setShowDeleteDialog(false);
+      if (onPostDeleted) {
+        onPostDeleted(post.id);
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    } finally {
+      setIsDeleteLoading(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -129,10 +160,23 @@ export function PostCard({ post }: PostCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setShowReportModal(true)} className="text-red-600">
-                <Flag className="h-4 w-4 mr-2" />
-                <span>Reportar post</span>
-              </DropdownMenuItem>
+              {post.isMine ? (
+                <>
+                  <DropdownMenuItem onClick={() => setShowEditModal(true)}>
+                    <LucideIcons.Pencil className="h-4 w-4 mr-2" />
+                    <span>Editar post</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className="text-red-600">
+                    <LucideIcons.Trash2 className="h-4 w-4 mr-2" />
+                    <span>Excluir post</span>
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuItem onClick={() => setShowReportModal(true)} className="text-red-600">
+                  <Flag className="h-4 w-4 mr-2" />
+                  <span>Reportar post</span>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -204,6 +248,38 @@ export function PostCard({ post }: PostCardProps) {
         targetId={post.id}
         targetType="POST"
       />
+
+      {/* Edit Post Modal */}
+      {showEditModal && (
+        <EditPostModal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          post={post}
+          onPostUpdated={onPostUpdated}
+        />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir post</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleteLoading}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeletePost}
+              disabled={isDeleteLoading}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleteLoading ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

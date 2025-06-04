@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Send, MoreHorizontal, Flag } from 'lucide-react';
+import { Send, MoreHorizontal, Flag, Pencil, Trash2 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -15,8 +15,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Comment, createComment, fetchCommentsByPost } from '@/lib/comment-api';
+import { Comment, createComment, deleteComment, fetchCommentsByPost, updateComment } from '@/lib/comment-api';
 import { ReportModal } from './report-modal';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../ui/alert-dialog';
 
 interface CommentSectionProps {
   postId: string;
@@ -29,6 +39,10 @@ export function CommentSection({ postId }: CommentSectionProps) {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [reportingComment, setReportingComment] = useState<string | null>(null);
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
+  const [editContent, setEditContent] = useState('');
+  const [deletingComment, setDeletingComment] = useState<string | null>(null);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   useEffect(() => {
     async function loadComments() {
@@ -54,7 +68,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
       const comment = await createComment({
         postId,
         content: newComment.trim(),
-        userId: user.id
+        userId: user.id,
       });
 
       setComments((prev) => [...prev, comment]);
@@ -64,6 +78,49 @@ export function CommentSection({ postId }: CommentSectionProps) {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEditComment = async () => {
+    if (!editingComment || !editContent.trim()) return;
+
+    try {
+      setSubmitting(true);
+      const updatedComment = await updateComment(editingComment.id, editContent.trim());
+
+      setComments((prev) => prev.map((comment) => (comment.id === updatedComment.id ? updatedComment : comment)));
+      setEditingComment(null);
+      setEditContent('');
+    } catch (error) {
+      console.error('Error updating comment:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async () => {
+    if (!deletingComment) return;
+
+    try {
+      setIsDeleteLoading(true);
+      await deleteComment(deletingComment);
+
+      setComments((prev) => prev.filter((comment) => comment.id !== deletingComment));
+      setDeletingComment(null);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    } finally {
+      setIsDeleteLoading(false);
+    }
+  };
+
+  const startEditing = (comment: Comment) => {
+    setEditingComment(comment);
+    setEditContent(comment.content);
+  };
+
+  const cancelEditing = () => {
+    setEditingComment(null);
+    setEditContent('');
   };
 
   const formatDate = (dateString: string) => {
@@ -96,7 +153,12 @@ export function CommentSection({ postId }: CommentSectionProps) {
             />
 
             <div className="flex justify-end">
-              <Button className='bg-[#511A2B] hover:bg-[#511A2B]/90 text-white' onClick={handleSubmitComment} disabled={!newComment.trim() || submitting} size="sm">
+              <Button
+                className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
+                onClick={handleSubmitComment}
+                disabled={!newComment.trim() || submitting}
+                size="sm"
+              >
                 <Send className="h-4 w-4" />
                 Comentar
               </Button>
@@ -146,17 +208,48 @@ export function CommentSection({ postId }: CommentSectionProps) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => setReportingComment(comment.id)} className="text-red-600">
-                        <Flag className="h-4 w-4 mr-2" />
-                        <span>Reportar comentário</span>
-                      </DropdownMenuItem>
+                      {comment.isMine ? (
+                        <>
+                          <DropdownMenuItem onClick={() => startEditing(comment)}>
+                            <Pencil className="h-4 w-4 mr-2" />
+                            <span>Editar comentário</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setDeletingComment(comment.id)} className="text-red-600">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            <span>Excluir comentário</span>
+                          </DropdownMenuItem>
+                        </>
+                      ) : (
+                        <DropdownMenuItem onClick={() => setReportingComment(comment.id)} className="text-red-600">
+                          <Flag className="h-4 w-4 mr-2" />
+                          <span>Reportar comentário</span>
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
 
-                <div className="mt-1 text-gray-700">
-                  <p>{comment.content}</p>
-                </div>
+                {editingComment?.id === comment.id ? (
+                  <div className="mt-2">
+                    <Textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="min-h-[80px] resize-none mb-2"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" size="sm" onClick={cancelEditing} disabled={submitting}>
+                        Cancelar
+                      </Button>
+                      <Button size="sm" onClick={handleEditComment} disabled={!editContent.trim() || submitting}>
+                        Salvar
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-1 text-gray-700">
+                    <p>{comment.content}</p>
+                  </div>
+                )}
               </div>
             </div>
           ))
@@ -178,6 +271,28 @@ export function CommentSection({ postId }: CommentSectionProps) {
           targetType="COMMENT"
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingComment} onOpenChange={(open) => !open && setDeletingComment(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir comentário</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este comentário? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleteLoading}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteComment}
+              disabled={isDeleteLoading}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleteLoading ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -18,6 +18,7 @@ export interface Comment {
     name: string;
     profileImage?: string;
   };
+  isMine?: boolean;
 }
 
 export async function fetchCommentsByPost(postId: string): Promise<Comment[]> {
@@ -28,4 +29,14 @@ export async function fetchCommentsByPost(postId: string): Promise<Comment[]> {
 export async function createComment(data: CreateCommentData): Promise<Comment> {
   const response = await api.post('comments/', data);
   return response.data;
+}
+
+export async function updateComment(commentId: string, content: string): Promise<Comment> {
+  const response = await api.patch(`comments/${commentId}`, content);
+  return response.data;
+}
+
+export async function deleteComment(commentId: string): Promise<void> {
+  await api.delete(`comments/${commentId}`);
+  return Promise.resolve();
 }

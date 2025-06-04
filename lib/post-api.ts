@@ -30,3 +30,23 @@ export async function unlikePost(likeId: string): Promise<void> {
   await api.delete(`likes/${likeId}`);
   return Promise.resolve();
 }
+
+// Function to update a post
+export async function updatePost(
+  postId: string,
+  data: { title?: string; content?: string; hashtags?: string[]; image?: string | null }
+): Promise<Post> {
+  const response = await api.patch('posts', data);
+
+  if (!response.data) {
+    throw new Error(`Post with ID ${postId} not found`);
+  }
+
+  return response.data;
+}
+
+// Function to delete a post
+export async function deletePost(postId: string): Promise<void> {
+  await api.delete(`posts/${postId}`);
+  return Promise.resolve();
+}
