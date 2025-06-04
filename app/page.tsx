@@ -1,11 +1,18 @@
 "use client"
 
-import { MuralContent } from "@/components/mural-content"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
-export default function Dashboard() {
+export default function HomePage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push("/mural")
+  }, [router])
+
   return (
-    <div className="min-h-screen bg-[#FFEDC1] w-full pt-20">
-      <MuralContent />
+    <div className="min-h-screen bg-[#FFEDC1] w-full flex items-center justify-center">
+      <div className="animate-pulse text-[#511A2B]">Redirecionando...</div>
     </div>
   )
 }

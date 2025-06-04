@@ -65,11 +65,14 @@ export function ProfessionalsContent() {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Profissionais recomendados</h1>
-              <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais de confiança, cuidadosamente recomendados por nós.</p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Profissionais recomendados</h1>
+                <p className="text-[#511A2B]/70">
+                  Encontre e conecte-se com profissionais de confiança, cuidadosamente recomendados por nós.
+                </p>
+              </div>
             </div>
-
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#511A2B]/50 w-4 h-4" />
