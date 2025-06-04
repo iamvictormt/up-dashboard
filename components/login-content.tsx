@@ -36,12 +36,12 @@ import { toast } from 'sonner';
 import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask, applyZipCodeMask } from '@/utils/masks';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { RegisterDTO } from '@/types';
 import { appUrl } from '@/constants/appRoutes';
 import { appImages } from '@/constants/appImages';
 import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
 import { AddressForm } from './address-form';
+import { useIsMobile } from './ui/use-mobile';
 
 export default function LoginContent() {
   const router = useRouter();

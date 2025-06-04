@@ -26,7 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUser } from '@/contexts/user-context';
 import api from '@/services/api';
-import { updateUserProfileImage, uploadImage } from '@/utils/image-upload';
+import { uploadImage } from '@/utils/image-upload';
 import { toast } from 'sonner';
 import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask, applyZipCodeMask } from '@/utils/masks';
 import { AddressForm } from './address-form';
@@ -187,12 +187,12 @@ export function ProfileEditModal({ isOpen, onClose }: ProfileEditModalProps) {
       let uploadedImageUrl: string | null = null;
 
       if (photo && photo !== user?.profileImage) {
-        uploadedImageUrl = await uploadImage(photo);
+        // uploadedImageUrl = await uploadImage(photo);
         setPhoto(uploadedImageUrl);
       }
 
       if (uploadedImageUrl && user) {
-        await updateUserProfileImage(user.id, uploadedImageUrl);
+        // await updateUserProfileImage(user.id, uploadedImageUrl);
       }
 
       await saveProfileData();

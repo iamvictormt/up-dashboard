@@ -1,6 +1,6 @@
 "use client"
 
-import { MuralContent } from "@/components/mural-content"
+import { MuralContent } from "@/components/mural/mural-content"
 import { useParams } from "next/navigation"
 
 export default function CommunityPage() {
