@@ -27,6 +27,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 interface CommentSectionProps {
   postId: string;
@@ -34,6 +35,7 @@ interface CommentSectionProps {
 
 export function CommentSection({ postId }: CommentSectionProps) {
   const { user } = useUser();
+  const { updateCount, triggerUpdate } = useMuralUpdate();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -58,7 +60,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
     }
 
     loadComments();
-  }, [postId]);
+  }, [postId, updateCount]);
 
   const handleSubmitComment = async () => {
     if (!user || !newComment.trim()) return;
@@ -71,7 +73,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
         userId: user.id,
       });
 
-      setComments((prev) => [comment,...prev]);
+      setComments((prev) => [comment, ...prev]);
       setNewComment('');
     } catch (error) {
       console.error('Error submitting comment:', error);
@@ -90,6 +92,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
       setComments((prev) => prev.map((comment) => (comment.id === updatedComment.id ? updatedComment : comment)));
       setEditingComment(null);
       setEditContent('');
+      triggerUpdate();
     } catch (error) {
       console.error('Error updating comment:', error);
     } finally {
@@ -106,6 +109,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
       setComments((prev) => prev.filter((comment) => comment.id !== deletingComment));
       setDeletingComment(null);
+      triggerUpdate();
     } catch (error) {
       console.error('Error deleting comment:', error);
     } finally {

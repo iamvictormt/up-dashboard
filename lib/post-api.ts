@@ -1,5 +1,5 @@
 import api from '@/services/api';
-import { CreateLike } from '@/types/like';
+import { CreateLike, ResponseCreateLike } from '@/types/like';
 import type { CreatePost, Post } from '@/types/post';
 
 // Function to fetch posts by community ID
@@ -20,9 +20,9 @@ export async function createPost(post: CreatePost): Promise<Post> {
 }
 
 // Function to like a post
-export async function likePost(createLike: CreateLike): Promise<void> {
-  await api.post(`likes`, createLike);
-  return Promise.resolve();
+export async function likePost(createLike: CreateLike): Promise<string> {
+  const response = await api.post(`likes`, createLike);
+  return response.data.id;
 }
 
 // Function to unlike a post

@@ -1,25 +1,28 @@
-"use client"
+'use client';
 
-import type { Community } from "@/types/community"
-import { Button } from "@/components/ui/button"
-import { PenLine, Users, Info } from "lucide-react"
-import * as LucideIcons from "lucide-react"
-import type { LucideIcon } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import type { Community } from '@/types/community';
+import { Button } from '@/components/ui/button';
+import { PenLine, Users, Info } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsMobile } from '../ui/use-mobile';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
 interface CommunityHeaderProps {
-  community: Community
-  onCreatePost: () => void
+  community: Community;
+  onCreatePost: () => void;
 }
 
 export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProps) {
+  const isMobile = useIsMobile();
   // Function to dynamically get icon from string name
   const getIconByName = (iconName: string): LucideIcon => {
-    const icon = (LucideIcons as Record<string, LucideIcon>)[iconName]
-    return icon || LucideIcons.Hash
-  }
+    const icon = (LucideIcons as Record<string, LucideIcon>)[iconName];
+    return icon || LucideIcons.Hash;
+  };
 
-  const Icon = getIconByName(community.icon)
+  const Icon = getIconByName(community.icon);
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
@@ -37,22 +40,38 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
             <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
               <div className="flex items-center gap-1">
                 <Users className="h-3.5 w-3.5" />
-                <span>{community.postsCount} posts publicados</span>
+                <span>
+                  {`${community.postsCount ?? 0} publica${(community.postsCount ?? 0) === 1 ? 'ção' : 'ções'}`}
+                </span>
               </div>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
+              {isMobile ? (
+                <Popover>
+                  <PopoverTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
                       <Info className="h-3.5 w-3.5" />
                       <span className="sr-only">Informações da comunidade</span>
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{community.description || "Sem descrição"}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64">
+                    <p>{community.description || 'Sem descrição'}</p>
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+                        <Info className="h-3.5 w-3.5" />
+                        <span className="sr-only">Informações da comunidade</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{community.description || 'Sem descrição'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
           </div>
         </div>
@@ -62,8 +81,8 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
           className="gap-2"
           style={{
             backgroundColor: community.color,
-            color: "#fff",
-            borderColor: "transparent",
+            color: '#fff',
+            borderColor: 'transparent',
           }}
         >
           <PenLine className="h-4 w-4" />
@@ -72,5 +91,5 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Community } from '@/types/community';
 import { fetchCommunities } from '@/lib/community-api';
+import { useMuralUpdate } from './mural-update-context';
 
 interface CommunityContextType {
   communities: Community[];
@@ -19,6 +20,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const {updateCount} = useMuralUpdate();
 
   useEffect(() => {
     async function loadCommunities() {
@@ -40,7 +42,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
     }
 
     loadCommunities();
-  }, []);
+  }, [updateCount]);
 
   const selectCommunity = (community: Community) => {
     setSelectedCommunity(community);

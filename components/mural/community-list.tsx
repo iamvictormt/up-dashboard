@@ -8,8 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function CommunityList() {
   const { communities, selectedCommunity, selectCommunity } = useCommunity()
-
-  // Function to dynamically get icon from string name
+  
   const getIconByName = (iconName: string): LucideIcon => {
     const icon = (LucideIcons as Record<string, LucideIcon>)[iconName]
     return icon || LucideIcons.Hash

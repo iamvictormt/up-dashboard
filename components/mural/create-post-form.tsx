@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,8 @@ import { useCommunity } from '@/contexts/community-context';
 import { ImageIcon, X, Loader2, Hash } from 'lucide-react';
 import { uploadImage } from '@/utils/image-upload';
 import { createPost } from '@/lib/post-api';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
+import { Badge } from '../ui/badge';
 
 interface CreatePostFormProps {
   communityId: string;
@@ -22,13 +24,16 @@ interface CreatePostFormProps {
 export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostFormProps) {
   const { user } = useUser();
   const { selectedCommunity } = useCommunity();
+  const { triggerUpdate } = useMuralUpdate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [hashtags, setHashtags] = useState('');
+  const [hashtags, setHashtags] = useState<string[]>([]);
+  const [hashtagInput, setHashtagInput] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hashtagInputRef = useRef<HTMLInputElement>(null);
 
   if (!user) return null;
 
@@ -60,11 +65,9 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
       setSubmitting(true);
       setError(null);
 
-      // Process hashtags
-      const hashtagArray = hashtags
-        .split(/[,\s]+/)
-        .map((tag) => tag.trim().replace(/^#/, ''))
-        .filter((tag) => tag.length > 0);
+      if (hashtagInput.trim()) {
+        addHashtag();
+      }
 
       // Upload image if present
       let imageUrl = null;
@@ -77,9 +80,11 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
         title: title.trim(),
         content: content.trim(),
         communityId,
-        hashtags: hashtagArray,
+        hashtags,
         authorId: user.id,
       });
+
+      triggerUpdate();
 
       onSuccess();
     } catch (err) {
@@ -87,6 +92,47 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
       setError('Falha ao criar post. Tente novamente.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const addHashtag = () => {
+    const tags = hashtagInput
+      .split(/[\s,]+/)
+      .map((tag) => tag.trim().replace(/^#/, ''))
+      .filter((tag) => tag.length > 0);
+
+    if (tags.length > 0) {
+      const newTags = tags.filter((tag) => !hashtags.includes(tag));
+      if (newTags.length > 0) {
+        setHashtags([...hashtags, ...newTags]);
+      }
+      setHashtagInput('');
+    }
+  };
+
+  const removeHashtag = (tag: string) => {
+    setHashtags(hashtags.filter((t) => t !== tag));
+  };
+
+  const handleHashtagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addHashtag();
+    } else if (e.key === ' ' || e.key === ',') {
+      e.preventDefault();
+      addHashtag();
+    }
+  };
+
+  const handleHashtagInputBlur = () => {
+    if (hashtagInput.trim()) {
+      addHashtag();
+    }
+  };
+
+  const focusHashtagInput = () => {
+    if (hashtagInputRef.current) {
+      hashtagInputRef.current.focus();
     }
   };
 
@@ -128,14 +174,48 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
             required
           />
 
-          <div className="relative">
-            <Hash className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Hashtags separadas por espaço ou vírgula"
-              value={hashtags}
-              onChange={(e) => setHashtags(e.target.value)}
-              className="pl-10 border-gray-200"
-            />
+          <div className="space-y-2">
+            <div className="relative">
+              <Hash className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                ref={hashtagInputRef}
+                placeholder="Hashtags (espaço ou vírgula para adicionar)"
+                value={hashtagInput}
+                onChange={(e) => setHashtagInput(e.target.value)}
+                onKeyDown={handleHashtagInputKeyDown}
+                onBlur={handleHashtagInputBlur}
+                className="pl-10 border-gray-200"
+              />
+            </div>
+
+            {hashtags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {hashtags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="pl-2 pr-1 py-1 flex items-center gap-1">
+                    {tag}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 rounded-full p-0 hover:bg-gray-300"
+                      onClick={() => removeHashtag(tag)}
+                    >
+                      <X className="h-3 w-3" />
+                      <span className="sr-only">Remover hashtag</span>
+                    </Button>
+                  </Badge>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-xs text-gray-500 hover:text-gray-700"
+                  onClick={focusHashtagInput}
+                >
+                  + Adicionar mais
+                </Button>
+              </div>
+            )}
           </div>
 
           {imagePreview ? (

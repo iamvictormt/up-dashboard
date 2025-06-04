@@ -37,9 +37,10 @@ interface PostCardProps {
   post: Post;
   onPostDeleted?: (postId: string) => void;
   onPostUpdated?: (post: Post) => void;
+  likeIdChange?: (postId: string, newLikeId: string) => void;
 }
 
-export function PostCard({ post, onPostUpdated, onPostDeleted }: PostCardProps) {
+export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: PostCardProps) {
   const { user } = useUser();
   const { selectedCommunity } = useCommunity();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
@@ -64,15 +65,18 @@ export function PostCard({ post, onPostUpdated, onPostDeleted }: PostCardProps) 
 
     try {
       setIsLikeLoading(true);
+      let likeId = "";
 
       if (isLiked && post.likeId) {
         await unlikePost(post.likeId);
         setLikesCount((prev) => prev - 1);
       } else {
-        await likePost({ userId: user.id, postId: post.id });
+        likeId = await likePost({ userId: user.id, postId: post.id });
         setLikesCount((prev) => prev + 1);
       }
-
+      if (likeIdChange) {
+        likeIdChange(post.id, likeId);
+      }
       setIsLiked(!isLiked);
     } catch (error) {
       console.error('Error toggling like:', error);

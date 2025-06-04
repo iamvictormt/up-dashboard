@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Post } from '@/types/post';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { uploadImage } from '@/utils/image-upload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { updatePost } from '@/lib/post-api';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 interface EditPostModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface EditPostModalProps {
 }
 
 export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPostModalProps) {
+  const { triggerUpdate } = useMuralUpdate();
   const [title, setTitle] = useState(post.title || '');
   const [content, setContent] = useState(post.content || '');
   const [hashtags, setHashtags] = useState<string[]>(post.hashtags || []);
@@ -29,12 +31,17 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(post.image || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const hashtagInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async () => {
     if (!content.trim()) return;
 
     try {
       setIsSubmitting(true);
+
+      if (hashtagInput.trim()) {
+        addHashtag();
+      }
 
       let imageUrl = post.image;
       if (image) {
@@ -51,6 +58,8 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
       if (onPostUpdated) {
         onPostUpdated(updatedPost);
       }
+
+      triggerUpdate();
 
       onClose();
     } catch (error) {
@@ -78,9 +87,16 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
   };
 
   const addHashtag = () => {
-    const tag = hashtagInput.trim().replace(/\s+/g, '');
-    if (tag && !hashtags.includes(tag)) {
-      setHashtags([...hashtags, tag]);
+    const tags = hashtagInput
+      .split(/[\s,]+/)
+      .map((tag) => tag.trim().replace(/^#/, ''))
+      .filter((tag) => tag.length > 0);
+
+    if (tags.length > 0) {
+      const newTags = tags.filter((tag) => !hashtags.includes(tag));
+      if (newTags.length > 0) {
+        setHashtags([...hashtags, ...newTags]);
+      }
       setHashtagInput('');
     }
   };
@@ -89,10 +105,27 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
     setHashtags(hashtags.filter((t) => t !== tag));
   };
 
-  const handleHashtagKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ',') {
+  const handleHashtagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
       e.preventDefault();
       addHashtag();
+    } else if (e.key === ' ' || e.key === ',') {
+      e.preventDefault();
+      addHashtag();
+    } else if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  const handleHashtagInputBlur = () => {
+    if (hashtagInput.trim()) {
+      addHashtag();
+    }
+  };
+
+  const focusHashtagInput = () => {
+    if (hashtagInputRef.current) {
+      hashtagInputRef.current.focus();
     }
   };
 
@@ -124,16 +157,15 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
             <Label htmlFor="hashtags">Hashtags</Label>
             <div className="flex">
               <Input
+                ref={hashtagInputRef}
                 id="hashtags"
-                placeholder="Adicione hashtags (pressione Enter)"
+                placeholder="Hashtags (espaço ou vírgula para adicionar)"
                 value={hashtagInput}
                 onChange={(e) => setHashtagInput(e.target.value)}
-                onKeyDown={handleHashtagKeyDown}
+                onKeyDown={handleHashtagInputKeyDown}
+                onBlur={handleHashtagInputBlur}
                 className="flex-1"
               />
-              <Button type="button" onClick={addHashtag} className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white ml-2">
-                Adicionar
-              </Button>
             </div>
 
             {hashtags.length > 0 && (
@@ -153,6 +185,15 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
                     </Button>
                   </Badge>
                 ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 text-xs text-gray-500 hover:text-gray-700"
+                  onClick={focusHashtagInput}
+                >
+                  + Adicionar mais
+                </Button>
               </div>
             )}
           </div>
