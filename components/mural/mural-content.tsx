@@ -15,6 +15,7 @@ import { TrendingTopics } from './trending-topics';
 import { MuralUpdateProvider } from '@/contexts/mural-update-context';
 import { Skeleton } from '../ui/skeleton';
 import { MobileCommunitiesFAB } from './mobile-communities-fab';
+import { Toaster } from '../ui/toaster';
 
 export function MuralContent() {
   const isMobile = useMobile();
@@ -24,11 +25,10 @@ export function MuralContent() {
   return (
     <MuralUpdateProvider>
       <div className="p-6 md:p-8 w-full">
-            <MobileCommunitiesFAB />
+        <MobileCommunitiesFAB />
 
         <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full max-w-7xl mx-auto">
           <div className="max-w-6xl mx-auto">
-
             {/* Header */}
             <div className=" mb-8 space-y-4 md:space-y-0">
               <div className="">
@@ -119,6 +119,7 @@ export function MuralContent() {
             </div>
           </div>
         </div>
+        <Toaster />
       </div>
     </MuralUpdateProvider>
   );

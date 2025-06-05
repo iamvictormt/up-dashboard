@@ -32,6 +32,7 @@ import {
   AlertDialogTitle,
 } from '../ui/alert-dialog';
 import { EditPostModal } from './edit-post-modal';
+import { useToast } from '@/hooks/use-toast';
 
 interface PostCardProps {
   post: Post;
@@ -51,6 +52,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { toast } = useToast();
 
   // Function to dynamically get icon from string name
   const getIconByName = (iconName: string): LucideIcon => {
@@ -65,14 +67,24 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
 
     try {
       setIsLikeLoading(true);
-      let likeId = "";
+      let likeId = '';
 
       if (isLiked && post.likeId) {
         await unlikePost(post.likeId);
         setLikesCount((prev) => prev - 1);
+        toast({
+          title: 'Curtida removida 💔',
+          description: 'Você removeu sua curtida do post.',
+          duration: 2000,
+        });
       } else {
         likeId = await likePost({ userId: user.id, postId: post.id });
         setLikesCount((prev) => prev + 1);
+        toast({
+          title: 'Post curtido! ❤️',
+          description: 'Você curtiu este post.',
+          duration: 2000,
+        });
       }
       if (likeIdChange) {
         likeIdChange(post.id, likeId);
@@ -218,7 +230,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
           <Button
             variant="ghost"
             size="sm"
-            className={`gap-2 ${isLiked ? 'text-red-500' : ''}`}
+            className={`gap-2 ${isLiked ? 'text-red-500 hover:text-red-500/80' : ''}`}
             onClick={handleLikeToggle}
             disabled={isLikeLoading}
           >

@@ -28,6 +28,7 @@ import {
   AlertDialogTitle,
 } from '../ui/alert-dialog';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
+import { useToast } from '@/hooks/use-toast';
 
 interface CommentSectionProps {
   postId: string;
@@ -45,6 +46,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
   const [editContent, setEditContent] = useState('');
   const [deletingComment, setDeletingComment] = useState<string | null>(null);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     async function loadComments() {
@@ -75,6 +77,11 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
       setComments((prev) => [comment, ...prev]);
       setNewComment('');
+      toast({
+        title: 'Post comentado! ✒️',
+        description: 'Você comentou neste post.',
+        duration: 2000,
+      });
     } catch (error) {
       console.error('Error submitting comment:', error);
     } finally {
@@ -93,6 +100,11 @@ export function CommentSection({ postId }: CommentSectionProps) {
       setEditingComment(null);
       setEditContent('');
       triggerUpdate();
+      toast({
+        title: 'Comentário editado! ✒️',
+        description: 'Você editou seu comentário neste post.',
+        duration: 2000,
+      });
     } catch (error) {
       console.error('Error updating comment:', error);
     } finally {
@@ -110,6 +122,11 @@ export function CommentSection({ postId }: CommentSectionProps) {
       setComments((prev) => prev.filter((comment) => comment.id !== deletingComment));
       setDeletingComment(null);
       triggerUpdate();
+      toast({
+        title: 'Comentário apagado! 🗑️',
+        description: 'Você apagou seu comentário neste post.',
+        duration: 2000,
+      });
     } catch (error) {
       console.error('Error deleting comment:', error);
     } finally {
@@ -295,7 +312,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
             <AlertDialogAction
               onClick={handleDeleteComment}
               disabled={isDeleteLoading}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isDeleteLoading ? 'Excluindo...' : 'Excluir'}
             </AlertDialogAction>
