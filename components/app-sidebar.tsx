@@ -49,7 +49,6 @@ export function AppSidebar() {
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  console.log(role);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -260,7 +259,7 @@ export function AppSidebar() {
       {!isMobileOpen ? (
         <button
           onClick={toggleMobileSidebar}
-          className="fixed top-2 left-2 z-[60] md:hidden bg-[#511A2B] text-white p-3 rounded-xl shadow-lg border border-white/20"
+          className="fixed top-6 left-2 z-[60] md:hidden bg-[#46142b] text-white p-3 rounded-xl shadow-lg border border-white/20"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -277,7 +276,7 @@ export function AppSidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen bg-[#511A2B] z-50
+          fixed top-0 left-0 h-screen bg-[#46142b] z-50
           transition-all duration-300 ease-in-out flex flex-col
           ${isExpanded ? 'w-72' : 'w-24'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -285,7 +284,7 @@ export function AppSidebar() {
         `}
       >
         {/* Sidebar Header */}
-        <div className="border-b border-white/10 p-4 pt-6 flex items-center justify-between">
+        <div className="p-4 pt-6 flex items-center justify-between">
           {isExpanded ? (
             <>
               <div className="flex items-center space-x-3">
@@ -332,7 +331,7 @@ export function AppSidebar() {
           {/* Main Menu */}
           <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
             {isExpanded && (
-              <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-2">
+              <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-3">
                 {isLoading ? <Skeleton className="h-3 w-16 bg-white/20" /> : 'PRINCIPAL'}
               </div>
             )}
@@ -346,7 +345,7 @@ export function AppSidebar() {
           </div>
 
           {/* Other Menu */}
-          <div className="py-4 border-t border-white/10">
+          <div className="py-4">
             {isExpanded && (
               <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">
                 {isLoading ? <Skeleton className="h-3 w-12 bg-white/20" /> : 'OUTROS'}

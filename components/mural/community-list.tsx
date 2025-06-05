@@ -17,7 +17,7 @@ export function CommunityList() {
   return (
     <div className="bg-white rounded-xl shadow-sm p-4">
       <h2 className="text-lg font-semibold mb-4 px-2">Comunidades</h2>
-      <ScrollArea className="h-[calc(80vh-180px)]">
+      <ScrollArea className="max-h-[calc(80vh-180px)]">
         <div className="space-y-1 pr-2">
           {communities.map((community) => {
             const Icon = getIconByName(community.icon)

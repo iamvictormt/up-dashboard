@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useCommunity } from '@/contexts/community-context';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMobile } from '@/hooks/use-mobile';
 import { CommunityList } from './community-list';
@@ -33,34 +33,31 @@ export function MuralContent() {
                   <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
                 </div>
               </div>
+              {/* Mobile Community Menu */}
+              {isMobile && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="bg-[#511A2B] hover:bg-[#511A2B]/90 hover:text-white md:hidden bottom-6 left-6 z-50 rounded-lg shadow-lg w-full text-white">
+                      <Menu className="h-5 w-5" />
+                      Visualizar mais comunidades
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="p-0 w-[85%] max-w-[300px]">
+                    <SheetTitle></SheetTitle>
+                    <ScrollArea className="h-full">
+                      <div className="p-4">
+                        <CommunityList />
+                      </div>
+                    </ScrollArea>
+                  </SheetContent>
+                </Sheet>
+              )}
               <div className="mx-auto py-6">
                 <div className="flex flex-col md:flex-row gap-6">
-                  {/* Mobile Community Menu */}
-                  {isMobile && (
-                    <Sheet>
-                      <SheetTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="md:hidden fixed bottom-6 left-6 z-50 rounded-full shadow-lg bg-white"
-                        >
-                          <Menu className="h-5 w-5" />
-                        </Button>
-                      </SheetTrigger>
-                      <SheetContent side="left" className="p-0 w-[85%] max-w-[300px]">
-                        <ScrollArea className="h-full">
-                          <div className="p-4">
-                            <CommunityList />
-                          </div>
-                        </ScrollArea>
-                      </SheetContent>
-                    </Sheet>
-                  )}
-
                   {/* Desktop Community Sidebar */}
-                  {true && (
+                  {!isMobile && (
                     <div className="hidden md:block w-[280px] flex-shrink-0">
-                      <div className="sticky top-[8vh]">
+                      <div className="sticky top-[12vh]">
                         <CommunityList />
                       </div>
                     </div>
@@ -127,7 +124,7 @@ export function MuralContent() {
 
                   {/* Right Sidebar */}
                   <div className="hidden lg:block w-[280px] flex-shrink-0">
-                    <div className="sticky top-[8vh] space-y-6">
+                    <div className="sticky top-[12vh] space-y-6">
                       <TrendingTopics />
                     </div>
                   </div>
