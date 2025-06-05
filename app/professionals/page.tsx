@@ -1,4 +1,4 @@
-import { ProfessionalsContent } from '@/components/professionals-content';
+import { ProfessionalsContent } from '@/components/recommended-professionals/recommended-professional-content';
 
 export default function Professionals() {
   return (

@@ -1,4 +1,4 @@
-import { SuppliersContent } from '@/components/suppliers-content';
+import { SuppliersContent } from "@/components/suppliers/suppliers-content";
 
 export default function Suppliers() {
   return (

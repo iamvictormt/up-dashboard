@@ -1,4 +1,4 @@
-import { SupplierDetailContent } from '@/components/supplier-detail-content';
+import { SupplierDetailContent } from "@/components/suppliers/supplier-detail-content";
 
 interface SupplierDetailPageProps {
   params: {
