@@ -9,26 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { EventData } from "@/types"
 
-interface EventData {
-  name: string
-  description: string
-  date: string
-  type: string
-  points: number
-  totalSpots: number
-  filledSpots: number
-  participantsCount: number
-  address: {
-    state: string
-    city: string
-    district: string
-    street: string
-    complement: string | null
-    number: string
-    zipCode: string
-  }
-}
 
 interface EventEditModalProps {
   event: EventData

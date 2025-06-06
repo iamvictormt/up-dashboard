@@ -10,9 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { deleteProduct, updateProduct } from '@/lib/product';
 import { toast } from 'sonner';
 import { ProductData } from '@/types';
+import { deleteProduct, updateProduct } from '@/lib/product-api';
 
 interface ProductEditModalProps {
   product: ProductData;
@@ -263,6 +263,8 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               {isSubmitting ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <Save className="w-4 h-4" />
+
                   <span>Salvando...</span>
                 </div>
               ) : (

@@ -10,7 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { createEvent } from '@/lib/event-api';
+import { toast } from 'sonner';
 
 interface EventFormProps {
   storeId: string;
@@ -145,11 +146,11 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
         address: formData.address,
       };
 
-      // Simular envio para API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log('Evento criado:', eventData);
-      onEventCreated(eventData);
+      const response = await createEvent(eventData);
+      if (response.status === 201) {
+        onEventCreated(eventData);
+        toast.success('Evento cadastrado com sucesso.');
+      }
     } catch (error) {
       console.error('Erro ao criar evento:', error);
       setErrors({ general: 'Erro ao criar evento. Tente novamente.' });
@@ -210,23 +211,18 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
                   <Label htmlFor="type" className="text-[#511A2B] font-medium">
                     Tipo de Evento
                   </Label>
-                  <Select value={formData.type} onValueChange={(e) => handleInputChange('type', e)}>
-                    <SelectTrigger
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors.name ? 'border-red-500' : ''
-                      }`}
-                    >
-                      <SelectValue placeholder="Selecione sua profissão" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {eventTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {' '}
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    id="type"
+                    value={formData.type}
+                    onChange={(e) => handleInputChange('type', e.target.value)}
+                    className="mt-1 w-full p-3 border border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl focus:outline-none"
+                  >
+                    {eventTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
@@ -439,7 +435,7 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
               {isSubmitting ? (
                 <>
                   <Clock className="w-4 h-4 mr-2 animate-spin" />
-                  Criando...
+                  <span>Salvando...</span>
                 </>
               ) : (
                 <>

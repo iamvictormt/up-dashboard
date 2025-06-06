@@ -1,116 +1,119 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState } from "react"
-import { X, Save, Package } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+import { useState } from 'react';
+import { X, Save, Package } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { createProduct } from '@/lib/product-api';
+import { toast } from 'sonner';
 
 interface ProductFormProps {
-  storeId: string
-  onProductCreated: (productData: any) => void
-  onClose: () => void
+  storeId: string;
+  onProductCreated: (productData: any) => void;
+  onClose: () => void;
 }
 
 interface ProductData {
-  name: string
-  description: string
-  price: number
-  link: string
-  featured: boolean
-  promotion: boolean
+  name: string;
+  description: string;
+  price: number;
+  link: string;
+  featured: boolean;
+  promotion: boolean;
 }
 
 export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormProps) {
   const [productData, setProductData] = useState<ProductData>({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
     price: 0,
-    link: "",
+    link: '',
     featured: false,
     promotion: false,
-  })
+  });
 
-  const [errors, setErrors] = useState<Partial<ProductData>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<Partial<ProductData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (field: keyof ProductData, value: string | number | boolean) => {
     setProductData((prev) => ({
       ...prev,
       [field]: value,
-    }))
+    }));
 
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({
         ...prev,
         [field]: undefined,
-      }))
+      }));
     }
-  }
+  };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<ProductData> = {}
+    const newErrors: Partial<ProductData> = {};
 
     if (!productData.name.trim()) {
-      newErrors.name = "Nome é obrigatório"
+      newErrors.name = 'Nome é obrigatório';
     }
 
     if (!productData.description.trim()) {
-      newErrors.description = "Descrição é obrigatória"
+      newErrors.description = 'Descrição é obrigatória';
     }
 
     if (productData.price <= 0) {
-    //   newErrors.price = "Preço deve ser maior que zero"
+      newErrors.price = 'Preço deve ser maior que zero';
     }
 
     if (productData.link && !isValidUrl(productData.link)) {
-      newErrors.link = "URL inválida"
+      newErrors.link = 'URL inválida';
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const isValidUrl = (url: string): boolean => {
     try {
-      new URL(url)
-      return true
+      new URL(url);
+      return true;
     } catch {
-      return false
+      return false;
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
       const newProduct = {
         ...productData,
         storeId,
-      }
+      };
 
-      onProductCreated(newProduct)
+      const response = await createProduct(newProduct);
+      if (response.status === 201) {
+        onProductCreated(newProduct);
+        toast.success('Produto cadastrado com sucesso.');
+      }
     } catch (error) {
-      console.error("Erro ao criar produto:", error)
+      console.error('Erro ao criar produto:', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -144,10 +147,10 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
               <Input
                 id="name"
                 value={productData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
+                onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="Ex: Consultoria em TI"
                 className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                  errors.name ? "border-red-500" : ""
+                  errors.name ? 'border-red-500' : ''
                 }`}
               />
               {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -161,11 +164,11 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
               <Textarea
                 id="description"
                 value={productData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
+                onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Descreva seu produto ou serviço..."
                 rows={4}
                 className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                  errors.description ? "border-red-500" : ""
+                  errors.description ? 'border-red-500' : ''
                 }`}
               />
               {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -181,11 +184,11 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
                 type="number"
                 step="0.01"
                 min="0"
-                value={productData.price || ""}
-                onChange={(e) => handleInputChange("price", Number.parseFloat(e.target.value) || 0)}
+                value={productData.price || ''}
+                onChange={(e) => handleInputChange('price', Number.parseFloat(e.target.value) || 0)}
                 placeholder="0,00"
                 className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                  errors.price ? "border-red-500" : ""
+                  errors.price ? 'border-red-500' : ''
                 }`}
               />
               {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
@@ -200,10 +203,10 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
                 id="link"
                 type="url"
                 value={productData.link}
-                onChange={(e) => handleInputChange("link", e.target.value)}
+                onChange={(e) => handleInputChange('link', e.target.value)}
                 placeholder="https://exemplo.com/produto"
                 className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                  errors.link ? "border-red-500" : ""
+                  errors.link ? 'border-red-500' : ''
                 }`}
               />
               {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
@@ -220,7 +223,7 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
                 </div>
                 <Switch
                   checked={productData.featured}
-                  onCheckedChange={(checked) => handleInputChange("featured", checked)}
+                  onCheckedChange={(checked) => handleInputChange('featured', checked)}
                   className="data-[state=checked]:bg-[#511A2B]"
                 />
               </div>
@@ -233,8 +236,8 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
                 </div>
                 <Switch
                   checked={productData.promotion}
-                  onCheckedChange={(checked) => handleInputChange("promotion", checked)}
-                  className="data-[state=unchecked]:bg-primary/30 data-[state=checked]:bg-primary/90"
+                  onCheckedChange={(checked) => handleInputChange('promotion', checked)}
+                  className="data-[state=checked]:bg-red-500"
                 />
               </div>
             </div>
@@ -272,5 +275,5 @@ export function ProductForm({ storeId, onProductCreated, onClose }: ProductFormP
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

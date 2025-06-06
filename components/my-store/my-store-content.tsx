@@ -28,15 +28,16 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
-import { EventForm } from '@/components/event-form';
-import { ProductForm } from '@/components/product-form';
+import { EventForm } from '@/components/my-store/event-form';
+import { ProductForm } from '@/components/my-store/product-form';
 import { MyStoreContentSkeleton } from './my-store-skeleton';
 import { EventEditModal } from './event-edit-modal';
 import { fetchMyStore, updateStore } from '@/lib/store-api';
-import { createProduct } from '@/lib/product';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
+import { createEvent } from '@/lib/event-api';
+import { createProduct } from '@/lib/product-api';
 
 const fetchStoreData = async (): Promise<StoreData | null> => {
   const response = await fetchMyStore();
@@ -118,7 +119,7 @@ export function MyStoreContent() {
     }
   };
 
-  const handleEventCreated = (eventData: any) => {
+  const handleEventCreated = async (eventData: any) => {
     if (!storeData) return;
 
     const newEvent = {
@@ -131,8 +132,10 @@ export function MyStoreContent() {
       filledSpots: 0,
       participantsCount: 0,
       address: eventData.address,
+      storeId: storeData.id,
     };
 
+    setShowEventForm(false);
     setStoreData((prev) =>
       prev
         ? {
@@ -141,9 +144,6 @@ export function MyStoreContent() {
           }
         : null
     );
-
-    setShowEventForm(false);
-    console.log('Evento criado:', newEvent);
   };
 
   const handleProductCreated = async (productData: any) => {
@@ -158,18 +158,15 @@ export function MyStoreContent() {
       promotion: productData.promotion,
     };
 
-    const response = await createProduct(newProduct);
-    if (response.status === 201) {
-      setShowProductForm(false);
-      setStoreData((prev) =>
-        prev
-          ? {
-              ...prev,
-              products: [...prev.products, newProduct],
-            }
-          : null
-      );
-    }
+    setShowProductForm(false);
+    setStoreData((prev) =>
+      prev
+        ? {
+            ...prev,
+            products: [...prev.products, newProduct],
+          }
+        : null
+    );
   };
 
   const removeProduct = (index: number) => {
@@ -469,7 +466,7 @@ export function MyStoreContent() {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {storeData.events.map((event, index) => (
                   <Card
                     key={index}
