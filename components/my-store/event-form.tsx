@@ -132,7 +132,6 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
     setIsSubmitting(true);
 
     try {
-      // Combinar data e hora em formato ISO
       const dateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString();
 
       const eventData = {

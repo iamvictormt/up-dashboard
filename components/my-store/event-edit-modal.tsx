@@ -1,38 +1,38 @@
-"use client"
+'use client';
 
-import type React from "react"
-import { useState } from "react"
-import { X, Calendar, MapPin, Clock, Save, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { EventData } from "@/types"
-
+import type React from 'react';
+import { useState } from 'react';
+import { X, Calendar, MapPin, Clock, Save, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { EventData } from '@/types';
+import { toast } from 'sonner';
+import { updateEvent } from '@/lib/event-api';
 
 interface EventEditModalProps {
-  event: EventData
+  event: EventData;
   storeAddress: {
-    state: string
-    city: string
-    district: string
-    street: string
-    complement: string | null
-    number: string
-    zipCode: string
-  }
-  onEventUpdated: (eventData: EventData) => void
-  onDelete: () => void
-  onClose: () => void
+    state: string;
+    city: string;
+    district: string;
+    street: string;
+    complement: string | null;
+    number: string;
+    zipCode: string;
+  };
+  onEventUpdated: (eventData: EventData) => void;
+  onDelete: () => void;
+  onClose: () => void;
 }
 
 export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, onClose }: EventEditModalProps) {
-  // Converter data ISO para formato de input
-  const eventDate = new Date(event.date)
-  const dateString = eventDate.toISOString().split("T")[0]
-  const timeString = eventDate.toTimeString().slice(0, 5)
+  const eventDate = new Date(event.date);
+  const dateString = eventDate.toISOString().split('T')[0];
+  const timeString = eventDate.toTimeString().slice(0, 5);
 
   const [formData, setFormData] = useState({
     name: event.name,
@@ -43,115 +43,114 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
     points: event.points,
     totalSpots: event.totalSpots,
     address: event.address,
-  })
+  });
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleInputChange = (field: string, value: string | number) => {
-    if (field.startsWith("address.")) {
-      const addressField = field.split(".")[1]
+    if (field.startsWith('address.')) {
+      const addressField = field.split('.')[1];
       setFormData({
         ...formData,
         address: {
           ...formData.address,
           [addressField]: value,
         },
-      })
+      });
     } else {
       setFormData({
         ...formData,
         [field]: value,
-      })
+      });
     }
 
-    // Limpar erro do campo
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Nome do evento é obrigatório"
+      newErrors.name = 'Nome do evento é obrigatório';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = "Descrição é obrigatória"
+      newErrors.description = 'Descrição é obrigatória';
     }
 
     if (!formData.date) {
-      newErrors.date = "Data é obrigatória"
+      newErrors.date = 'Data é obrigatória';
     }
 
     if (!formData.time) {
-      newErrors.time = "Horário é obrigatório"
+      newErrors.time = 'Horário é obrigatório';
     }
 
     if (formData.points < 1) {
-      newErrors.points = "Pontos deve ser maior que 0"
+      newErrors.points = 'Pontos deve ser maior que 0';
     }
 
     if (formData.totalSpots < 1) {
-      newErrors.totalSpots = "Número de vagas deve ser maior que 0"
+      newErrors.totalSpots = 'Número de vagas deve ser maior que 0';
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!validateForm()) return
+    if (!validateForm() || !event.id) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
-      // Combinar data e hora em formato ISO
-      const dateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString()
+      const dateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString();
 
-      const updatedEvent: EventData = {
+      const updatedEvent = {
         name: formData.name,
         description: formData.description,
         date: dateTime,
         type: formData.type,
         points: formData.points,
         totalSpots: formData.totalSpots,
-        filledSpots: event.filledSpots, // Manter valores existentes
+        filledSpots: event.filledSpots,
         participantsCount: event.participantsCount,
         address: formData.address,
+      };
+
+      const response = await updateEvent(event.id, updatedEvent);
+      if (response.status === 200) {
+        onEventUpdated(updatedEvent);
+        toast.success('Evento editado com sucesso.');
       }
-
-      // Simular envio para API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      onEventUpdated(updatedEvent)
     } catch (error) {
-      console.error("Erro ao atualizar evento:", error)
-      setErrors({ general: "Erro ao atualizar evento. Tente novamente." })
+      console.error('Erro ao atualizar evento:', error);
+      setErrors({ general: 'Erro ao atualizar evento. Tente novamente.' });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      onDelete()
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      onDelete();
     } catch (error) {
-      console.error("Erro ao excluir evento:", error)
+      console.error('Erro ao excluir evento:', error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  const eventTypes = ["Workshop", "Conferência", "Meetup", "Hackathon", "Seminário", "Curso", "Palestra"]
+  const eventTypes = ['Workshop', 'Conferência', 'Meetup', 'Hackathon', 'Seminário', 'Curso', 'Palestra'];
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -201,10 +200,10 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="name"
                     value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="Ex: Workshop de TypeScript"
                     className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.name ? "border-red-500" : ""
+                      errors.name ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -217,7 +216,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <select
                     id="type"
                     value={formData.type}
-                    onChange={(e) => handleInputChange("type", e.target.value)}
+                    onChange={(e) => handleInputChange('type', e.target.value)}
                     className="mt-1 w-full p-3 border border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl focus:outline-none"
                   >
                     {eventTypes.map((type) => (
@@ -236,10 +235,10 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
                   placeholder="Descreva o evento, objetivos e o que os participantes irão aprender..."
                   className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                    errors.description ? "border-red-500" : ""
+                    errors.description ? 'border-red-500' : ''
                   }`}
                   rows={3}
                 />
@@ -255,9 +254,9 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                     id="date"
                     type="date"
                     value={formData.date}
-                    onChange={(e) => handleInputChange("date", e.target.value)}
+                    onChange={(e) => handleInputChange('date', e.target.value)}
                     className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.date ? "border-red-500" : ""
+                      errors.date ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
@@ -271,9 +270,9 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                     id="time"
                     type="time"
                     value={formData.time}
-                    onChange={(e) => handleInputChange("time", e.target.value)}
+                    onChange={(e) => handleInputChange('time', e.target.value)}
                     className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.time ? "border-red-500" : ""
+                      errors.time ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
@@ -288,9 +287,9 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                     type="number"
                     min="1"
                     value={formData.totalSpots}
-                    onChange={(e) => handleInputChange("totalSpots", Number.parseInt(e.target.value) || 0)}
+                    onChange={(e) => handleInputChange('totalSpots', Number.parseInt(e.target.value) || 0)}
                     className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.totalSpots ? "border-red-500" : ""
+                      errors.totalSpots ? 'border-red-500' : ''
                     }`}
                   />
                   {errors.totalSpots && <p className="text-red-500 text-sm mt-1">{errors.totalSpots}</p>}
@@ -306,9 +305,9 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   type="number"
                   min="1"
                   value={formData.points}
-                  onChange={(e) => handleInputChange("points", Number.parseInt(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange('points', Number.parseInt(e.target.value) || 0)}
                   className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                    errors.points ? "border-red-500" : ""
+                    errors.points ? 'border-red-500' : ''
                   }`}
                 />
                 {errors.points && <p className="text-red-500 text-sm mt-1">{errors.points}</p>}
@@ -348,7 +347,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="zipCode"
                     value={formData.address.zipCode}
-                    onChange={(e) => handleInputChange("address.zipCode", e.target.value)}
+                    onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -360,7 +359,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="city"
                     value={formData.address.city}
-                    onChange={(e) => handleInputChange("address.city", e.target.value)}
+                    onChange={(e) => handleInputChange('address.city', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -372,7 +371,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="state"
                     value={formData.address.state}
-                    onChange={(e) => handleInputChange("address.state", e.target.value)}
+                    onChange={(e) => handleInputChange('address.state', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -386,7 +385,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="street"
                     value={formData.address.street}
-                    onChange={(e) => handleInputChange("address.street", e.target.value)}
+                    onChange={(e) => handleInputChange('address.street', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -398,7 +397,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="number"
                     value={formData.address.number}
-                    onChange={(e) => handleInputChange("address.number", e.target.value)}
+                    onChange={(e) => handleInputChange('address.number', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -410,7 +409,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                   <Input
                     id="district"
                     value={formData.address.district}
-                    onChange={(e) => handleInputChange("address.district", e.target.value)}
+                    onChange={(e) => handleInputChange('address.district', e.target.value)}
                     className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                   />
                 </div>
@@ -422,8 +421,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </Label>
                 <Input
                   id="complement"
-                  value={formData.address.complement || ""}
-                  onChange={(e) => handleInputChange("address.complement", e.target.value)}
+                  value={formData.address.complement || ''}
+                  onChange={(e) => handleInputChange('address.complement', e.target.value)}
                   placeholder="Ex: Sala 5, Andar 2, etc."
                   className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
                 />
@@ -498,7 +497,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                         <span>Excluindo...</span>
                       </div>
                     ) : (
-                      "Excluir Evento"
+                      'Excluir Evento'
                     )}
                   </Button>
                 </div>
@@ -508,5 +507,5 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

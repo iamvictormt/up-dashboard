@@ -11,7 +11,18 @@ export interface CreateEventData {
   storeId: string;
 }
 
+export interface UpdateEventData {
+  name: string;
+  description: string;
+  date: string;
+  type: string;
+  points: number;
+  totalSpots: number;
+  address: AddressData;
+}
+
 export interface EventData {
+  id?: string;
   name: string;
   description: string;
   date: string;

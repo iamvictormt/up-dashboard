@@ -501,7 +501,7 @@ export function MyStoreContent() {
                     </div>
 
                     <CardContent className="p-6">
-                      <p className="text-[#511A2B]/80 mb-4">{event.description}</p>
+                      <p className="text-[#511A2B]/80 mb-4 truncate">{event.description}</p>
 
                       <div className="space-y-3 mb-6">
                         <div className="flex items-center gap-3">
@@ -527,7 +527,7 @@ export function MyStoreContent() {
                         <div className="flex items-center gap-3">
                           <Users className="w-4 h-4 text-[#511A2B]/70" />
                           <span className="text-sm font-medium text-[#511A2B]">
-                            {event.participantsCount} participantes confirmados
+                            {event.participantsCount || 0} participantes confirmados
                           </span>
                         </div>
                       </div>
