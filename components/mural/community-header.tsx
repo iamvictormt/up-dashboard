@@ -76,19 +76,21 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
           </div>
         </div>
 
-        <Button
-          onClick={onCreatePost}
-          className="gap-2"
-          style={{
-            backgroundColor: community.color,
-            color: '#fff',
-            borderColor: 'transparent',
-          }}
-        >
-          <PenLine className="h-4 w-4" />
-          <span className="hidden sm:inline">Criar Post</span>
-          <span className="sm:hidden">Post</span>
-        </Button>
+        {community.id !== "" && (
+          <Button
+            onClick={onCreatePost}
+            className="gap-2"
+            style={{
+              backgroundColor: community.color,
+              color: '#fff',
+              borderColor: 'transparent',
+            }}
+          >
+            <PenLine className="h-4 w-4" />
+            <span className="hidden sm:inline">Criar Post</span>
+            <span className="sm:hidden">Post</span>
+          </Button>
+        )}
       </div>
     </div>
   );

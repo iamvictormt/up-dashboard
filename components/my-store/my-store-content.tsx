@@ -39,6 +39,7 @@ import { toast } from 'sonner';
 import { StoreData } from '@/types';
 import { createEvent } from '@/lib/event-api';
 import { createProduct } from '@/lib/product-api';
+import MapCard from '../map-card';
 
 const fetchStoreData = async (): Promise<StoreData | null> => {
   const response = await fetchMyStore();
@@ -213,7 +214,7 @@ export function MyStoreContent() {
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         {/* Floating Action Buttons */}
-        <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
+        <div className="sticky top-32 ml-[95%] z-50 flex flex-col space-y-3">
           <Button
             onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
             size="icon"
@@ -652,32 +653,8 @@ export function MyStoreContent() {
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white border-0 shadow-lg rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-[#511A2B] flex items-center text-xl">
-                      <Map className="w-6 h-6 mr-3" />
-                      Mapa
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center gap-3 p-4 bg-[#511A2B]/5 rounded-xl">
-                      <Globe className="w-5 h-5 text-[#511A2B]/70" />
-                      <div className="flex-1">
-                        mapa
-                      </div>
-                    </div>
+                                     <MapCard cep={ '75083125' } />
 
-                    <div className="flex items-center gap-3 p-4 bg-[#511A2B]/5 rounded-xl">
-                      <Mail className="w-5 h-5 text-[#511A2B]/70" />
-                      <div>
-                        <p className="text-sm text-[#511A2B]/70">E-mail</p>
-                        <p className="font-semibold text-[#511A2B] truncate w-60">
-                         {storeData.website?.replace('https://', '')}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             </section>
           </div>

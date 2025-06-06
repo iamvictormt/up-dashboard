@@ -136,6 +136,10 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
     }
   };
 
+  if(communityId === "") {
+    return;
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-sm p-5">
       <form onSubmit={handleSubmit}>
@@ -259,6 +263,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
               style={{
                 backgroundColor: selectedCommunity?.color || '#000',
                 borderColor: 'transparent',
+                color: 'white',
               }}
             >
               {submitting ? (

@@ -130,7 +130,7 @@ export function DashboardHeader() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-6"
+                className="flex items-center text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-8 md:p-6"
               >
                 <span className="text-sm hidden sm:inline">{getUserName().split(' ')[0]}</span>
                 <Avatar className="w-8 h-8">

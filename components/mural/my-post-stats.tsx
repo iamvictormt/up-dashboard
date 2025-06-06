@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FileText, Hash, Heart, MessageCircle } from 'lucide-react';
+import { FileText, Hash, Heart, MessageCircle, Rss } from 'lucide-react';
 import { fetchMyPostsStats } from '@/lib/post-api';
 import { PostStats } from '@/types/post';
 
@@ -30,19 +30,13 @@ export function MyPostsStats() {
   if (loading) {
     return (
       <div className="bg-white rounded-lg border p-4">
-        <h3 className="font-semibold text-gray-900 mb-4">Meus Posts</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">Números dos meus posts</h3>
         <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="p-3 border rounded-lg">
-              <Skeleton className="h-4 w-3/4 mb-2" />
-              <Skeleton className="h-3 w-full mb-2" />
+          <div className="rounded-lg">
               <div className="flex gap-2">
-                <Skeleton className="h-5 w-12" />
-                <Skeleton className="h-5 w-12" />
-                <Skeleton className="h-5 w-12" />
+                <Skeleton className="h-16 w-[100%]" />
               </div>
             </div>
-          ))}
         </div>
       </div>
     );
@@ -51,7 +45,7 @@ export function MyPostsStats() {
   return (
     <div className="bg-white rounded-lg border p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Números dos seus posts</h3>
+        <h3 className="font-semibold text-gray-900">Números dos meus posts</h3>
       </div>
 
       {/* Estatísticas gerais */}
@@ -59,7 +53,7 @@ export function MyPostsStats() {
         <div className="grid grid-cols-3 gap-2 mb-4 p-3 bg-gray-50 rounded-xl">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 text-green-500 mb-1">
-              <Hash className="h-4 w-4" />
+              <Rss className="h-4 w-4" />
               <span className="text-xs font-medium">{stats.postsCount}</span>
             </div>
             <p className="text-xs text-gray-500">Total</p>

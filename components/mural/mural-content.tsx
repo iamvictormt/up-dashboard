@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCommunity } from '@/contexts/community-context';
 import { useMobile } from '@/hooks/use-mobile';
 import { CommunityList } from './community-list';

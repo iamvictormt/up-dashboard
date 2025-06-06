@@ -97,8 +97,7 @@ export function HelpContent() {
 
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full max-w-7xl mx-auto">
-        <div className="max-w-6xl mx-auto">
+      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-[#511A2B] rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -283,7 +282,6 @@ export function HelpContent() {
                 </div>
               </CardContent>
             </Card>
-          </div>
         </div>
       </div>
     </div>

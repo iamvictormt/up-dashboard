@@ -1,17 +1,33 @@
-"use client"
+'use client';
 
-import { useCommunity } from "@/contexts/community-context"
-import { cn } from "@/lib/utils"
-import type { LucideIcon } from "lucide-react"
-import * as LucideIcons from "lucide-react"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { useCommunity } from '@/contexts/community-context';
+import { cn } from '@/lib/utils';
+import type { LucideIcon } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '../ui/skeleton';
 
 export function CommunityList() {
-  const { communities, selectedCommunity, selectCommunity } = useCommunity()
-  
+  const { communities, selectedCommunity, selectCommunity } = useCommunity();
+
   const getIconByName = (iconName: string): LucideIcon => {
-    const icon = (LucideIcons as Record<string, LucideIcon>)[iconName]
-    return icon || LucideIcons.Hash
+    const icon = (LucideIcons as Record<string, LucideIcon>)[iconName];
+    return icon || LucideIcons.Hash;
+  };
+
+  if (!selectedCommunity) {
+    return (
+      <div className="bg-white rounded-xl shadow-sm p-4">
+        <h2 className="text-lg font-semibold mb-4 px-2">Comunidades</h2>
+        <div className="space-y-1 pr-2">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="rounded-lg">
+              <Skeleton className="h-14 w-[100%]" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -20,16 +36,16 @@ export function CommunityList() {
       <ScrollArea className="max-h-[calc(80vh-180px)]">
         <div className="space-y-1 pr-2">
           {communities.map((community) => {
-            const Icon = getIconByName(community.icon)
-            const isSelected = selectedCommunity?.id === community.id
+            const Icon = getIconByName(community.icon);
+            const isSelected = selectedCommunity?.id === community.id;
 
             return (
               <button
                 key={community.id}
                 onClick={() => selectCommunity(community)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all",
-                  isSelected ? "bg-gray-100 font-medium" : "hover:bg-gray-50",
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all',
+                  isSelected ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'
                 )}
               >
                 <div
@@ -40,10 +56,10 @@ export function CommunityList() {
                 </div>
                 <span className="truncate">{community.name}</span>
               </button>
-            )
+            );
           })}
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }
