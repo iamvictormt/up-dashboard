@@ -17,6 +17,7 @@ export function MuralUpdateProvider({ children }: { children: React.ReactNode })
   const [updateCount, setUpdateCount] = useState(0)
 
   const triggerUpdate = useCallback(() => {
+    console.log("veio aqui")
     setUpdateCount((prev) => prev + 1)
   }, [])
 

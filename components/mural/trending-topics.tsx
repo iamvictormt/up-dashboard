@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp } from 'lucide-react';
 import { fetchTrendingTopics } from '@/lib/trending-api';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 interface TrendingTopic {
   tag: string;
@@ -14,6 +15,7 @@ interface TrendingTopic {
 export function TrendingTopics() {
   const [topics, setTopics] = useState<TrendingTopic[]>([]);
   const [loading, setLoading] = useState(true);
+  const { updateCount } = useMuralUpdate();
 
   useEffect(() => {
     async function loadTopics() {
@@ -30,7 +32,7 @@ export function TrendingTopics() {
     }
 
     loadTopics();
-  }, []);
+  }, [updateCount]);
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4">

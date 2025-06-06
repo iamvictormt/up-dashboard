@@ -1,91 +1,94 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { Bell, Check, Heart, MessageCircle, UserPlus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { formatDistanceToNow } from "date-fns"
-import { ptBR } from "date-fns/locale"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { fetchNotifications, markNotificationAsRead, markAllNotificationsAsRead } from "@/lib/notifications-api"
+import { useState, useEffect } from 'react';
+import { Bell, Check, Heart, MessageCircle, UserPlus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { fetchNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '@/lib/notifications-api';
+import { toast } from 'sonner';
 
 interface Notification {
-  id: string
-  type: "like" | "comment" | "mention" | "follow"
-  title: string
-  message: string
-  isRead: boolean
-  createdAt: string
+  id: string;
+  type: 'like' | 'comment' | 'mention' | 'follow';
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
   user?: {
-    id: string
-    name: string
-    avatar?: string
-  }
+    id: string;
+    name: string;
+    avatar?: string;
+  };
   post?: {
-    id: string
-    title?: string
-  }
+    id: string;
+    title?: string;
+  };
 }
 
 export function NotificationsDropdown() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [loading, setLoading] = useState(true)
-  const [isOpen, setIsOpen] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const unreadCount = notifications.filter((n) => !n.isRead).length
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   useEffect(() => {
     async function loadNotifications() {
       try {
-        setLoading(true)
-        const data = await fetchNotifications()
-        setNotifications(data)
+        setLoading(true);
+        const data = await fetchNotifications();
+        setNotifications(data);
       } catch (error) {
-        console.error("Error loading notifications:", error)
-        setNotifications([])
+        console.error('Error loading notifications:', error);
+        setNotifications([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    loadNotifications()
-  }, [])
+    loadNotifications();
+  }, []);
 
   const handleMarkAsRead = async (notificationId: string) => {
     try {
-      await markNotificationAsRead(notificationId)
+      await markNotificationAsRead(notificationId);
       setNotifications((prev) =>
         prev.map((notification) =>
-          notification.id === notificationId ? { ...notification, isRead: true } : notification,
-        ),
-      )
+          notification.id === notificationId ? { ...notification, isRead: true } : notification
+        )
+      );
+      toast.success('A notificação foi marcada como lida.');
     } catch (error) {
-      console.error("Error marking notification as read:", error)
+      console.error('Error marking notification as read:', error);
     }
-  }
+  };
 
   const handleMarkAllAsRead = async () => {
     try {
-      await markAllNotificationsAsRead()
-      setNotifications((prev) => prev.map((notification) => ({ ...notification, isRead: true })))
+      await markAllNotificationsAsRead();
+      setNotifications((prev) => prev.map((notification) => ({ ...notification, isRead: true })));
+      toast.success('Todas as notificações foram marcadas como lidas.');
     } catch (error) {
-      console.error("Error marking all notifications as read:", error)
+      console.error('Error marking all notifications as read:', error);
     }
-  }
+  };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case "LIKE":
-        return <Heart className="h-4 w-4 text-red-500" />
-      case "COMMENT":
-        return <MessageCircle className="h-4 w-4 text-blue-500" />
+      case 'LIKE':
+        return <Heart className="h-4 w-4 text-red-500" />;
+      case 'COMMENT':
+        return <MessageCircle className="h-4 w-4 text-blue-500" />;
       default:
-        return <Bell className="h-4 w-4 text-gray-500" />
+        return <Bell className="h-4 w-4 text-gray-500" />;
     }
-  }
+  };
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -97,7 +100,7 @@ export function NotificationsDropdown() {
               variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
             >
-              {unreadCount > 9 ? "9+" : unreadCount}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}
           <span className="sr-only">Notificações</span>
@@ -133,14 +136,14 @@ export function NotificationsDropdown() {
                 <div
                   key={notification.id}
                   className={`p-4 hover:bg-gray-50 transition-colors ${
-                    !notification.isRead ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+                    !notification.isRead ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="relative">
                       {notification.user ? (
                         <Avatar className="h-12 w-12 md:h-16 md:w-16 ">
-                          <AvatarImage src={notification.user.avatar || "/placeholder.svg?height=40&width=40"} />
+                          <AvatarImage src={notification.user.avatar || '/placeholder.svg?height=40&width=40'} />
                           <AvatarFallback>{notification.user.name.charAt(0).toUpperCase()}</AvatarFallback>
                         </Avatar>
                       ) : (
@@ -192,5 +195,5 @@ export function NotificationsDropdown() {
         </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

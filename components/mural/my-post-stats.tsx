@@ -5,10 +5,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Hash, Heart, MessageCircle, Rss } from 'lucide-react';
 import { fetchMyPostsStats } from '@/lib/post-api';
 import { PostStats } from '@/types/post';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 export function MyPostsStats() {
   const [stats, setStats] = useState<PostStats>();
   const [loading, setLoading] = useState(true);
+  const { updateCount } = useMuralUpdate();
 
   useEffect(() => {
     async function loadUserPosts() {
@@ -24,19 +26,18 @@ export function MyPostsStats() {
     }
 
     loadUserPosts();
-  }, []);
-
+  }, [updateCount]);
 
   if (loading) {
     return (
       <div className="bg-white rounded-lg border p-4">
-        <h3 className="font-semibold text-gray-900 mb-4">Números dos meus posts</h3>
+        <h3 className="font-semibold text-gray-900 mb-4">Engajamento dos meus posts</h3>
         <div className="space-y-3">
           <div className="rounded-lg">
-              <div className="flex gap-2">
-                <Skeleton className="h-16 w-[100%]" />
-              </div>
+            <div className="flex gap-2">
+              <Skeleton className="h-16 w-[100%]" />
             </div>
+          </div>
         </div>
       </div>
     );
@@ -45,7 +46,7 @@ export function MyPostsStats() {
   return (
     <div className="bg-white rounded-lg border p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-900">Números dos meus posts</h3>
+        <h3 className="font-semibold text-gray-900">Engajamento dos meus posts</h3>
       </div>
 
       {/* Estatísticas gerais */}

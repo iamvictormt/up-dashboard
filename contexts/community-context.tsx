@@ -20,7 +20,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const {updateCount} = useMuralUpdate();
+  const { updateCount } = useMuralUpdate();
 
   useEffect(() => {
     async function loadCommunities() {
