@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 const markerIcon = new L.Icon({
-  iconUrl: '/pin.svg', // Ou um CDN válido
+  iconUrl: '/pin.svg',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
