@@ -23,7 +23,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <AppSidebar />
-      <div className="flex-1 transition-all duration-300 md:ml-72 peer-data-[state=collapsed]:md:ml-24 relative min-w-0">
+      <div className="flex-1 transition-all duration-300 md:ml-72 peer-data-[state=collapsed]:md:ml-24 relative min-w-0 z-20">
         <DashboardHeader />
         <div className="mt-[10vh] w-full">{children}</div>
       </div>

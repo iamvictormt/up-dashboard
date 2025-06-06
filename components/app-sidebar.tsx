@@ -2,19 +2,17 @@
 
 import type React from 'react';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   MessageSquare,
-  LayoutDashboard,
   Users,
   Store,
   Calendar,
   Briefcase,
   GraduationCap,
   HelpCircle,
-  Settings,
   ChevronRight,
   ChevronLeft,
   Menu,
@@ -43,7 +41,7 @@ type SidebarItem = {
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { user, isLoading, role } = useUser();
+  const { isLoading, role } = useUser();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});

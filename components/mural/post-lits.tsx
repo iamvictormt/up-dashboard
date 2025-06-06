@@ -5,7 +5,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/types/post';
 import { fetchMyPosts, fetchPostsByCommunity } from '@/lib/post-api';
 import { PostCard } from './post-card';
-import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 interface PostListProps {
   communityId: string;
@@ -15,7 +14,6 @@ export function PostList({ communityId }: PostListProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { updateCount } = useMuralUpdate();
 
   useEffect(() => {
     async function loadPosts() {
@@ -37,7 +35,7 @@ export function PostList({ communityId }: PostListProps) {
     }
 
     loadPosts();
-  }, [communityId, updateCount]);
+  }, [communityId]);
 
   const handleLikeIdChange = (postId: string, newLikeId: string) => {
     setPosts((prevPosts) => prevPosts.map((post) => (post.id === postId ? { ...post, likeId: newLikeId } : post)));

@@ -132,8 +132,8 @@ export function DashboardHeader() {
                 variant="ghost"
                 className="flex items-center text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-8 md:p-6"
               >
-                <span className="text-sm hidden sm:inline">{getUserName().split(' ')[0]}</span>
-                <Avatar className="w-8 h-8">
+                <span className="text-sm hidden sm:inline">Olá, {getUserName().split(' ')[0]}</span>
+                <Avatar className="md:ml-3 w-8 h-8">
                   <AvatarImage src={getProfileImage() || '/placeholder.svg'} />
                 </Avatar>
               </Button>

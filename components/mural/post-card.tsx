@@ -46,6 +46,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
   const { selectedCommunity } = useCommunity();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likes || 0);
+  const [commentsCount, setCommentsCount] = useState(post.comments || 0);
   const [showComments, setShowComments] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -125,6 +126,14 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
     } catch (error) {
       return 'data desconhecida';
     }
+  };
+
+  const handleNewComment = () => {
+    setCommentsCount((count) => count + 1);
+  };
+
+  const handleRemoveComment = () => {
+    setCommentsCount((count) => count - 1);
   };
 
   return (
@@ -240,7 +249,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
 
           <Button variant="ghost" size="sm" className="gap-2" onClick={handleCommentToggle}>
             <MessageSquare className="h-5 w-5" />
-            <span>{post.comments || 0}</span>
+            <span>{commentsCount || 0}</span>
           </Button>
 
           <Button variant="ghost" size="sm" className="gap-2">
@@ -253,7 +262,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
       {/* Comments Section */}
       {showComments && (
         <div className="border-t border-gray-100">
-          <CommentSection postId={post.id} />
+          <CommentSection postId={post.id} onNewComment={handleNewComment} onCommentRemoved={handleRemoveComment} />
         </div>
       )}
 

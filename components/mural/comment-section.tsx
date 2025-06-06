@@ -27,16 +27,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog';
-import { useMuralUpdate } from '@/contexts/mural-update-context';
 import { useToast } from '@/hooks/use-toast';
 
 interface CommentSectionProps {
   postId: string;
+  onNewComment: any;
+  onCommentRemoved: any;
 }
 
-export function CommentSection({ postId }: CommentSectionProps) {
+export function CommentSection({ postId, onNewComment, onCommentRemoved }: CommentSectionProps) {
   const { user } = useUser();
-  const { updateCount, triggerUpdate } = useMuralUpdate();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -62,7 +62,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
     }
 
     loadComments();
-  }, [postId, updateCount]);
+  }, [postId]);
 
   const handleSubmitComment = async () => {
     if (!user || !newComment.trim()) return;
@@ -77,6 +77,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
       setComments((prev) => [comment, ...prev]);
       setNewComment('');
+      onNewComment();
       toast({
         title: 'Post comentado! ✒️',
         description: 'Você comentou neste post.',
@@ -99,7 +100,6 @@ export function CommentSection({ postId }: CommentSectionProps) {
       setComments((prev) => prev.map((comment) => (comment.id === updatedComment.id ? updatedComment : comment)));
       setEditingComment(null);
       setEditContent('');
-      triggerUpdate();
       toast({
         title: 'Comentário editado! ✒️',
         description: 'Você editou seu comentário neste post.',
@@ -121,7 +121,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
 
       setComments((prev) => prev.filter((comment) => comment.id !== deletingComment));
       setDeletingComment(null);
-      triggerUpdate();
+      onCommentRemoved();
       toast({
         title: 'Comentário apagado! 🗑️',
         description: 'Você apagou seu comentário neste post.',
