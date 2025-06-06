@@ -22,7 +22,7 @@ export interface Post {
   likes: number;
   likeId?: string;
   isLiked?: boolean;
-  
+
   isMine?: boolean;
 }
 
@@ -32,4 +32,10 @@ export interface CreatePost {
   authorId: string;
   communityId: string;
   hashtags: string[];
+}
+
+export interface PostStats {
+  postsCount: number;
+  commentsCount: number;
+  likesCount: number;
 }

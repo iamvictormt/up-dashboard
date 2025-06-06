@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Post } from '@/types/post';
-import { fetchPostsByCommunity } from '@/lib/post-api';
+import { fetchMyPosts, fetchPostsByCommunity } from '@/lib/post-api';
 import { PostCard } from './post-card';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
 
@@ -20,8 +20,13 @@ export function PostList({ communityId }: PostListProps) {
   useEffect(() => {
     async function loadPosts() {
       try {
+        let data: Post[];
         setLoading(true);
-        const data = await fetchPostsByCommunity(communityId);
+        if (communityId === '') {
+          data = await fetchMyPosts();
+        } else {
+          data = await fetchPostsByCommunity(communityId);
+        }
         setPosts(data);
       } catch (err) {
         setError('Failed to load posts');

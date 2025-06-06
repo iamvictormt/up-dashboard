@@ -19,6 +19,7 @@ import {
   X,
   Plus,
   ExternalLink,
+  Map,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -654,32 +655,15 @@ export function MyStoreContent() {
                 <Card className="bg-white border-0 shadow-lg rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-[#511A2B] flex items-center text-xl">
-                      <Globe className="w-6 h-6 mr-3" />
-                      Contato
+                      <Map className="w-6 h-6 mr-3" />
+                      Mapa
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-center gap-3 p-4 bg-[#511A2B]/5 rounded-xl">
                       <Globe className="w-5 h-5 text-[#511A2B]/70" />
                       <div className="flex-1">
-                        <p className="text-sm text-[#511A2B]/70">Website</p>
-                        {isEditing ? (
-                          <Input
-                            value={editData.website}
-                            onChange={(e) => handleInputChange('website', e.target.value)}
-                            className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            placeholder="https://meusite.com.br"
-                          />
-                        ) : (
-                          <a
-                            href={storeData.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-semibold text-blue-600 hover:underline"
-                          >
-                            {storeData.website}
-                          </a>
-                        )}
+                        mapa
                       </div>
                     </div>
 
@@ -687,8 +671,8 @@ export function MyStoreContent() {
                       <Mail className="w-5 h-5 text-[#511A2B]/70" />
                       <div>
                         <p className="text-sm text-[#511A2B]/70">E-mail</p>
-                        <p className="font-semibold text-[#511A2B]">
-                          contato@{storeData.website?.replace('https://', '')}
+                        <p className="font-semibold text-[#511A2B] truncate w-60">
+                         {storeData.website?.replace('https://', '')}
                         </p>
                       </div>
                     </div>

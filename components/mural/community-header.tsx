@@ -2,7 +2,7 @@
 
 import type { Community } from '@/types/community';
 import { Button } from '@/components/ui/button';
-import { PenLine, Users, Info } from 'lucide-react';
+import { PenLine, Info } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -16,7 +16,7 @@ interface CommunityHeaderProps {
 
 export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProps) {
   const isMobile = useIsMobile();
-  // Function to dynamically get icon from string name
+
   const getIconByName = (iconName: string): LucideIcon => {
     const icon = (LucideIcons as Record<string, LucideIcon>)[iconName];
     return icon || LucideIcons.Hash;

@@ -1,10 +1,20 @@
 import api from '@/services/api';
-import { CreateLike, ResponseCreateLike } from '@/types/like';
-import type { CreatePost, Post } from '@/types/post';
+import { CreateLike } from '@/types/like';
+import type { CreatePost, Post, PostStats } from '@/types/post';
 
 // Function to fetch posts by community ID
 export async function fetchPostsByCommunity(communityId: string): Promise<Post[]> {
   const response = await api.get(`posts/community/${communityId}`);
+  return response.data || [];
+}
+
+export async function fetchMyPostsStats(): Promise<PostStats> {
+  const response = await api.get(`posts/my-posts-stats`);
+  return response.data || [];
+}
+
+export async function fetchMyPosts(): Promise<Post[]> {
+  const response = await api.get(`posts/my-posts`);
   return response.data || [];
 }
 

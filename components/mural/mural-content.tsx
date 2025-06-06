@@ -12,6 +12,7 @@ import { MuralUpdateProvider } from '@/contexts/mural-update-context';
 import { Skeleton } from '../ui/skeleton';
 import { MobileCommunitiesFAB } from './mobile-communities-fab';
 import { Toaster } from '../ui/toaster';
+import { MyPostsStats } from './my-post-stats';
 
 export function MuralContent() {
   const isMobile = useMobile();
@@ -107,6 +108,7 @@ export function MuralContent() {
                 <div className="hidden lg:block w-[280px] flex-shrink-0">
                   <div className="sticky top-[12vh] space-y-6">
                     <TrendingTopics />
+                    <MyPostsStats />
                   </div>
                 </div>
               </div>
