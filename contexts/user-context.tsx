@@ -7,6 +7,7 @@ import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import Cookies from 'js-cookie';
 import api from '@/services/api';
+import { Profession } from '@/types';
 
 // Tipos para o usuário
 interface User {
@@ -40,7 +41,7 @@ interface User {
   professional?: {
     id: string;
     name: string;
-    profession: string;
+    profession: Profession;
     document: string;
     generalRegister: string;
     registrationAgency: string;

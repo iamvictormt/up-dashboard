@@ -36,12 +36,13 @@ import { toast } from 'sonner';
 import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask, applyZipCodeMask } from '@/utils/masks';
 import Image from 'next/image';
 import Cookies from 'js-cookie';
-import { RegisterDTO } from '@/types';
+import { Profession, RegisterDTO } from '@/types';
 import { appUrl } from '@/constants/appRoutes';
 import { appImages } from '@/constants/appImages';
 import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
 import { AddressForm } from './address-form';
 import { useIsMobile } from './ui/use-mobile';
+import { fetchProfessions } from '@/lib/professions-api';
 
 export default function LoginContent() {
   const router = useRouter();
@@ -51,6 +52,7 @@ export default function LoginContent() {
   );
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
+  const [professions, setProfessions] = useState<Profession[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -114,8 +116,20 @@ export default function LoginContent() {
     }
   };
 
+  async function loadProfessions() {
+    try {
+      const response = await fetchProfessions();
+      setProfessions(response.data);
+    } catch (err) {
+      toast.error('Erro ao carregar as profissões, contate o administrador');
+      console.error(err);
+    } finally {
+    }
+  }
+
   useEffect(() => {
     setMounted(true);
+    loadProfessions();
   }, []);
 
   const [loginData, setLoginData] = useState({
@@ -138,7 +152,7 @@ export default function LoginContent() {
   const [professionalData, setProfessionalData] = useState({
     name: '',
     officeName: '',
-    profession: '',
+    professionId: '',
     document: '',
     generalRegister: '',
     registrationAgency: '',
@@ -205,7 +219,7 @@ export default function LoginContent() {
       const data = await response.json();
       Cookies.set('token', data.access_token, { expires: 1 / 24 });
       Cookies.set('user', JSON.stringify(data.user), { expires: 1 / 24 });
-      Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 })
+      Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
       setTimeout(() => {
@@ -250,7 +264,7 @@ export default function LoginContent() {
   };
 
   const handleProfessionalSelectChange = (value: string) => {
-    setProfessionalData((prev) => ({ ...prev, profession: value }));
+    setProfessionalData((prev) => ({ ...prev, professionId: value }));
   };
 
   // Partner Supplier Register handlers
@@ -333,11 +347,11 @@ export default function LoginContent() {
       payload.professional = {
         name: data.name,
         officeName: data.officeName,
-        profession: data.profession,
         document: data.document,
         generalRegister: data.generalRegister,
         registrationAgency: data.registrationAgency,
         phone: data.phone,
+        professionId: data.professionId
       };
     } else if (isPartnerSupplier(data)) {
       payload.partnerSupplier = {
@@ -1077,7 +1091,7 @@ export default function LoginContent() {
                             </Label>
                             <div className="relative">
                               <Select
-                                value={professionalData.profession}
+                                value={professionalData.professionId}
                                 onValueChange={handleProfessionalSelectChange}
                                 disabled={registerSuccess}
                                 required
@@ -1086,13 +1100,14 @@ export default function LoginContent() {
                                   <SelectValue placeholder="Selecione sua profissão" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="Arquiteto(a)">Arquiteto(a)</SelectItem>
-                                  <SelectItem value="Designer de Interiores">Designer de Interiores</SelectItem>
-                                  <SelectItem value="Engenheiro(a)">Engenheiro(a)</SelectItem>
-                                  <SelectItem value="Paisagista">Paisagista</SelectItem>
-                                  <SelectItem value="Outro">Outro</SelectItem>
+                                  {professions.map((profession: Profession) => (
+                                    <SelectItem key={profession.id} value={profession.id}>
+                                      {profession.name}
+                                    </SelectItem>
+                                  ))}
                                 </SelectContent>
                               </Select>
+
                               <Briefcase className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
                             </div>
                           </div>
