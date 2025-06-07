@@ -82,7 +82,11 @@ export function PostList({ communityId }: PostListProps) {
     return (
       <div className="bg-white rounded-xl shadow-sm p-8 text-center">
         <h3 className="text-lg font-medium mb-2">Nenhum post encontrado</h3>
-        <p className="text-gray-500">Seja o primeiro a compartilhar algo nesta comunidade!</p>
+        {communityId === '' ? (
+          <p className="text-gray-500">Tem algo legal para mostrar? Compartilhe com a comunidade!</p>
+        ) : (
+          <p className="text-gray-500">Seja o primeiro a compartilhar algo nesta comunidade!</p>
+        )}
       </div>
     );
   }

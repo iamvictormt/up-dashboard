@@ -1,4 +1,4 @@
-import { WorkshopsContent } from '@/components/workshops-content';
+import { WorkshopsContent } from '@/components/workshops/workshops-content';
 
 export default function Workshops() {
   return (

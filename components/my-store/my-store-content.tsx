@@ -37,8 +37,6 @@ import { fetchMyStore, updateStore } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
-import { createEvent } from '@/lib/event-api';
-import { createProduct } from '@/lib/product-api';
 import MapCard from '../map-card';
 
 const fetchStoreData = async (): Promise<StoreData | null> => {
@@ -214,7 +212,7 @@ export function MyStoreContent() {
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         {/* Floating Action Buttons */}
-        <div className="sticky top-32 ml-[95%] z-50 flex flex-col space-y-3">
+        <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
           <Button
             onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
             size="icon"
@@ -379,14 +377,14 @@ export function MyStoreContent() {
           <div className="max-w-7xl mx-auto space-y-16">
             {/* Produtos Section */}
             <section>
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                 <div>
                   <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Meus Produtos</h2>
                   <p className="text-[#511A2B]/70">Gerencie sua linha completa de produtos</p>
                 </div>
                 <Button
                   onClick={() => setShowProductForm(true)}
-                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3"
+                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Adicionar Produto
@@ -454,14 +452,14 @@ export function MyStoreContent() {
 
             {/* Eventos Section */}
             <section>
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                 <div>
                   <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Meus Eventos</h2>
                   <p className="text-[#511A2B]/70">Organize eventos e workshops para sua comunidade</p>
                 </div>
                 <Button
                   onClick={() => setShowEventForm(true)}
-                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3"
+                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Criar Evento
@@ -633,18 +631,19 @@ export function MyStoreContent() {
                         <p className="text-[#511A2B]/80">CEP: {storeData.address.zipCode}</p>
                       </div>
                     )}
-                    <Separator />
                     <div className="flex items-center gap-3">
-                      <Clock className="w-5 h-5 text-[#511A2B]/70" />
                       <div className="flex-1">
-                        <p className="text-sm text-[#511A2B]/70">Horário de Funcionamento</p>
                         {isEditing ? (
-                          <Input
-                            value={editData.openingHours}
-                            onChange={(e) => handleInputChange('openingHours', e.target.value)}
-                            className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            placeholder="Ex: Segunda a Sexta: 08:00 - 18:00"
-                          />
+                          <>
+                            <Label className="text-[#511A2B] font-medium">Horário de Funcionamento</Label>
+
+                            <Input
+                              value={editData.openingHours}
+                              onChange={(e) => handleInputChange('openingHours', e.target.value)}
+                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
+                              placeholder="Ex: Segunda a Sexta: 08:00 - 18:00"
+                            />
+                          </>
                         ) : (
                           <p className="font-semibold text-[#511A2B]">{storeData.openingHours}</p>
                         )}
@@ -653,8 +652,7 @@ export function MyStoreContent() {
                   </CardContent>
                 </Card>
 
-                                     <MapCard cep={ '75083125' } />
-
+                <MapCard cep={storeData.address.state} />
               </div>
             </section>
           </div>

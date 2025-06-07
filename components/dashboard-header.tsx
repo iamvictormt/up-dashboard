@@ -59,7 +59,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const getUserType = () => {
     if (user?.professional) {
-      return `${user.professional.profession} • ${user.professional.level}`
+      return `${user.professional.profession}`
     } else if (user?.partnerSupplier) {
       return "Fornecedor Parceiro"
     } else if (user?.loveDecoration) {
@@ -138,7 +138,6 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
         <div className="flex items-center space-x-4">
           <div className="flex flex-col">
             <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
-            <p className="text-xs text-white/70 hidden md:block">{getUserType()}</p>
           </div>
         </div>
 
@@ -161,7 +160,6 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 <div className="flex flex-col space-y-1">
                   <p className="text-xs font-medium text-[#511A2B]">{getUserName()}</p>
                   <p className="text-xs text-[#511A2B]/70">{user.email}</p>
-                  <p className="text-xs text-[#511A2B]/50">{getUserType()}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-[#511A2B]/10" />

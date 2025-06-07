@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { EventCard } from '@/components/event-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { EventCard } from './event-card';
+import { EventCardSkeleton } from './event-card-skeleton';
 
 interface Event {
   id: string;
@@ -228,10 +229,10 @@ export function EventsContent() {
 
         {/* Loading State */}
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-12 w-12 text-[#511A2B] animate-spin mb-4" />
-            <p className="text-[#511A2B] text-lg font-medium">Carregando eventos...</p>
-            <p className="text-[#511A2B]/70 text-sm">Buscando os melhores eventos para você</p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <EventCardSkeleton key={`skeleton-${index}`} />
+            ))}
           </div>
         ) : (
           /* Events Grid */

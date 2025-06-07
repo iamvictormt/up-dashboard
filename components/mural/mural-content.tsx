@@ -29,7 +29,7 @@ export function MuralContent() {
           <div className=" mb-8 space-y-4 md:space-y-0">
             <div className="">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Mural da Comunidade</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Mural da comunidade</h1>
                 <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
               </div>
             </div>

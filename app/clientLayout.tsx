@@ -1,26 +1,28 @@
-"use client"
+'use client';
 
-import type React from "react"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { AppSidebar } from "@/components/app-sidebar"
-import { DashboardHeader } from "@/components/dashboard-header"
-import { UserProvider } from "@/contexts/user-context"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
+import type React from 'react';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { AppSidebar } from '@/components/app-sidebar';
+import { DashboardHeader } from '@/components/dashboard-header';
+import { UserProvider } from '@/contexts/user-context';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { Toaster } from 'sonner';
+import { useMobile } from '@/hooks/use-mobile';
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ['latin'] });
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
+  const pathname = usePathname();
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
   const handleSidebarExpandedChange = (expanded: boolean) => {
-    setIsSidebarExpanded(expanded)
-  }
+    setIsSidebarExpanded(expanded);
+  };
 
-  if (pathname === "/login") {
-    return <>{children}</>
+  if (pathname === '/login') {
+    return <>{children}</>;
   }
 
   return (
@@ -34,27 +36,26 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         />
       </div>
       <div
-        className={`flex-1 transition-all duration-300 ${isSidebarExpanded ? "md:ml-72" : "md:ml-24"} relative min-w-0`}
+        className={`flex-1 transition-all duration-300 ${isSidebarExpanded ? 'md:ml-72' : 'md:ml-24'} relative min-w-0`}
       >
         <DashboardHeader isSidebarExpanded={isSidebarExpanded} />
         <main className="pt-[10vh] w-full">{children}</main>
       </div>
     </div>
-  )
+  );
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const isMobile = useMobile();
+
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
         <UserProvider>
           <LayoutContent>{children}</LayoutContent>
         </UserProvider>
+        <Toaster richColors position={isMobile ? 'top-center' : 'top-right'} />
       </body>
     </html>
-  )
+  );
 }
