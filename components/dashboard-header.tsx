@@ -1,8 +1,8 @@
-'use client';
+"use client"
 
-import { LogOut, User, Settings, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LogOut, User, Settings, Menu, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,65 +10,73 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useUser } from '@/contexts/user-context';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ProfileEditModal } from '@/components/profile-edit-modal';
-import { useState } from 'react';
-import { NotificationsDropdown } from './notifications-dropdown';
+} from "@/components/ui/dropdown-menu"
+import { useUser } from "@/contexts/user-context"
+import { Skeleton } from "@/components/ui/skeleton"
+import { ProfileEditModal } from "@/components/profile-edit-modal"
+import { useState } from "react"
+import { AppSidebar } from "./app-sidebar"
+import { NotificationsDropdown } from "./notifications-dropdown"
 
-export function DashboardHeader() {
-  const { user, isLoading, logout } = useUser();
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+interface DashboardHeaderProps {
+  isSidebarExpanded?: boolean
+}
+
+export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderProps) {
+  const { user, isLoading, logout } = useUser()
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
 
   const handleLogout = () => {
-    logout();
-    window.location.href = '/login';
-  };
+    logout()
+    window.location.href = "/login"
+  }
 
   const getUserName = () => {
-    if (!user) return 'Usuário';
+    if (!user) return "Usuário"
 
     if (user.professional) {
-      return user.professional.name;
+      return user.professional.name
     } else if (user.partnerSupplier) {
-      return user.partnerSupplier.tradeName;
+      return user.partnerSupplier.tradeName
     } else if (user.loveDecoration) {
-      return user.loveDecoration.name;
+      return user.loveDecoration.name
     }
 
-    return user.email.split('@')[0];
-  };
+    return user.email.split("@")[0]
+  }
 
   const getProfileImage = () => {
     if (user?.profileImage) {
-      return user.profileImage;
+      return user.profileImage
     }
-    return '/placeholder.svg';
-  };
+    return "/placeholder.svg"
+  }
 
   const getUserType = () => {
     if (user?.professional) {
-      return `${user.professional.profession} • ${user.professional.level}`;
+      return `${user.professional.profession} • ${user.professional.level}`
     } else if (user?.partnerSupplier) {
-      return 'Fornecedor Parceiro';
+      return "Fornecedor Parceiro"
     } else if (user?.loveDecoration) {
-      return 'Eu amo decoração';
+      return "Eu amo decoração"
     }
-    return 'Usuário';
-  };
+    return "Usuário"
+  }
+
+  // Classes dinâmicas para o header baseadas no estado da sidebar
+  const headerClasses = `fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-[#46142b] transition-all duration-300 w-full left-0 px-4 md:px-6 ${
+    isSidebarExpanded ? "md:left-72 md:w-[calc(100%-18rem)]" : "md:left-24 md:w-[calc(100%-6rem)]"
+  }`
 
   if (isLoading) {
     return (
       <>
-        {/* Elemento de curvatura - apenas desktop */}
-        {/* <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24 hidden">
-          <svg width="32" height="64" viewBox="0 0 32 64" fill="none" className="block">
-            <path d="M0 0H32C32 35.346 3.346 64 0 64V0Z" fill="#FFEDC1" />
-          </svg>
-        </div> */}
-
-        <header className="fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-[#46142b] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
+        <header className={headerClasses}>
           <div className="flex items-center space-x-4 ml-12 md:ml-0">
             <Skeleton className="h-6 w-32 bg-white/20" />
           </div>
@@ -80,21 +88,24 @@ export function DashboardHeader() {
           </div>
         </header>
       </>
-    );
+    )
   }
 
   if (!user) {
     return (
       <>
-        {/* Elemento de curvatura - apenas desktop */}
-        {/* <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24">
-          <svg width="32" height="64" viewBox="0 0 32 64" fill="none" className="block">
-            <path d="M0 0H32C32 35.346 3.346 64 0 64V0Z" fill="#FFEDC1" />
-          </svg>
-        </div> */}
+        <header className={headerClasses}>
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-white hover:bg-white/10 rounded-xl mr-2"
+            onClick={toggleMobileMenu}
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
 
-        <header className="fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-[#46142b] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
-          <div className="flex items-center space-x-4 ml-12 md:ml-0">
+          <div className="flex items-center space-x-4">
             <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
           </div>
 
@@ -102,21 +113,29 @@ export function DashboardHeader() {
             <div className="text-white/70 text-sm">Acesso restrito</div>
           </div>
         </header>
+
+        {/* Mobile Sidebar - apenas visível em mobile */}
+        <div className="md:hidden">
+          <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
+        </div>
       </>
-    );
+    )
   }
 
   return (
     <>
-      {/* Elemento de curvatura - apenas desktop */}
-      {/* <div className="fixed top-0 left-72 z-30 hidden md:block transition-all duration-300 peer-data-[state=collapsed]:left-24">
-        <svg width="32" height="64" viewBox="0 0 32 64" fill="none" className="block">
-          <path d="M0 0H32C32 35.346 3.346 64 0 64V0Z" fill="#FFEDC1" />
-        </svg>
-      </div> */}
+      <header className={headerClasses}>
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden rounded-xl text-gray-300 hover:text-white hover:bg-white/10 p-8 md:p-6"
+          onClick={toggleMobileMenu}
+        >
+          {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </Button>
 
-      <header className="fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-[#46142b] transition-all duration-300 w-full left-0 px-4 md:px-6 md:left-72 md:w-[calc(100%-18rem)] md:peer-data-[state=collapsed]:left-24 md:peer-data-[state=collapsed]:w-[calc(100%-6rem)]">
-        <div className="flex items-center space-x-4 ml-12 md:ml-0">
+        <div className="flex items-center space-x-4">
           <div className="flex flex-col">
             <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
             <p className="text-xs text-white/70 hidden md:block">{getUserType()}</p>
@@ -125,14 +144,13 @@ export function DashboardHeader() {
 
         <div className="flex items-center space-x-2 md:space-x-4">
           <NotificationsDropdown />
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 className="flex items-center text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-8 md:p-6"
               >
-                <span className="text-sm hidden sm:inline">Olá, {getUserName().split(' ')[0]}</span>
+                <span className="hidden sm:inline">Olá, {getUserName().split(" ")[0]}</span>
                 <Avatar className="md:ml-3 w-8 h-8">
                   <AvatarImage src={getProfileImage() || '/placeholder.svg'} />
                 </Avatar>
@@ -169,10 +187,14 @@ export function DashboardHeader() {
       </header>
 
       {/* Modal de Edição de Perfil */}
-
       {isProfileModalOpen && (
         <ProfileEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
       )}
+
+      {/* Mobile Sidebar - apenas visível em mobile */}
+      <div className="md:hidden">
+        <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
+      </div>
     </>
-  );
+  )
 }

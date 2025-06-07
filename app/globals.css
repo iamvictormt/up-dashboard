@@ -242,15 +242,3 @@ html:has(aside.w-72) .sidebar-curve {
   }
 }
 
-/* Melhorar a detecção do estado da sidebar para o header - apenas desktop */
-@media (min-width: 768px) {
-  html:has(aside.w-24) header.fixed.top-0 {
-    left: 6rem !important;
-    width: calc(100% - 6rem) !important;
-  }
-
-  html:has(aside.w-72) header.fixed.top-0 {
-    left: 18rem !important;
-    width: calc(100% - 18rem) !important;
-  }
-}

@@ -1,10 +1,10 @@
-'use client';
+"use client"
 
-import type React from 'react';
+import type React from "react"
 
-import { useState, useRef } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState, useRef, useEffect } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   MessageSquare,
   Users,
@@ -15,161 +15,168 @@ import {
   HelpCircle,
   ChevronRight,
   ChevronLeft,
-  Menu,
   X,
   Crown,
-} from 'lucide-react';
-import { useUser } from '@/contexts/user-context';
-import { Skeleton } from './ui/skeleton';
-import { appImages } from '@/constants/appImages';
-import Image from 'next/image';
+} from "lucide-react"
+import { useUser } from "@/contexts/user-context"
+import { Skeleton } from "./ui/skeleton"
+import Image from "next/image"
+import { appImages } from "@/constants/appImages"
 
 type SidebarItem = {
-  title: string;
-  icon: React.ElementType;
-  url?: string;
-  badge?: string;
-  indicator?: string;
-  isExpandable?: boolean;
+  title: string
+  icon: React.ElementType
+  url?: string
+  badge?: string
+  indicator?: string
+  isExpandable?: boolean
   subItems?: {
-    title: string;
-    url: string;
-    indicator?: 'purple' | 'red' | 'blue' | 'green';
-  }[];
-  roles?: string[];
-};
+    title: string
+    url: string
+    indicator?: "purple" | "red" | "blue" | "green"
+  }[]
+  roles?: string[]
+}
 
-export function AppSidebar() {
-  const pathname = usePathname();
-  const { isLoading, role } = useUser();
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+interface AppSidebarProps {
+  isMobileOpen: boolean
+  onToggleMobile: () => void
+  onExpandedChange?: (expanded: boolean) => void
+  isDesktop?: boolean
+}
+
+export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isDesktop = false }: AppSidebarProps) {
+  const pathname = usePathname()
+  const { isLoading, role } = useUser()
+  const [isExpanded, setIsExpanded] = useState(true)
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({})
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
+    const newExpanded = !isExpanded
+    setIsExpanded(newExpanded)
+    if (onExpandedChange) {
+      onExpandedChange(newExpanded)
+    }
+  }
 
-  const toggleMobileSidebar = () => {
-    setIsMobileOpen(!isMobileOpen);
-  };
+  // Notifica o pai quando o estado de expansão muda
+  useEffect(() => {
+    if (onExpandedChange) {
+      onExpandedChange(isExpanded)
+    }
+  }, [isExpanded, onExpandedChange])
 
   const toggleExpandItem = (title: string) => {
     if (isExpanded) {
       setExpandedItems((prev) => ({
         ...prev,
         [title]: !prev[title],
-      }));
+      }))
     }
-  };
+  }
 
   const handleMouseEnter = (itemTitle: string) => {
     if (!isExpanded) {
       if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
+        clearTimeout(hoverTimeoutRef.current)
       }
-      setHoveredItem(itemTitle);
+      setHoveredItem(itemTitle)
     }
-  };
+  }
 
   const handleMouseLeave = () => {
     if (!isExpanded) {
       hoverTimeoutRef.current = setTimeout(() => {
-        setHoveredItem(null);
-      }, 100);
+        setHoveredItem(null)
+      }, 100)
     }
-  };
+  }
 
   const mainMenuItems: SidebarItem[] = [
     {
-      title: 'Mural',
+      title: "Mural",
       icon: MessageSquare,
-      url: '/mural',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      url: "/mural",
+      roles: ["professional", "partnerSupplier", "loveDecoration"],
     },
     {
-      title: 'Profissionais',
+      title: "Profissionais",
       icon: Users,
-      url: '/professionals',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      url: "/professionals",
+      roles: ["professional", "partnerSupplier", "loveDecoration"],
     },
     {
-      title: 'Fornecedores',
+      title: "Fornecedores",
       icon: Store,
-      url: '/suppliers',
-      roles: ['professional'],
+      url: "/suppliers",
+      roles: ["professional"],
     },
     {
-      title: 'Workshops',
+      title: "Workshops",
       icon: GraduationCap,
-      url: '/workshops',
-      roles: ['professional'],
+      url: "/workshops",
+      roles: ["professional"],
     },
     {
-      title: 'Eventos',
+      title: "Eventos",
       icon: Calendar,
-      url: '/events',
-      roles: ['professional'],
+      url: "/events",
+      roles: ["professional"],
     },
     {
-      title: 'Minha Loja',
+      title: "Minha Loja",
       icon: Briefcase,
-      url: '/my-store',
-      roles: ['partnerSupplier'],
+      url: "/my-store",
+      roles: ["partnerSupplier"],
     },
     {
-      title: 'Meus Benefícios',
+      title: "Meus Benefícios",
       icon: Crown,
-      url: '/benefits',
-      roles: ['partnerSupplier'],
+      url: "/benefits",
+      roles: ["partnerSupplier"],
     },
-  ];
+  ]
 
   const otherMenuItems: SidebarItem[] = [
     {
-      title: 'Ajuda',
+      title: "Ajuda",
       icon: HelpCircle,
-      url: '/help',
+      url: "/help",
     },
-    // {
-    //   title: 'Configurações',
-    //   icon: Settings,
-    //   url: '/settings',
-    // },
-  ];
+  ]
 
   const MenuItemSkeleton = () => (
-    <div className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
+    <div className={`w-full relative ${isExpanded ? "px-3" : "px-2"}`}>
       <div
         className={`
           w-full flex items-center h-12 rounded-lg
-          ${isExpanded ? 'justify-between px-4' : 'justify-center'}
+          ${isExpanded ? "justify-between px-4" : "justify-center"}
         `}
       >
-        <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
+        <div className={`flex items-center ${isExpanded ? "space-x-3" : ""}`}>
           <Skeleton className="w-5 h-5 bg-white/20" />
           {isExpanded && <Skeleton className="h-4 w-20 bg-white/20" />}
         </div>
       </div>
     </div>
-  );
+  )
 
   const renderMenuItem = (item: SidebarItem) => {
-    const isActive = item.url === pathname;
-    const isItemExpanded = expandedItems[item.title];
+    const isActive = item.url === pathname
+    const isItemExpanded = expandedItems[item.title]
 
     // Classes comuns para ambos os tipos de item
     const baseClasses = `
       w-full flex items-center transition-all h-12 rounded-lg
       text-gray-300 hover:text-white hover:bg-white/10
-      ${isExpanded ? 'justify-between px-4' : 'justify-center'}
-    `;
+      ${isExpanded ? "justify-between px-4" : "justify-center"}
+    `
 
     if (item.isExpandable) {
       return (
-        <div key={item.title} className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
+        <div key={item.title} className={`w-full relative ${isExpanded ? "px-3" : "px-2"}`}>
           <button
             data-item={item.title}
             onClick={() => toggleExpandItem(item.title)}
@@ -177,12 +184,12 @@ export function AppSidebar() {
             onMouseLeave={handleMouseLeave}
             className={baseClasses}
           >
-            <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
+            <div className={`flex items-center ${isExpanded ? "space-x-3" : ""}`}>
               <item.icon className="w-5 h-5" />
               {isExpanded && <span className="text-sm font-medium">{item.title}</span>}
             </div>
             {isExpanded && (
-              <ChevronRight className={`w-4 h-4 transition-transform ${isItemExpanded ? 'rotate-90' : ''}`} />
+              <ChevronRight className={`w-4 h-4 transition-transform ${isItemExpanded ? "rotate-90" : ""}`} />
             )}
           </button>
 
@@ -190,18 +197,18 @@ export function AppSidebar() {
           {isExpanded && isItemExpanded && item.subItems && (
             <div className="ml-6 mt-1 space-y-1">
               {item.subItems.map((subItem) => {
-                const isSubActive = subItem.url === pathname;
+                const isSubActive = subItem.url === pathname
                 return (
                   <Link
                     key={subItem.title}
                     href={subItem.url}
-                    onClick={() => setIsMobileOpen(false)}
+                    onClick={() => onToggleMobile()}
                     className={`
                       flex items-center px-4 py-2 rounded-lg
                       ${
                         isSubActive
-                          ? 'bg-white/15 text-white shadow-lg'
-                          : 'text-gray-300 hover:text-white hover:bg-white/10'
+                          ? "bg-white/15 text-white shadow-lg"
+                          : "text-gray-300 hover:text-white hover:bg-white/10"
                       }
                       transition-all
                     `}
@@ -209,66 +216,53 @@ export function AppSidebar() {
                     <div className="flex items-center space-x-3">
                       <div
                         className={`w-2 h-2 rounded-full ${
-                          subItem.indicator === 'purple'
-                            ? 'bg-purple-500'
-                            : subItem.indicator === 'red'
-                            ? 'bg-red-500'
-                            : subItem.indicator === 'blue'
-                            ? 'bg-blue-500'
-                            : 'bg-green-500'
+                          subItem.indicator === "purple"
+                            ? "bg-purple-500"
+                            : subItem.indicator === "red"
+                              ? "bg-red-500"
+                              : subItem.indicator === "blue"
+                                ? "bg-blue-500"
+                                : "bg-green-500"
                         }`}
                       />
                       <span className="text-sm font-medium">{subItem.title}</span>
                     </div>
                   </Link>
-                );
+                )
               })}
             </div>
           )}
         </div>
-      );
+      )
     }
 
     return (
-      <div key={item.title} className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
+      <div key={item.title} className={`w-full relative ${isExpanded ? "px-3" : "px-2"}`}>
         <Link
           data-item={item.title}
-          href={item.url || '#'}
-          onClick={() => setIsMobileOpen(false)}
+          href={item.url || "#"}
+          onClick={() => onToggleMobile()}
           onMouseEnter={() => handleMouseEnter(item.title)}
           onMouseLeave={handleMouseLeave}
           className={`
             ${baseClasses}
-            ${isActive ? 'bg-white/15 text-white shadow-lg' : ''}
+            ${isActive ? "bg-white/15 text-white shadow-lg" : ""}
           `}
         >
-          <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
+          <div className={`flex items-center ${isExpanded ? "space-x-3" : ""}`}>
             <item.icon className="w-5 h-5" />
             {isExpanded && <span className="text-sm font-medium">{item.title}</span>}
           </div>
         </Link>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <>
-      {/* Mobile Menu Button - Melhor posicionamento */}
-      {!isMobileOpen ? (
-        <button
-          onClick={toggleMobileSidebar}
-          className="fixed top-6 left-2 z-[60] md:hidden bg-[#46142b] text-white p-3 rounded-xl shadow-lg border border-white/20"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-      ) : null}
-
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
-          onClick={() => setIsMobileOpen(false)}
-        />
+      {/* Mobile Overlay - apenas para mobile */}
+      {!isDesktop && isMobileOpen && (
+        <div className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm" onClick={() => onToggleMobile()} />
       )}
 
       {/* Sidebar */}
@@ -276,8 +270,8 @@ export function AppSidebar() {
         className={`
           fixed top-0 left-0 h-screen bg-[#46142b] z-50
           transition-all duration-300 ease-in-out flex flex-col
-          ${isExpanded ? 'w-72' : 'w-24'}
-          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          ${isExpanded ? "w-72" : "w-24"}
+          ${isDesktop ? "translate-x-0" : isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
           shadow-2xl md:shadow-none
         `}
       >
@@ -305,7 +299,7 @@ export function AppSidebar() {
                 </button>
                 {/* Botão de fechar no mobile */}
                 <button
-                  onClick={toggleMobileSidebar}
+                  onClick={onToggleMobile}
                   className="md:hidden w-8 h-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors"
                 >
                   <X className="w-5 h-5" />
@@ -330,7 +324,7 @@ export function AppSidebar() {
           <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
             {isExpanded && (
               <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-3">
-                {isLoading ? <Skeleton className="h-3 w-16 bg-white/20" /> : 'PRINCIPAL'}
+                {isLoading ? <Skeleton className="h-3 w-16 bg-white/20" /> : "PRINCIPAL"}
               </div>
             )}
             <div className="space-y-1">
@@ -338,7 +332,9 @@ export function AppSidebar() {
                 ? // Mostra skeletons enquanto carrega
                   Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
                 : // Mostra itens reais após carregar
-                  mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                  mainMenuItems
+                    .filter((item) => !item.roles || item.roles.includes(role))
+                    .map(renderMenuItem)}
             </div>
           </div>
 
@@ -346,7 +342,7 @@ export function AppSidebar() {
           <div className="py-4">
             {isExpanded && (
               <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">
-                {isLoading ? <Skeleton className="h-3 w-12 bg-white/20" /> : 'OUTROS'}
+                {isLoading ? <Skeleton className="h-3 w-12 bg-white/20" /> : "OUTROS"}
               </div>
             )}
             <div className="space-y-1">
@@ -354,7 +350,9 @@ export function AppSidebar() {
                 ? // Mostra skeletons para seção "Outros"
                   Array.from({ length: 2 }).map((_, index) => <MenuItemSkeleton key={`skeleton-other-${index}`} />)
                 : // Mostra itens reais
-                  otherMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                  otherMenuItems
+                    .filter((item) => !item.roles || item.roles.includes(role))
+                    .map(renderMenuItem)}
             </div>
           </div>
         </div>
@@ -364,12 +362,12 @@ export function AppSidebar() {
       {!isLoading && !isExpanded && hoveredItem && (
         <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
           {mainMenuItems.concat(otherMenuItems).map((item, index) => {
-            if (item.title !== hoveredItem) return null;
+            if (item.title !== hoveredItem) return null
 
-            const itemElement = document.querySelector(`[data-item="${item.title}"]`);
-            const rect = itemElement?.getBoundingClientRect();
+            const itemElement = document.querySelector(`[data-item="${item.title}"]`)
+            const rect = itemElement?.getBoundingClientRect()
 
-            if (!rect) return null;
+            if (!rect) return null
 
             if (item.isExpandable && item.subItems) {
               return (
@@ -382,9 +380,9 @@ export function AppSidebar() {
                   }}
                   onMouseEnter={() => {
                     if (hoverTimeoutRef.current) {
-                      clearTimeout(hoverTimeoutRef.current);
+                      clearTimeout(hoverTimeoutRef.current)
                     }
-                    setHoveredItem(item.title);
+                    setHoveredItem(item.title)
                   }}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -400,7 +398,7 @@ export function AppSidebar() {
                     {/* Itens do submenu */}
                     <div className="py-1">
                       {item.subItems.map((subItem) => {
-                        const isSubActive = subItem.url === pathname;
+                        const isSubActive = subItem.url === pathname
                         return (
                           <Link
                             key={subItem.title}
@@ -409,8 +407,8 @@ export function AppSidebar() {
                               flex items-center px-4 py-2 mx-2 rounded-md
                               ${
                                 isSubActive
-                                  ? 'bg-white/15 text-white'
-                                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                                  ? "bg-white/15 text-white"
+                                  : "text-gray-300 hover:text-white hover:bg-white/10"
                               }
                               transition-all
                             `}
@@ -418,19 +416,19 @@ export function AppSidebar() {
                             <div className="flex items-center space-x-3">
                               <div
                                 className={`w-2 h-2 rounded-full ${
-                                  subItem.indicator === 'purple'
-                                    ? 'bg-purple-500'
-                                    : subItem.indicator === 'red'
-                                    ? 'bg-red-500'
-                                    : subItem.indicator === 'blue'
-                                    ? 'bg-blue-500'
-                                    : 'bg-green-500'
+                                  subItem.indicator === "purple"
+                                    ? "bg-purple-500"
+                                    : subItem.indicator === "red"
+                                      ? "bg-red-500"
+                                      : subItem.indicator === "blue"
+                                        ? "bg-blue-500"
+                                        : "bg-green-500"
                                 }`}
                               />
                               <span className="text-sm font-medium">{subItem.title}</span>
                             </div>
                           </Link>
-                        );
+                        )
                       })}
                     </div>
 
@@ -438,7 +436,7 @@ export function AppSidebar() {
                     <div className="absolute left-0 top-6 transform -translate-x-1 w-2 h-2 bg-[#511A2B] rotate-45 border-l border-b border-white/10" />
                   </div>
                 </div>
-              );
+              )
             } else {
               return (
                 <div
@@ -447,13 +445,13 @@ export function AppSidebar() {
                   style={{
                     left: rect.right + 8,
                     top: rect.top + rect.height / 2,
-                    transform: 'translateY(-50%)',
+                    transform: "translateY(-50%)",
                   }}
                   onMouseEnter={() => {
                     if (hoverTimeoutRef.current) {
-                      clearTimeout(hoverTimeoutRef.current);
+                      clearTimeout(hoverTimeoutRef.current)
                     }
-                    setHoveredItem(item.title);
+                    setHoveredItem(item.title)
                   }}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -462,11 +460,11 @@ export function AppSidebar() {
                     <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-[#511A2B] rotate-45 border-l border-b border-white/10" />
                   </div>
                 </div>
-              );
+              )
             }
           })}
         </div>
       )}
     </>
-  );
+  )
 }

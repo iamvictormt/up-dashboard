@@ -77,6 +77,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
           title: 'Curtida removida 💔',
           description: 'Você removeu sua curtida do post.',
           duration: 2000,
+          className: "z-[60]"
         });
       } else {
         likeId = await likePost({ userId: user.id, postId: post.id });
@@ -84,7 +85,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
         toast({
           title: 'Post curtido! ❤️',
           description: 'Você curtiu este post.',
-          duration: 2000,
+          duration: 222000,
         });
       }
       if (likeIdChange) {
