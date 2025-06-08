@@ -218,9 +218,7 @@ export default function LoginContent() {
 
       const data = await response.json();
       Cookies.set('token', data.access_token, { expires: 1 / 24 });
-      Cookies.set('user', JSON.stringify(data.user), { expires: 1 / 24 });
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
-
       toast.success('Login realizado com sucesso!');
       setTimeout(() => {
         window.location.href = appUrl.mural;

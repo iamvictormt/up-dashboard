@@ -1,174 +1,93 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState, useRef } from "react"
-import { X, Upload, Camera, Trash2, AlertCircle, CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { useUser } from "@/contexts/user-context"
+import { useState, useRef } from 'react';
+import { X, Upload, Camera, Trash2, AlertCircle, CheckCircle, Save } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { useUser } from '@/contexts/user-context';
+import { toast } from 'sonner';
+import { updateImageUser, uploadImageCloudinary } from '@/lib/user-api';
 
 interface ProfileImageModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
-  const { user, updateUser } = useUser()
-  const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [previewImage, setPreviewImage] = useState<string | null>(null)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { user, updateProfileImage } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const allowedTypes = ['image/jpeg', 'image/png'];
 
-  if (!isOpen) return null
-
-  const getUserName = () => {
-    if (user?.professional) return user.professional.name
-    if (user?.partnerSupplier) return user.partnerSupplier.tradeName
-    if (user?.loveDecoration) return user.loveDecoration.name
-    return "Usuário"
-  }
-
-  const getUserInitials = () => {
-    const name = getUserName()
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase()
-  }
+  if (!isOpen) return null;
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-    // Validar tipo de arquivo
-    if (!file.type.startsWith("image/")) {
-      setErrorMessage("Por favor, selecione apenas arquivos de imagem.")
-      return
+    if (!allowedTypes.includes(file.type)) {
+      setErrorMessage('Por favor, selecione apenas arquivos de imagem.');
+      return;
     }
 
-    // Validar tamanho do arquivo (máximo 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setErrorMessage("A imagem deve ter no máximo 5MB.")
-      return
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('A imagem deve ter no máximo 2MB.');
+      return;
     }
 
-    setSelectedFile(file)
-    setErrorMessage(null)
+    setSelectedFile(file);
+    setErrorMessage(null);
 
-    // Criar preview da imagem
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
-      setPreviewImage(e.target?.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
+      setPreviewImage(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleUpload = async () => {
     if (!selectedFile || !user) {
-      setErrorMessage("Nenhuma imagem selecionada.")
-      return
+      setErrorMessage('Nenhuma imagem selecionada.');
+      return;
     }
 
-    setIsLoading(true)
-    setErrorMessage(null)
-    setSuccessMessage(null)
+    setIsLoading(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
-      // Criar FormData para upload
-      const formData = new FormData()
-      formData.append("profileImage", selectedFile)
+      const cloudinaryImageURL = await uploadImageCloudinary(selectedFile);
+      if (!cloudinaryImageURL) return;
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.id}/profile-image`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || "Erro ao fazer upload da imagem")
-      }
-
-      const result = await response.json()
-
-      // Atualizar contexto local com a nova URL da imagem
-      updateUser({
-        ...user,
-        profileImage: result.profileImageUrl,
-      })
-
-      setSuccessMessage("Imagem de perfil atualizada com sucesso!")
-
-      // Fechar modal após 2 segundos
-      setTimeout(() => {
-        onClose()
-      }, 2000)
+      await updateImageUser(user.id, cloudinaryImageURL);
+      updateProfileImage(cloudinaryImageURL);
+      toast.success('Imagem de perfil atualizada com sucesso!');
+      
+      onClose();
     } catch (error) {
-      console.error("Erro ao fazer upload:", error)
-      setErrorMessage(error instanceof Error ? error.message : "Erro inesperado ao fazer upload")
+      console.error('Erro ao fazer upload:', error);
+      toast.error(error instanceof Error ? error.message : 'Erro inesperado ao fazer upload');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
-
-  const handleRemoveImage = async () => {
-    if (!user) return
-
-    setIsLoading(true)
-    setErrorMessage(null)
-    setSuccessMessage(null)
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.id}/profile-image`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao remover imagem de perfil")
-      }
-
-      // Atualizar contexto local removendo a imagem
-      updateUser({
-        ...user,
-        profileImage: undefined,
-      })
-
-      setSuccessMessage("Imagem de perfil removida com sucesso!")
-      setPreviewImage(null)
-      setSelectedFile(null)
-
-      // Fechar modal após 2 segundos
-      setTimeout(() => {
-        onClose()
-      }, 2000)
-    } catch (error) {
-      console.error("Erro ao remover imagem:", error)
-      setErrorMessage("Erro ao remover imagem de perfil. Tente novamente.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  };
 
   const handleClearSelection = () => {
-    setSelectedFile(null)
-    setPreviewImage(null)
-    setErrorMessage(null)
+    setSelectedFile(null);
+    setPreviewImage(null);
+    setErrorMessage(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""
+      fileInputRef.current.value = '';
     }
-  }
+  };
 
-  const currentImage = previewImage || user?.profileImage
+  const currentImage = previewImage || user?.profileImage;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -203,16 +122,15 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
 
           {/* Current/Preview Image */}
           <div className="flex flex-col items-center space-y-4">
-            <Avatar className="w-32 h-32">
-              <AvatarImage src={currentImage || "/placeholder.svg"} />
-              <AvatarFallback className="bg-[#511A2B] text-white text-2xl">{getUserInitials()}</AvatarFallback>
+            <Avatar className="w-64 h-64">
+              <AvatarImage src={currentImage || '/placeholder.svg'} className="object-cover" />
             </Avatar>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                {previewImage ? "Nova imagem selecionada" : "Imagem atual do perfil"}
+                {previewImage ? 'Nova imagem selecionada' : 'Imagem atual do perfil'}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Tamanho máximo: 5MB • Formatos: JPG, PNG, GIF</p>
+              <p className="text-xs text-gray-500 mt-1">Tamanho máximo: 2MB • Formatos: JPG, PNG</p>
             </div>
           </div>
 
@@ -221,7 +139,7 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png"
               onChange={handleFileSelect}
               className="hidden"
               disabled={isLoading}
@@ -243,26 +161,15 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
                   <Button
                     onClick={handleUpload}
                     disabled={isLoading}
-                    className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90"
+                    className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
                   >
-                    {isLoading ? "Salvando..." : "Salvar Nova Imagem"}
+                    <Save className="w-4 h-4" />
+                    {isLoading ? 'Salvando...' : 'Salvar Nova Imagem'}
                   </Button>
                   <Button variant="outline" onClick={handleClearSelection} disabled={isLoading}>
                     Cancelar
                   </Button>
                 </div>
-              )}
-
-              {user?.profileImage && !selectedFile && (
-                <Button
-                  variant="outline"
-                  onClick={handleRemoveImage}
-                  disabled={isLoading}
-                  className="flex items-center justify-center space-x-2 text-red-600 border-red-200 hover:bg-red-50"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span>Remover Imagem Atual</span>
-                </Button>
               )}
             </div>
           </div>
@@ -276,5 +183,5 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

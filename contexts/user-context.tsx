@@ -8,6 +8,8 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import Cookies from 'js-cookie';
 import api from '@/services/api';
 import { Profession } from '@/types';
+import { fetchUserAuthenticated } from '@/lib/user-api';
+import { AddressData } from '@/types/address';
 
 // Tipos para o usuário
 interface User {
@@ -69,6 +71,7 @@ interface UserContextType {
   isLoading: boolean;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  updateProfileImage: (profileImage: string) => void;
   role: string;
 }
 
@@ -108,16 +111,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setError(null);
 
         const token = getCookie('token');
-        const userString = getCookie('user');
 
-        if (!token || !userString) {
+        if (!token) {
           router.push(appUrl.login);
           return;
         }
-
-        const decoded = decodeURIComponent(userString);
-        const user = JSON.parse(decoded);
-        setUser(user);
+        const result = await fetchUserAuthenticated();
+        setUser(result.data);
       } catch (err) {
         console.error('Erro ao carregar usuário:', err);
         setError('Erro ao carregar usuário');
@@ -137,7 +137,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const logout = () => {
     deleteCookie('token');
-    deleteCookie('user');
     setUser(null);
     setError(null);
   };
@@ -146,6 +145,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (user && user.loveDecoration)
       setUser({
         ...user,
+        ...userData,
         loveDecoration: {
           ...user.loveDecoration,
           ...userData,
@@ -155,6 +155,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (user && user.professional)
       setUser({
         ...user,
+        ...userData,
         professional: {
           ...user.professional,
           ...userData,
@@ -164,10 +165,19 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (user && user.partnerSupplier)
       setUser({
         ...user,
+        ...userData,
         partnerSupplier: {
           ...user.partnerSupplier,
           ...userData,
         },
+      });
+  };
+
+  const updateProfileImage = (profileImage: string) => {
+    if (user)
+      setUser({
+        ...user,
+        profileImage,
       });
   };
 
@@ -176,6 +186,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     isLoading,
     logout,
     updateUser,
+    updateProfileImage,
     role,
   };
 

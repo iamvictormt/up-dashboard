@@ -34,7 +34,6 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401) {
       deleteCookie('token');
-      deleteCookie('user');
 
       setTimeout(() => {
         if (typeof window !== 'undefined') {

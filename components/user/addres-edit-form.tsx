@@ -1,220 +1,167 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { AlertCircle } from "lucide-react"
-import { useUser } from "@/contexts/user-context"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { AlertCircle, Save } from 'lucide-react';
+import { useUser } from '@/contexts/user-context';
+import { applyZipCodeMask } from '@/utils/masks';
+import { fetchAddressByZipCode } from '@/lib/address-api';
+import { updateAddressUser } from '@/lib/user-api';
+import { toast } from 'sonner';
 
 interface AddressData {
-  state: string
-  city: string
-  district: string
-  street: string
-  complement: string
-  number: string
-  zipCode: string
+  state: string;
+  city: string;
+  district: string;
+  street: string;
+  complement: string;
+  number: string;
+  zipCode: string;
 }
 
 interface ValidationErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 interface AddressEditFormProps {
-  address?: any
-  isLoading: boolean
-  setIsLoading: (loading: boolean) => void
-  setErrorMessage: (message: string | null) => void
-  onClose: () => void
+  address?: any;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+  setErrorMessage: (message: string | null) => void;
+  onClose: () => void;
 }
 
-const BRAZILIAN_STATES = [
-  { value: "AC", label: "Acre" },
-  { value: "AL", label: "Alagoas" },
-  { value: "AP", label: "Amapá" },
-  { value: "AM", label: "Amazonas" },
-  { value: "BA", label: "Bahia" },
-  { value: "CE", label: "Ceará" },
-  { value: "DF", label: "Distrito Federal" },
-  { value: "ES", label: "Espírito Santo" },
-  { value: "GO", label: "Goiás" },
-  { value: "MA", label: "Maranhão" },
-  { value: "MT", label: "Mato Grosso" },
-  { value: "MS", label: "Mato Grosso do Sul" },
-  { value: "MG", label: "Minas Gerais" },
-  { value: "PA", label: "Pará" },
-  { value: "PB", label: "Paraíba" },
-  { value: "PR", label: "Paraná" },
-  { value: "PE", label: "Pernambuco" },
-  { value: "PI", label: "Piauí" },
-  { value: "RJ", label: "Rio de Janeiro" },
-  { value: "RN", label: "Rio Grande do Norte" },
-  { value: "RS", label: "Rio Grande do Sul" },
-  { value: "RO", label: "Rondônia" },
-  { value: "RR", label: "Roraima" },
-  { value: "SC", label: "Santa Catarina" },
-  { value: "SP", label: "São Paulo" },
-  { value: "SE", label: "Sergipe" },
-  { value: "TO", label: "Tocantins" },
-]
-
 export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMessage, onClose }: AddressEditFormProps) {
-  const { user, updateUser } = useUser()
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
+  const { user, updateUser } = useUser();
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
   const [formData, setFormData] = useState<AddressData>({
-    state: address?.state || "",
-    city: address?.city || "",
-    district: address?.district || "",
-    street: address?.street || "",
-    complement: address?.complement || "",
-    number: address?.number || "",
-    zipCode: address?.zipCode || "",
-  })
+    state: address?.state || '',
+    city: address?.city || '',
+    district: address?.district || '',
+    street: address?.street || '',
+    complement: address?.complement || '',
+    number: address?.number || '',
+    zipCode: address?.zipCode || '',
+  });
 
-  // Função para validar CEP
-  const validateCEP = (cep: string): boolean => {
-    if (!cep.trim()) return true
-    const cepRegex = /^\d{5}-\d{3}$|^\d{8}$/
-    return cepRegex.test(cep.replace(/\s/g, ""))
-  }
-
-  // Validação de campos
-  const validateFields = (): boolean => {
-    const errors: ValidationErrors = {}
-
-    if (formData.zipCode && !validateCEP(formData.zipCode)) {
-      errors.zipCode = "Formato de CEP inválido. Use 12345-678 ou 12345678"
-    }
-
-    setValidationErrors(errors)
-    return Object.keys(errors).length === 0
-  }
-
-  // Detecta mudanças no formulário comparando com os dados originais
   const getChangedFields = () => {
-    const changedFields: any = {}
+    const changedFields: any = {};
 
     if (formData.state !== address?.state) {
-      changedFields.state = formData.state
+      changedFields.state = formData.state;
     }
 
     if (formData.city !== address?.city) {
-      changedFields.city = formData.city
+      changedFields.city = formData.city;
     }
 
     if (formData.district !== address?.district) {
-      changedFields.district = formData.district
+      changedFields.district = formData.district;
     }
 
     if (formData.street !== address?.street) {
-      changedFields.street = formData.street
+      changedFields.street = formData.street;
     }
 
     if (formData.complement !== address?.complement) {
-      changedFields.complement = formData.complement
+      changedFields.complement = formData.complement;
     }
 
     if (formData.number !== address?.number) {
-      changedFields.number = formData.number
+      changedFields.number = formData.number;
     }
 
     if (formData.zipCode !== address?.zipCode) {
-      changedFields.zipCode = formData.zipCode
+      changedFields.zipCode = formData.zipCode;
     }
 
-    return changedFields
-  }
+    return changedFields;
+  };
 
-  // Verifica se há alterações para habilitar/desabilitar o botão salvar
   const hasChanges = () => {
-    const changedFields = getChangedFields()
-    return Object.keys(changedFields).length > 0
-  }
+    const changedFields = getChangedFields();
+    return Object.keys(changedFields).length > 0;
+  };
 
-  // Função para salvar dados do endereço
   const saveAddressData = async () => {
+    if (!user) return;
     try {
-      const changedFields = getChangedFields()
+      const changedFields = getChangedFields();
 
       if (Object.keys(changedFields).length === 0) {
-        return true // Nada para atualizar
+        return true;
       }
 
-      const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/user/${user?.id}/address`
+      await updateAddressUser(user?.id, changedFields);
 
-      const response = await fetch(endpoint, {
-        method: address?.id ? "PATCH" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-        body: JSON.stringify(changedFields),
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao salvar endereço")
-      }
-
-      const updatedAddress = await response.json()
-
-      // Atualizar contexto local com os novos dados
       updateUser({
         ...user,
         address: {
           ...address,
-          ...updatedAddress,
+          ...changedFields,
         },
-      })
+      });
 
-      return true
+      return true;
     } catch (error) {
-      console.error("Erro ao salvar endereço:", error)
-      setErrorMessage("Erro ao salvar endereço. Tente novamente.")
-      return false
+      console.error('Erro ao salvar endereço:', error);
+      toast.error('Erro ao salvar endereço. Tente novamente.');
+      return false;
     }
-  }
+  };
 
   const handleSave = async () => {
-    // Limpar erros anteriores
-    setErrorMessage(null)
-    setValidationErrors({})
+    setErrorMessage(null);
+    setValidationErrors({});
 
-    // Validar formatos
-    if (!validateFields()) {
-      setErrorMessage("Por favor, corrija os erros nos campos destacados.")
-      return
-    }
-
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const success = await saveAddressData()
+      const success = await saveAddressData();
 
       if (success) {
-        alert("Endereço atualizado com sucesso!")
-        onClose()
+        toast.success('Endereço atualizado com sucesso!');
+        onClose();
       }
     } catch (error) {
-      console.error("Erro geral ao salvar:", error)
-      setErrorMessage("Erro inesperado ao salvar. Tente novamente.")
+      console.error('Erro geral ao salvar:', error);
+      toast.error('Erro inesperado ao salvar. Tente novamente.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  // Componente para mostrar erro de campo
+  useEffect(() => {
+    const zip = formData.zipCode.replace(/\D/g, '');
+
+    if (zip.length === 8) {
+      const fetchAddress = async () => {
+        const address = await fetchAddressByZipCode(zip);
+        if (address) {
+          setFormData((prev) => ({
+            ...prev,
+            ...address,
+            zipCode: prev.zipCode,
+          }));
+        }
+      };
+
+      fetchAddress();
+    }
+  }, [formData.zipCode]);
+
   const FieldError = ({ error }: { error?: string }) => {
-    if (!error) return null
+    if (!error) return null;
     return (
       <div className="flex items-center space-x-1 mt-1">
         <AlertCircle className="w-4 h-4 text-red-500" />
         <span className="text-sm text-red-500">{error}</span>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -227,36 +174,33 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
             <Input
               id="zipCode"
               value={formData.zipCode}
-              onChange={(e) => setFormData((prev) => ({ ...prev, zipCode: e.target.value }))}
-              placeholder="12345-678"
-              className={validationErrors.zipCode ? "border-red-500" : ""}
+              onChange={(e) => {
+                const masked = applyZipCodeMask(e.target.value);
+                setFormData((prev) => ({ ...prev, zipCode: masked }));
+              }}
+              placeholder="Ex: 00000-000"
+              maxLength={9}
+              className={validationErrors.zipCode ? 'border-red-500' : ''}
             />
             <FieldError error={validationErrors.zipCode} />
           </div>
 
           <div>
             <Label htmlFor="state">Estado</Label>
-            <Select
+            <Input
+              id="state"
               value={formData.state}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, state: value }))}
-            >
-              <SelectTrigger id="state">
-                <SelectValue placeholder="Selecione o estado" />
-              </SelectTrigger>
-              <SelectContent>
-                {BRAZILIAN_STATES.map((state) => (
-                  <SelectItem key={state.value} value={state.value}>
-                    {state.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
+              placeholder="Sigla do estado"
+              disabled
+            />
           </div>
 
           <div>
             <Label htmlFor="city">Cidade</Label>
             <Input
               id="city"
+              disabled
               value={formData.city}
               onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
               placeholder="Nome da cidade"
@@ -269,6 +213,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
             <Label htmlFor="district">Bairro</Label>
             <Input
               id="district"
+              disabled
               value={formData.district}
               onChange={(e) => setFormData((prev) => ({ ...prev, district: e.target.value }))}
               placeholder="Nome do bairro"
@@ -279,6 +224,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
             <Label htmlFor="street">Rua</Label>
             <Input
               id="street"
+              disabled
               value={formData.street}
               onChange={(e) => setFormData((prev) => ({ ...prev, street: e.target.value }))}
               placeholder="Nome da rua"
@@ -317,11 +263,12 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
         <Button
           onClick={handleSave}
           disabled={isLoading || !hasChanges()}
-          className="bg-[#511A2B] hover:bg-[#511A2B]/90"
+          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
         >
-          {isLoading ? "Salvando..." : "Salvar Endereço"}
+          <Save className="w-4 h-4 mr-2" />
+          {isLoading ? 'Salvando...' : 'Salvar Endereço'}
         </Button>
       </div>
     </div>
-  )
+  );
 }

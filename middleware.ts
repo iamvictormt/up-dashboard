@@ -26,7 +26,6 @@ export function middleware(request: NextRequest) {
 
   if (!isAuthPage && (!token || isTokenExpired(token))) {
     deleteCookie('token');
-    deleteCookie('user');
 
     const url = new URL('/login', request.url);
 
