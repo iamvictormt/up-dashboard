@@ -652,7 +652,7 @@ export function MyStoreContent() {
                   </CardContent>
                 </Card>
 
-                <MapCard cep={storeData.address.state} />
+                <MapCard cep={storeData.address.zipCode} />
               </div>
             </section>
           </div>
