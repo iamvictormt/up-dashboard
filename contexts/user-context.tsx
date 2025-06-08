@@ -142,19 +142,33 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setError(null);
   };
 
-  const updateUser = async () => {
-    if (user) {
-      try {
-        setIsLoading(true);
-        const response = await api.get(`/users/${user.id}`);
-        setUser(response.data);
-        Cookies.set('user', JSON.stringify(response.data));
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  const updateUser = (userData: Partial<User>) => {
+    if (user && user.loveDecoration)
+      setUser({
+        ...user,
+        loveDecoration: {
+          ...user.loveDecoration,
+          ...userData,
+        },
+      });
+
+    if (user && user.professional)
+      setUser({
+        ...user,
+        professional: {
+          ...user.professional,
+          ...userData,
+        },
+      });
+
+    if (user && user.partnerSupplier)
+      setUser({
+        ...user,
+        partnerSupplier: {
+          ...user.partnerSupplier,
+          ...userData,
+        },
+      });
   };
 
   const value: UserContextType = {

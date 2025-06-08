@@ -115,7 +115,7 @@ export function MuralContent() {
             </div>
           </div>
         </div>
-        <Toaster />
+        <Toaster  />
       </div>
     </MuralUpdateProvider>
   );

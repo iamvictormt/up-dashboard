@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <UserProvider>
           <LayoutContent>{children}</LayoutContent>
         </UserProvider>
-        <Toaster richColors position={isMobile ? 'top-center' : 'top-right'} />
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );
