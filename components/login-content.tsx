@@ -119,7 +119,7 @@ export default function LoginContent() {
   async function loadProfessions() {
     try {
       const response = await fetchProfessions();
-      setProfessions(response.data);
+      setProfessions(response);
     } catch (err) {
       toast.error('Erro ao carregar as profissões, contate o administrador');
       console.error(err);

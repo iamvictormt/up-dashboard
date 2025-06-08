@@ -1,13 +1,23 @@
 import api from '@/services/api';
+import { PartnerSupplierData, ProfessionalData } from '@/types';
 import { AddressData } from '@/types/address';
+import { LoveDecorationData } from '@/types/loveDecoration';
 import { AxiosResponse } from 'axios';
 
 export async function fetchUserAuthenticated(): Promise<AxiosResponse> {
   return await api.get('users/authenticated');
 }
 
-export async function updateLoveDecoration(data: any): Promise<AxiosResponse> {
+export async function updateLoveDecoration(data: Partial<LoveDecorationData>): Promise<AxiosResponse> {
   return await api.patch(`love-decorations`, data);
+}
+
+export async function updateProfessional(data: Partial<ProfessionalData>): Promise<AxiosResponse> {
+  return await api.patch(`professionals`, data);
+}
+
+export async function updatePartnerSupplier(data: Partial<PartnerSupplierData>): Promise<AxiosResponse> {
+  return await api.patch(`partner-suppliers`, data);
 }
 
 export async function uploadImageCloudinary(file: File): Promise<string | null> {

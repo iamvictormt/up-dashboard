@@ -2,8 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { Card } from './ui/card';
 
-// Dinamicamente importa Leaflet apenas no cliente
 const Map = dynamic(() => import('./map-inner'), { ssr: false });
 
 interface MapCardProps {
@@ -20,7 +20,9 @@ export default function MapCard({ cep }: MapCardProps) {
         const data = await response.json();
 
         const address = `${data.logradouro}, ${data.bairro}, ${data.localidade}, ${data.uf}`;
-        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+        const geoRes = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
+        );
         const geo = await geoRes.json();
 
         if (geo.length > 0) {
@@ -33,9 +35,13 @@ export default function MapCard({ cep }: MapCardProps) {
 
     if (cep) fetchCoords();
   }, [cep]);
-  console.log(coords)
 
-  if (!coords) return <p>Carregando mapa...</p>;
+  if (!coords)
+    return (
+      <Card className="bg-white border-0 shadow-lg rounded-2xl justify-center text-center place-content-center">
+        <p>Localização não encontrada para este CEP.</p>
+      </Card>
+    );
 
   return <Map coords={coords} />;
 }

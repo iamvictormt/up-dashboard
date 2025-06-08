@@ -1,6 +1,16 @@
 import api from '@/services/api';
-import { AxiosResponse } from 'axios';
+import { Profession } from '@/types';
 
-export async function fetchProfessions(): Promise<AxiosResponse> {
-  return await api.get('professions');
+export async function fetchProfessions(): Promise<Profession[]> {
+  const cached = sessionStorage.getItem('professions');
+
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  const response = await api.get('professions');
+
+  sessionStorage.setItem('professions', JSON.stringify(response.data));
+
+  return response.data;
 }

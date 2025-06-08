@@ -92,7 +92,6 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                   professional={user?.professional}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
-                  setErrorMessage={setErrorMessage}
                   onClose={onClose}
                 />
               )}
@@ -101,7 +100,6 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                   supplier={user?.partnerSupplier}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
-                  setErrorMessage={setErrorMessage}
                   onClose={onClose}
                 />
               )}
@@ -110,7 +108,6 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                   loveDecoration={user?.loveDecoration}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
-                  setErrorMessage={setErrorMessage}
                   onClose={onClose}
                 />
               )}
@@ -121,7 +118,6 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                 address={user?.address}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-                setErrorMessage={setErrorMessage}
                 onClose={onClose}
               />
             </TabsContent>

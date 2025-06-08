@@ -29,11 +29,10 @@ interface AddressEditFormProps {
   address?: any;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  setErrorMessage: (message: string | null) => void;
   onClose: () => void;
 }
 
-export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMessage, onClose }: AddressEditFormProps) {
+export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: AddressEditFormProps) {
   const { user, updateUser } = useUser();
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
@@ -114,7 +113,6 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
   };
 
   const handleSave = async () => {
-    setErrorMessage(null);
     setValidationErrors({});
 
     setIsLoading(true);
@@ -255,7 +253,6 @@ export function AddressEditForm({ address, isLoading, setIsLoading, setErrorMess
         </div>
       </div>
 
-      {/* Footer */}
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
         <Button variant="outline" onClick={onClose} disabled={isLoading}>
           Cancelar

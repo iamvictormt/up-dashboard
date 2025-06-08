@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, MessageCircle, Save } from 'lucide-react';
+import { AlertCircle, Save } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { updateLoveDecoration } from '@/lib/user-api';
 import { toast } from 'sonner';
@@ -24,45 +24,13 @@ interface LoveDecorationEditFormProps {
   loveDecoration: any;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  setErrorMessage: (message: string | null) => void;
   onClose: () => void;
 }
-
-const BRAZILIAN_STATES = [
-  'AC',
-  'AL',
-  'AP',
-  'AM',
-  'BA',
-  'CE',
-  'DF',
-  'ES',
-  'GO',
-  'MA',
-  'MT',
-  'MS',
-  'MG',
-  'PA',
-  'PB',
-  'PR',
-  'PE',
-  'PI',
-  'RJ',
-  'RN',
-  'RS',
-  'RO',
-  'RR',
-  'SC',
-  'SP',
-  'SE',
-  'TO',
-];
 
 export function LoveDecorationEditForm({
   loveDecoration,
   isLoading,
   setIsLoading,
-  setErrorMessage,
   onClose,
 }: LoveDecorationEditFormProps) {
   const { updateUser } = useUser();
@@ -75,7 +43,6 @@ export function LoveDecorationEditForm({
     tiktok: loveDecoration?.tiktok || '',
   });
 
-  // Função para validar campos obrigatórios
   const validateRequiredFields = (): boolean => {
     const errors: ValidationErrors = {};
 
@@ -91,7 +58,6 @@ export function LoveDecorationEditForm({
     return Object.keys(errors).length === 0;
   };
 
-  // Detecta mudanças no formulário comparando com os dados originais
   const getChangedFields = () => {
     const changedFields: any = {};
 
@@ -114,19 +80,17 @@ export function LoveDecorationEditForm({
     return changedFields;
   };
 
-  // Verifica se há alterações para habilitar/desabilitar o botão salvar
   const hasChanges = () => {
     const changedFields = getChangedFields();
     return Object.keys(changedFields).length > 0;
   };
 
-  // Função para salvar dados do perfil
   const saveProfileData = async () => {
     try {
       const changedFields = getChangedFields();
 
       if (Object.keys(changedFields).length === 0) {
-        return true; // Nada para atualizar
+        return true;
       }
 
       const response = await updateLoveDecoration(changedFields);
@@ -135,7 +99,6 @@ export function LoveDecorationEditForm({
         throw new Error('Erro ao salvar dados do perfil');
       }
 
-      // Atualizar contexto local com os novos dados
       updateUser({
         ...loveDecoration,
         ...changedFields,
@@ -144,19 +107,16 @@ export function LoveDecorationEditForm({
       return true;
     } catch (error) {
       console.error('Erro ao salvar perfil:', error);
-      setErrorMessage('Erro ao salvar dados do perfil. Tente novamente.');
+      toast.error('Erro ao salvar dados do perfil. Tente novamente.');
       return false;
     }
   };
 
   const handleSave = async () => {
-    // Limpar erros anteriores
-    setErrorMessage(null);
     setValidationErrors({});
 
-    // Validar campos obrigatórios
     if (!validateRequiredFields()) {
-      setErrorMessage('Por favor, preencha todos os campos obrigatórios.');
+      toast.error('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
@@ -171,13 +131,12 @@ export function LoveDecorationEditForm({
       }
     } catch (error) {
       console.error('Erro geral ao salvar:', error);
-      setErrorMessage('Erro inesperado ao salvar. Tente novamente.');
+      toast.error('Erro inesperado ao salvar. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Componente para mostrar erro de campo
   const FieldError = ({ error }: { error?: string }) => {
     if (!error) return null;
     return (
