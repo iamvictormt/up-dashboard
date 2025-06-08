@@ -11,6 +11,7 @@ import { Profession } from '@/types';
 import { fetchProfessions } from '@/lib/professions-api';
 import { toast } from 'sonner';
 import { updateProfessional } from '@/lib/user-api';
+import { applyDocumentMask, applyPhoneMask } from '@/utils/masks';
 
 interface ProfessionalData {
   name: string;
@@ -199,7 +200,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name">Nome *</Label>
+            <Label htmlFor="name">Nome completo *</Label>
             <Input
               id="name"
               value={formData.name}
@@ -211,11 +212,16 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="document">CPF</Label>
+            <Label htmlFor="document">CPF/CNPJ</Label>
             <Input
               id="document"
               value={formData.document}
-              onChange={(e) => setFormData((prev) => ({ ...prev, document: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentMask(e.target.value) }))}
+              onBlur={(e) => {
+                e.target.value.length !== 14 && e.target.value.length !== 18
+                  ? setFormData((prev) => ({ ...prev, document: '' }))
+                  : '';
+              }}
               placeholder="123.456.789-00"
               className={validationErrors.document ? 'border-red-500' : ''}
             />
@@ -223,12 +229,15 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="phone">Telefone *</Label>
+            <Label htmlFor="phone">Whatsapp *</Label>
             <Input
               id="phone"
               value={formData.phone}
-              onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
               placeholder="(11) 99999-9999"
+              onChange={(e) => setFormData((prev) => ({ ...prev, phone: applyPhoneMask(e.target.value) }))}
+              onBlur={(e) => {
+                e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, phone: '' })) : '';
+              }}
               className={validationErrors.phone ? 'border-red-500' : ''}
             />
             <FieldError error={validationErrors.phone} />
@@ -276,16 +285,18 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
               value={formData.generalRegister}
               onChange={(e) => setFormData((prev) => ({ ...prev, generalRegister: e.target.value }))}
               placeholder="Número do registro"
+              maxLength={10}
             />
           </div>
 
           <div>
-            <Label htmlFor="registrationAgency">Órgão de Registro</Label>
+            <Label htmlFor="registrationAgency">CREA/CAU/ABD</Label>
             <Input
               id="registrationAgency"
               value={formData.registrationAgency}
               onChange={(e) => setFormData((prev) => ({ ...prev, registrationAgency: e.target.value }))}
-              placeholder="CREA, CRM, etc."
+              placeholder="1234567890-0/SP"
+              maxLength={20}
             />
           </div>
         </div>

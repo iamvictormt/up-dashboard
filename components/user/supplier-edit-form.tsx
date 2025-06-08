@@ -8,6 +8,7 @@ import { AlertCircle, Save } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updatePartnerSupplier } from '@/lib/user-api';
+import { applyDocumentCnpjMask, applyPhoneMask } from '@/utils/masks';
 
 interface SupplierData {
   tradeName: string;
@@ -163,12 +164,12 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="tradeName">Nome Comercial *</Label>
+            <Label htmlFor="tradeName">Nome fantasia *</Label>
             <Input
               id="tradeName"
               value={formData.tradeName}
               onChange={(e) => setFormData((prev) => ({ ...prev, tradeName: e.target.value }))}
-              placeholder="Nome fantasia"
+              placeholder="Ex: Padaria Doce Sabor"
               className={validationErrors.tradeName ? 'border-red-500' : ''}
             />
             <FieldError error={validationErrors.tradeName} />
@@ -180,7 +181,7 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
               id="companyName"
               value={formData.companyName}
               onChange={(e) => setFormData((prev) => ({ ...prev, companyName: e.target.value }))}
-              placeholder="Razão social da empresa"
+              placeholder="Ex: Padaria e Confeitaria São João LTDA"
               className={validationErrors.companyName ? 'border-red-500' : ''}
             />
             <FieldError error={validationErrors.companyName} />
@@ -191,7 +192,10 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
             <Input
               id="document"
               value={formData.document}
-              onChange={(e) => setFormData((prev) => ({ ...prev, document: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentCnpjMask(e.target.value) }))}
+              onBlur={(e) => {
+                e.target.value.length !== 18 ? setFormData((prev) => ({ ...prev, document: '' })) : '';
+              }}
               placeholder="00.000.000/0000-00"
               className={validationErrors.document ? 'border-red-500' : ''}
             />
@@ -203,7 +207,10 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
             <Input
               id="contact"
               value={formData.contact}
-              onChange={(e) => setFormData((prev) => ({ ...prev, contact: e.target.value }))}
+              onChange={(e) => setFormData((prev) => ({ ...prev, contact: applyPhoneMask(e.target.value) }))}
+              onBlur={(e) => {
+                e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, contact: '' })) : '';
+              }}
               placeholder="(11) 99999-9999"
               className={validationErrors.contact ? 'border-red-500' : ''}
             />
