@@ -40,9 +40,10 @@ import { Profession, RegisterDTO } from '@/types';
 import { appUrl } from '@/constants/appRoutes';
 import { appImages } from '@/constants/appImages';
 import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
-import { AddressForm } from './address-form';
-import { useIsMobile } from './ui/use-mobile';
+import { AddressForm } from '../address-form';
+import { useIsMobile } from '../ui/use-mobile';
 import { fetchProfessions } from '@/lib/professions-api';
+import { ForgotPasswordModal } from './forgot-password-modal';
 
 export default function LoginContent() {
   const router = useRouter();
@@ -55,6 +56,7 @@ export default function LoginContent() {
   const [professions, setProfessions] = useState<Profession[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -349,7 +351,7 @@ export default function LoginContent() {
         generalRegister: data.generalRegister,
         registrationAgency: data.registrationAgency,
         phone: data.phone,
-        professionId: data.professionId
+        professionId: data.professionId,
       };
     } else if (isPartnerSupplier(data)) {
       payload.partnerSupplier = {
@@ -635,7 +637,12 @@ export default function LoginContent() {
                           <Label htmlFor="senha" className="text-sm font-medium">
                             Senha
                           </Label>
-                          <Button variant="link" className="h-auto p-0 text-xs" type="button">
+                          <Button
+                            variant="link"
+                            className="h-auto p-0 text-xs"
+                            type="button"
+                            onClick={() => setShowForgotPasswordModal(true)}
+                          >
                             Esqueceu a senha?
                           </Button>
                         </div>
@@ -1546,6 +1553,7 @@ export default function LoginContent() {
           </div>
         </div>
       </main>
+      <ForgotPasswordModal isOpen={showForgotPasswordModal} onClose={() => setShowForgotPasswordModal(false)} />
     </div>
   );
 }

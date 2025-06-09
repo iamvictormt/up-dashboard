@@ -1,6 +1,6 @@
 'use client';
 
-import LoginContent from '@/components/login-content';
+import LoginContent from '@/components/auth/login-content';
 
 export default function LoginPage() {
   return <LoginContent />;

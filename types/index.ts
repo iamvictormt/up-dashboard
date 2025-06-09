@@ -7,3 +7,4 @@ export * from './product';
 export * from './recommendedProfessional';
 export * from './store';
 export * from './profession';
+export * from './auth';
