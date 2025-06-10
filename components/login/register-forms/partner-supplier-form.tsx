@@ -269,7 +269,7 @@ export function PartnerSupplierForm({
         </div>
       </div>
 
-      <div className="flex flex-1 gap-6 pb-4 pt-4">
+      <div className="block space-y-4 gap-6 mb-4 mt-4 md:flex md:space-y-0">
         <Button
           type="button"
           variant="outline"
