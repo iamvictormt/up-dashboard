@@ -63,7 +63,7 @@ export function ProfessionalForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
-      <div className="space-y-4">
+      <div className="space-y-4 pl-1 pr-1">
         <PhotoUpload photo={photo} onPhotoChange={onPhotoChange} />
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
