@@ -2,7 +2,7 @@ import { PartnerSupplierData, ProfessionalData } from "@/types";
 import { LoveDecorationData } from "@/types/loveDecoration";
 
 export function isProfessional(data: any): data is ProfessionalData {
-  return 'officeName' in data && 'profession' in data;
+  return 'officeName' in data && 'professionId' in data;
 }
 
 export function isPartnerSupplier(data: any): data is PartnerSupplierData {
