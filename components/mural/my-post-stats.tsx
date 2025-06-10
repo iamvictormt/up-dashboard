@@ -57,7 +57,7 @@ export function MyPostsStats() {
               <Rss className="h-4 w-4" />
               <span className="text-xs font-medium">{stats.postsCount}</span>
             </div>
-            <p className="text-xs text-gray-500">Total</p>
+            <p className="text-xs text-gray-500">Publicações</p>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 text-red-500 mb-1">
