@@ -39,6 +39,7 @@ interface User {
     contact: string;
     addressId: string;
     accessPending: boolean;
+    isPaid?: boolean;
   } | null;
   professional?: {
     id: string;

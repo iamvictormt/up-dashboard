@@ -83,7 +83,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background bg-[#46142b]/40;
+    @apply bg-background bg-[#f9a826]/40;
   }
 }
 
