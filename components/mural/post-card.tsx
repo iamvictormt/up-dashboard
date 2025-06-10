@@ -298,7 +298,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
             <AlertDialogAction
               onClick={handleDeletePost}
               disabled={isDeleteLoading}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleteLoading ? 'Excluindo...' : 'Excluir'}
             </AlertDialogAction>
