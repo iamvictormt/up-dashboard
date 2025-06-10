@@ -140,7 +140,7 @@ export function NotificationsDropdown() {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="relative">
+                    <div className="relative group">
                       {notification.user ? (
                         <Avatar className="h-12 w-12 md:h-16 md:w-16 ">
                           <AvatarImage src={notification.user.avatar || '/placeholder.svg?height=40&width=40'} />

@@ -257,17 +257,17 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
             <Label htmlFor="email" className="text-sm font-medium">
               Email
             </Label>
-            <div className="relative">
+            <div className="relative group">
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="seu@email.com"
-                className={`pl-10 bg-card/50 border-border/50 focus:border-primary`}
+                className={`pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200`}
                 disabled={isLoading}
               />
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>
           </div>
 
@@ -395,9 +395,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           <Label htmlFor="email" className="text-sm font-medium">
             Nova senha
           </Label>
-          <div className="relative">
+          <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>
             <Input
               id="password"
@@ -405,7 +405,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
               placeholder="Digite sua nova senha"
-              className={`pl-10 bg-card/50 border-border/50 focus:border-primary`}
+              className={`pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200`}
               disabled={isLoading}
             />
             <button
@@ -432,9 +432,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           <Label htmlFor="confirmPassword" className="text-sm font-medium">
             Confirmar nova senha
           </Label>
-          <div className="relative">
+          <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>
             <Input
               id="confirmPassword"
@@ -442,7 +442,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               placeholder="Confirme sua nova senha"
-              className={`pl-10 bg-card/50 border-border/50 focus:border-primary`}
+              className={`pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200`}
               disabled={isLoading}
             />
             <button

@@ -243,7 +243,7 @@ export function MyStoreContent() {
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center gap-12">
                 {/* Logo/Ícone da Loja */}
-                <div className="relative">
+                <div className="relative group">
                   <div className="w-40 h-40 rounded-3xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-2xl flex items-center justify-center">
                     <Store className="w-20 h-20 text-white" />
                   </div>
@@ -397,7 +397,7 @@ export function MyStoreContent() {
                     key={index}
                     className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2"
                   >
-                    <div className="relative">
+                    <div className="relative group">
                       <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                         <Image
                           src="/placeholder.svg?height=300&width=300"

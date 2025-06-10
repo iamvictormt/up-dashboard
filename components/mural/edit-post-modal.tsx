@@ -201,7 +201,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
           <div className="space-y-2">
             <Label htmlFor="image">Imagem</Label>
             {imagePreview ? (
-              <div className="relative">
+              <div className="relative group">
                 <img src={imagePreview || '/placeholder.svg'} alt="Preview" className="w-full h-auto rounded-md" />
                 <Button
                   type="button"

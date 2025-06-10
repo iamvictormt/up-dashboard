@@ -20,7 +20,7 @@ export async function updatePartnerSupplier(data: Partial<PartnerSupplierData>):
   return await api.patch(`partner-suppliers`, data);
 }
 
-export async function uploadImageCloudinary(file: File): Promise<string | null> {
+export async function uploadImageCloudinary(file: any): Promise<string | null> {
   try {
     const formData = new FormData();
     formData.append('file', file);
@@ -53,4 +53,8 @@ export async function updateAddressUser(userId: string, addressChanged: Partial<
 
 export async function updateImageUser(userId: string, profileImageUrl: string) {
   return await api.patch(`users/${userId}/profile-image`, { profileImage: profileImageUrl });
+}
+
+export async function saveUser(data: any, registerType: string) {
+  return await api.post(`${registerType}`, data);
 }

@@ -205,7 +205,7 @@ const NewCommentForm = ({
         </AvatarFallback>
       </Avatar>
       <div className="flex-1 space-y-2">
-        <div className="relative">
+        <div className="relative group">
           <Textarea
             placeholder="Escreva um comentário..."
             value={newComment}

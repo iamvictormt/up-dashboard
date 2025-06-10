@@ -17,7 +17,7 @@ export function MyStoreContentSkeleton() {
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center gap-12">
                 {/* Logo Skeleton */}
-                <div className="relative">
+                <div className="relative group">
                   <Skeleton className="w-40 h-40 rounded-3xl" />
                   <div className="absolute -top-2 -right-2">
                     <Skeleton className="w-20 h-6 rounded-full" />

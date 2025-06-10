@@ -179,7 +179,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
           />
 
           <div className="space-y-2">
-            <div className="relative">
+            <div className="relative group">
               <Hash className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 ref={hashtagInputRef}
@@ -223,7 +223,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
           </div>
 
           {imagePreview ? (
-            <div className="relative">
+            <div className="relative group">
               <img
                 src={imagePreview || '/placeholder.svg'}
                 alt="Preview"

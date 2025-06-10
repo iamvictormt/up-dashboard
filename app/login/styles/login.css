@@ -27,6 +27,15 @@ body {
 }
 
 @layer base {
+  input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px #360f23 inset !important;
+    transition: background-color 9999s ease-out 0s !important;
+    -webkit-text-fill-color: white;
+    -webkit-border-fill-color: #46142b
+  }
+}
+
+@layer base {
   :root {
     --background: 331.95 54.61% 17.65%;
     --foreground: 0 0% 98%;
