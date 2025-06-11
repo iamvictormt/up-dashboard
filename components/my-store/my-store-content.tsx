@@ -30,7 +30,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import Image from 'next/image';
 import { EventForm } from '@/components/my-store/event-form';
-import { ProductForm } from '@/components/my-store/product-form';
 import { MyStoreContentSkeleton } from './my-store-skeleton';
 import { EventEditModal } from './event-edit-modal';
 import { fetchMyStore, updateStore } from '@/lib/store-api';
@@ -38,6 +37,9 @@ import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
 import MapCard from '../map-card';
+import { StoreForm } from './store-form';
+import { NoStoreView } from './no-store-view';
+import { ProductFormModal } from './product-form';
 
 const fetchStoreData = async (): Promise<StoreData | null> => {
   const response = await fetchMyStore();
@@ -57,6 +59,7 @@ export function MyStoreContent() {
   const [editingEvent, setEditingEvent] = useState<number | null>(null);
   const [storeData, setStoreData] = useState<StoreData | null>(null);
   const [editData, setEditData] = useState<StoreData | null>(null);
+  const [showStoreForm, setShowStoreForm] = useState(false);
 
   useEffect(() => {
     const loadStoreData = async () => {
@@ -65,6 +68,7 @@ export function MyStoreContent() {
         const data = await fetchStoreData();
         setStoreData(data);
         setEditData(data);
+        console.log(data);
       } catch (error) {
         console.error('Erro ao carregar dados da loja:', error);
       } finally {
@@ -75,48 +79,72 @@ export function MyStoreContent() {
     loadStoreData();
   }, []);
 
-  const handleSave = async () => {
-    if (editData) {
-      try {
-        setIsLoading(true);
-        const response = await updateStore(editData);
-        if (response.status === 200) {
-          setStoreData(editData);
-          toast.success('Loja editada com sucesso.');
-        }
-      } catch (error) {
-        toast.error('Erro ao editar a loja, atualize a pagina e tente novamente.');
-        console.error('Erro ao atualizar produto:', error);
-      } finally {
-        setIsEditing(false);
-        setIsLoading(false);
+  const processStoreHours = (openingHours: string) => {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 = Domingo, 1 = Segunda, etc.
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Minutos desde meia-noite
+
+    const dayNames = [
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
+    ];
+
+    // Criar objeto com todos os dias da semana
+    const weekSchedule = dayNames.map((day) => ({ day, hours: 'Fechado' }));
+
+    // Processar horários cadastrados
+    const schedules = openingHours.split(' | ');
+    schedules.forEach((schedule) => {
+      const [day, hours] = schedule.split(': ');
+      const dayIndex = dayNames.indexOf(day);
+      if (dayIndex !== -1) {
+        weekSchedule[dayIndex].hours = hours;
       }
+    });
+
+    // Verificar se está aberto hoje
+    const todaySchedule = weekSchedule[currentDay];
+    let isOpen = false;
+    let closingTime = null;
+    let nextOpenTime = null;
+
+    if (todaySchedule.hours !== 'Fechado') {
+      const [openTime, closeTime] = todaySchedule.hours.split(' - ');
+      const [openHour, openMin] = openTime.split(':').map(Number);
+      const [closeHour, closeMin] = closeTime.split(':').map(Number);
+
+      const openMinutes = openHour * 60 + openMin;
+      const closeMinutes = closeHour * 60 + closeMin;
+
+      isOpen = currentTime >= openMinutes && currentTime < closeMinutes;
+      closingTime = isOpen ? closeTime : null;
+      nextOpenTime = !isOpen && currentTime < openMinutes ? openTime : null;
     }
+
+    return {
+      weekSchedule,
+      isOpen,
+      closingTime,
+      nextOpenTime,
+      currentDay,
+    };
   };
 
-  const handleCancel = () => {
-    setEditData(storeData);
-    setIsEditing(false);
+  const handleStoreCreated = (newStoreData: StoreData) => {
+    setStoreData(newStoreData);
+    setShowStoreForm(false);
+    toast.success('Loja cadastrada com sucesso.');
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    if (!editData) return;
-
-    if (field.startsWith('address.')) {
-      const addressField = field.split('.')[1];
-      setEditData({
-        ...editData,
-        address: {
-          ...editData.address,
-          [addressField]: value,
-        },
-      });
-    } else {
-      setEditData({
-        ...editData,
-        [field]: value,
-      });
-    }
+  const handleStoreUpdated = (updatedStoreData: StoreData) => {
+    setStoreData(updatedStoreData);
+    setShowStoreForm(false);
+    toast.success('Loja atualizada com sucesso.');
   };
 
   const handleEventCreated = async (eventData: any) => {
@@ -195,16 +223,15 @@ export function MyStoreContent() {
     return <MyStoreContentSkeleton />;
   }
 
-  if (!storeData || !editData) {
+  if (!storeData) {
     return (
-      <div className="p-6 md:p-8 w-full">
-        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-[#511A2B] mb-4">Erro ao carregar dados da loja</h2>
-            <p className="text-[#511A2B]/70">Tente recarregar a página</p>
-          </div>
-        </div>
-      </div>
+      <>
+        <NoStoreView onCreateStore={() => setShowStoreForm(true)} />
+
+        {showStoreForm && (
+          <StoreForm onStoreCreated={handleStoreCreated} onClose={() => setShowStoreForm(false)} isEditing={false} />
+        )}
+      </>
     );
   }
 
@@ -214,26 +241,12 @@ export function MyStoreContent() {
         {/* Floating Action Buttons */}
         <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
           <Button
-            onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
+            onClick={() => setShowStoreForm(true)}
             size="icon"
-            className={`rounded-full shadow-xl backdrop-blur-sm transition-all duration-300 ${
-              isEditing
-                ? 'bg-green-500 hover:bg-green-600 text-white scale-110'
-                : 'bg-white/90 hover:bg-white text-gray-700 hover:scale-110'
-            }`}
+            className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
           >
-            {isEditing ? <Save className="w-5 h-5" /> : <Edit3 className="w-5 h-5" />}
+            <Edit3 className="w-5 h-5" />
           </Button>
-
-          {isEditing && (
-            <Button
-              onClick={handleCancel}
-              size="icon"
-              className="rounded-full bg-red-500 hover:bg-red-600 text-white shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300"
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          )}
         </div>
 
         {/* Hero Section */}
@@ -241,9 +254,9 @@ export function MyStoreContent() {
           <div className="absolute inset-0 bg-[#46142b] rounded-xl" />
           <div className="relative px-6 py-16 md:py-24">
             <div className="max-w-7xl mx-auto">
-              <div className="flex flex-col lg:flex-row items-center gap-12">
+              <div className="flex flex-col lg:flex-row items-center gap-12 w-full px-4">
                 {/* Logo/Ícone da Loja */}
-                <div className="relative group">
+                <div className="relative">
                   <div className="w-40 h-40 rounded-3xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-2xl flex items-center justify-center">
                     <Store className="w-20 h-20 text-white" />
                   </div>
@@ -253,19 +266,9 @@ export function MyStoreContent() {
                 </div>
 
                 {/* Informações Principais */}
-                <div className="flex-1 text-center lg:text-left text-white">
-                  {isEditing ? (
-                    <Input
-                      value={editData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      className="text-4xl md:text-5xl font-bold mb-4 bg-white/20 border-white/30 text-white placeholder-white/70 rounded-xl pb-8 pt-8"
-                      placeholder="Nome da loja"
-                    />
-                  ) : (
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">{storeData.name}</h1>
-                  )}
-
-                  <p className="text-xl md:text-2xl text-white/90 mb-6">Minha Loja Especializada</p>
+                <div className="w-full lg:flex-1 text-center lg:text-left text-white break-words max-w-full">
+                  <h1 className="text-3xl md:text-5xl font-bold mb-4">{storeData.name}</h1>
+                  <p className="text-lg md:text-2xl text-white/90 mb-6">Minha Loja Especializada</p>
 
                   {/* Rating */}
                   <div className="flex items-center justify-center lg:justify-start mb-6">
@@ -279,44 +282,25 @@ export function MyStoreContent() {
                         />
                       ))}
                     </div>
-                    <span className="ml-3 text-2xl font-bold">{storeData.rating.toFixed(1)}</span>
-                    <span className="ml-2 text-white/80">• Excelente</span>
+                    <span className="ml-3 text-2xl font-bold">{storeData.rating.toFixed(1) || 0}</span>
+                    <span className="ml-2 text-white/80 hidden md:block">• Excelente</span>
                   </div>
 
-                  {isEditing ? (
-                    <Textarea
-                      value={editData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      className="text-lg text-white leading-relaxed mb-8 max-w-2xl bg-white/20 border-white/30 text-white placeholder-white/70 rounded-xl"
-                      placeholder="Descrição da loja"
-                      rows={3}
-                    />
-                  ) : (
-                    <p className="text-lg text-white/90 leading-relaxed mb-8 max-w-2xl">{storeData.description}</p>
-                  )}
+                  <p className="text-lg text-white/90 leading-relaxed mb-8 w-full break-words">
+                    {storeData.description}
+                  </p>
 
                   {/* Botões de Ação */}
                   <div className="flex flex-col sm:flex-row gap-4">
-                    {isEditing ? (
-                      <>
-                        <Input
-                          value={editData.website}
-                          onChange={(e) => handleInputChange('website', e.target.value)}
-                          className="bg-white/20 border-white/30 text-white placeholder-white/70 rounded-xl"
-                          placeholder="https://meusite.com.br"
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          size="lg"
-                          className="bg-white text-[#511A2B] hover:bg-white/90 rounded-xl px-8 py-4 font-semibold shadow-xl"
-                          onClick={() => window.open(storeData.website, '_blank')}
-                        >
-                          <Globe className="w-5 h-5 mr-2" />
-                          Visitar Site
-                        </Button>
-                      </>
+                    {storeData.website && (
+                      <Button
+                        size="lg"
+                        className="bg-white text-[#511A2B] hover:bg-white/90 rounded-xl px-8 py-4 font-semibold shadow-xl"
+                        onClick={() => window.open(storeData.website, '_blank')}
+                      >
+                        <Globe className="w-5 h-5 mr-2" />
+                        Visitar Site
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -334,7 +318,7 @@ export function MyStoreContent() {
                   <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Star className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-[#511A2B]">{storeData.rating.toFixed(1)}</div>
+                  <div className="text-2xl font-bold text-[#511A2B]">{storeData.rating.toFixed(1) || 0}</div>
                   <div className="text-sm text-[#511A2B]/70">Avaliação</div>
                 </CardContent>
               </Card>
@@ -397,7 +381,7 @@ export function MyStoreContent() {
                     key={index}
                     className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2"
                   >
-                    <div className="relative group">
+                    <div className="relative">
                       <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                         <Image
                           src="/placeholder.svg?height=300&width=300"
@@ -501,7 +485,7 @@ export function MyStoreContent() {
                     </div>
 
                     <CardContent className="p-6">
-                      <p className="text-[#511A2B]/80 mb-4 truncate">{event.description}</p>
+                      <p className="text-[#511A2B]/80 mb-4">{event.description}</p>
 
                       <div className="space-y-3 mb-6">
                         <div className="flex items-center gap-3">
@@ -527,7 +511,7 @@ export function MyStoreContent() {
                         <div className="flex items-center gap-3">
                           <Users className="w-4 h-4 text-[#511A2B]/70" />
                           <span className="text-sm font-medium text-[#511A2B]">
-                            {event.participantsCount || 0} participantes confirmados
+                            {event.participantsCount} participantes confirmados
                           </span>
                         </div>
                       </div>
@@ -541,175 +525,237 @@ export function MyStoreContent() {
               </div>
             </section>
 
-            {/* Informações da Loja */}
             <section>
-              <h2 className="text-3xl font-bold text-[#511A2B] mb-8">Informações da Loja</h2>
+              <div className="text-center mb-12">
+                <h2 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-4">Informações da Loja</h2>
+                <p className="text-[#511A2B]/70 max-w-2xl mx-auto">
+                  Conheça mais detalhes sobre nossa loja, localização e horários de funcionamento
+                </p>
+              </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="bg-white border-0 shadow-lg rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-[#511A2B] flex items-center text-xl">
-                      <MapPin className="w-6 h-6 mr-3" />
-                      Localização
-                    </CardTitle>
+                {/* Card de Localização */}
+                <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                  <CardHeader className="bg-[#46142b] text-white p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <MapPin className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">Localização</h3>
+                        <p className="text-white/90 text-sm">Onde nos encontrar</p>
+                      </div>
+                    </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {isEditing ? (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label className="text-[#511A2B] font-medium">CEP</Label>
-                            <Input
-                              value={editData.address.zipCode}
-                              onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#511A2B] font-medium">Estado</Label>
-                            <Input
-                              value={editData.address.state}
-                              onChange={(e) => handleInputChange('address.state', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label className="text-[#511A2B] font-medium">Cidade</Label>
-                            <Input
-                              value={editData.address.city}
-                              onChange={(e) => handleInputChange('address.city', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#511A2B] font-medium">Bairro</Label>
-                            <Input
-                              value={editData.address.district}
-                              onChange={(e) => handleInputChange('address.district', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="col-span-2">
-                            <Label className="text-[#511A2B] font-medium">Rua</Label>
-                            <Input
-                              value={editData.address.street}
-                              onChange={(e) => handleInputChange('address.street', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-[#511A2B] font-medium">Número</Label>
-                            <Input
-                              value={editData.address.number}
-                              onChange={(e) => handleInputChange('address.number', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                            />
-                          </div>
+
+                  <CardContent className="p-6 flex-1">
+                    <div className="relative w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden mb-6">
+                      <MapCard cep={storeData.address.zipCode} />
+                    </div>
+
+                    {/* Endereço Completo */}
+                    <div className="space-y-5">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-[#511A2B]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-5 h-5 text-[#511A2B]" />
                         </div>
                         <div>
-                          <Label className="text-[#511A2B] font-medium">Complemento</Label>
-                          <Input
-                            value={editData.address.complement || ''}
-                            onChange={(e) => handleInputChange('address.complement', e.target.value)}
-                            className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                          />
+                          <h4 className="font-bold text-[#511A2B] text-lg">Endereço Completo</h4>
+                          <p className="text-[#511A2B]/80 mt-1">
+                            {storeData.address.street}, {storeData.address.number}
+                            {storeData.address.complement && `, ${storeData.address.complement}`}
+                          </p>
+                          <p className="text-[#511A2B]/80 mt-1">
+                            {storeData.address.district}, {storeData.address.city} - {storeData.address.state}
+                          </p>
+                          <p className="text-[#511A2B]/70 text-sm mt-1">CEP: {storeData.address.zipCode}</p>
                         </div>
                       </div>
-                    ) : (
-                      <div>
-                        <p className="font-semibold text-[#511A2B] text-lg">
-                          {storeData.address.street}, {storeData.address.number}
-                          {storeData.address.complement && `, ${storeData.address.complement}`}
-                        </p>
-                        <p className="text-[#511A2B]/80">
-                          {storeData.address.district}, {storeData.address.city} - {storeData.address.state}
-                        </p>
-                        <p className="text-[#511A2B]/80">CEP: {storeData.address.zipCode}</p>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1">
-                        {isEditing ? (
-                          <>
-                            <Label className="text-[#511A2B] font-medium">Horário de Funcionamento</Label>
 
-                            <Input
-                              value={editData.openingHours}
-                              onChange={(e) => handleInputChange('openingHours', e.target.value)}
-                              className="border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
-                              placeholder="Ex: Segunda a Sexta: 08:00 - 18:00"
-                            />
-                          </>
-                        ) : (
-                          <p className="font-semibold text-[#511A2B]">{storeData.openingHours}</p>
-                        )}
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-[#D56235]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Globe className="w-5 h-5 text-[#D56235]" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-[#511A2B] text-lg">Região</h4>
+                          <p className="text-[#511A2B]/80">
+                            {storeData.address.city} - {storeData.address.state}
+                          </p>
+                          <p className="text-[#511A2B]/70 text-sm mt-1">Bairro: {storeData.address.district}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 bg-[#FEC460]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Store className="w-5 h-5 text-[#FEC460]" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-[#511A2B] text-lg">Referência</h4>
+                          <p className="text-[#511A2B]/80">
+                            {storeData.name} - {storeData.address.street}
+                          </p>
+                          <p className="text-[#511A2B]/70 text-sm mt-1">
+                            Próximo ao centro de {storeData.address.district}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
+                {/* Card de Horário de Funcionamento */}
+                <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                  <CardHeader className="bg-[#46142b] text-white p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <Clock className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold">Horário de Funcionamento</h3>
+                        <p className="text-white/90 text-sm">Quando estamos abertos</p>
+                      </div>
+                    </div>
+                  </CardHeader>
 
-                <MapCard cep={storeData.address.zipCode} />
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <div className="space-y-3 mb-6 flex-1">
+                      {(() => {
+                        const storeHours = processStoreHours(storeData.openingHours);
+                        return storeHours.weekSchedule.map((schedule, index) => {
+                          const isToday = storeHours.currentDay === index;
+                          const isClosed = schedule.hours === 'Fechado';
+
+                          return (
+                            <div
+                              key={index}
+                              className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
+                                isToday ? 'bg-[#511A2B]/10 border border-[#511A2B]/20' : 'bg-gray-50'
+                              }`}
+                            >
+                              <span
+                                className={`font-medium ${isToday ? 'text-[#511A2B] font-bold' : 'text-[#511A2B]'}`}
+                              >
+                                {schedule.day}
+                                {isToday && (
+                                  <span className="ml-2 text-xs bg-[#511A2B] text-white px-2 py-1 rounded-full">
+                                    Hoje
+                                  </span>
+                                )}
+                              </span>
+                              <Badge
+                                variant="secondary"
+                                className={`px-3 py-1 ${
+                                  isClosed
+                                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                    : isToday
+                                    ? 'bg-[#511A2B] text-white hover:bg-[#511A2B]/90'
+                                    : 'bg-[#511A2B]/10 text-[#511A2B] hover:bg-[#511A2B]/20'
+                                }`}
+                              >
+                                {schedule.hours}
+                              </Badge>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+
+                    {(() => {
+                      const storeHours = processStoreHours(storeData.openingHours);
+                      return (
+                        <div
+                          className={`p-4 rounded-xl border ${
+                            storeHours.isOpen ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`w-3 h-3 rounded-full ${storeHours.isOpen ? 'bg-green-500' : 'bg-red-500'}`}
+                            ></div>
+                            <span
+                              className={`font-medium text-sm ${storeHours.isOpen ? 'text-green-700' : 'text-red-700'}`}
+                            >
+                              {storeHours.isOpen ? 'Aberto agora' : 'Fechado agora'}
+                            </span>
+                          </div>
+                          <p className={`text-sm mt-1 ${storeHours.isOpen ? 'text-green-600' : 'text-red-600'}`}>
+                            {storeHours.isOpen && storeHours.closingTime && `Fecha às ${storeHours.closingTime}`}
+                            {!storeHours.isOpen && storeHours.nextOpenTime && `Abre às ${storeHours.nextOpenTime}`}
+                            {!storeHours.isOpen && !storeHours.nextOpenTime && 'Fechado hoje'}
+                          </p>
+                        </div>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
               </div>
             </section>
           </div>
         </div>
+
+        {/* Modals */}
+        {editingProduct !== null && (
+          <ProductEditModal
+            product={storeData.products[editingProduct]}
+            onProductUpdated={(updatedProduct) => {
+              const newProducts = [...storeData.products];
+              newProducts[editingProduct] = updatedProduct;
+              setStoreData((prev) => ({ ...prev, products: newProducts }));
+              setEditingProduct(null);
+            }}
+            onDelete={() => {
+              removeProduct(editingProduct);
+              setEditingProduct(null);
+            }}
+            onClose={() => setEditingProduct(null)}
+          />
+        )}
+
+        {/* Modal de edição de evento */}
+        {editingEvent !== null && (
+          <EventEditModal
+            event={storeData.events[editingEvent]}
+            storeAddress={storeData.address}
+            onEventUpdated={(updatedEvent) => {
+              const newEvents = [...storeData.events];
+              newEvents[editingEvent] = updatedEvent;
+              setStoreData((prev) => ({ ...prev, events: newEvents }));
+              setEditingEvent(null);
+            }}
+            onDelete={() => {
+              removeEvent(editingEvent);
+              setEditingEvent(null);
+            }}
+            onClose={() => setEditingEvent(null)}
+          />
+        )}
+
+        {showStoreForm && (
+          <StoreForm
+            storeData={storeData}
+            onStoreUpdated={handleStoreUpdated}
+            onClose={() => setShowStoreForm(false)}
+            isEditing={true}
+          />
+        )}
+
+        {showEventForm && (
+          <EventForm
+            storeId={storeData.id}
+            storeAddress={storeData.address}
+            onEventCreated={handleEventCreated}
+            onClose={() => setShowEventForm(false)}
+          />
+        )}
+
+        {showProductForm && storeData && (
+          <ProductFormModal
+            storeId={storeData.id}
+            onProductCreated={handleProductCreated}
+            onClose={() => setShowProductForm(false)}
+            isOpen={showProductForm}
+          />
+        )}
       </div>
-      {/* Modals */}
-      {editingProduct !== null && (
-        <ProductEditModal
-          product={storeData.products[editingProduct]}
-          onProductUpdated={(updatedProduct) => {
-            const newProducts = [...storeData.products];
-            newProducts[editingProduct] = updatedProduct;
-            setStoreData((prev) => ({ ...prev, products: newProducts }));
-            setEditingProduct(null);
-          }}
-          onDelete={() => {
-            removeProduct(editingProduct);
-            setEditingProduct(null);
-          }}
-          onClose={() => setEditingProduct(null)}
-        />
-      )}
-
-      {/* Modal de edição de evento */}
-      {editingEvent !== null && (
-        <EventEditModal
-          event={storeData.events[editingEvent]}
-          storeAddress={storeData.address}
-          onEventUpdated={(updatedEvent) => {
-            const newEvents = [...storeData.events];
-            newEvents[editingEvent] = updatedEvent;
-            setStoreData((prev) => ({ ...prev, events: newEvents }));
-            setEditingEvent(null);
-          }}
-          onDelete={() => {
-            removeEvent(editingEvent);
-            setEditingEvent(null);
-          }}
-          onClose={() => setEditingEvent(null)}
-        />
-      )}
-      {showEventForm && (
-        <EventForm
-          storeId={storeData.id}
-          storeAddress={storeData.address}
-          onEventCreated={handleEventCreated}
-          onClose={() => setShowEventForm(false)}
-        />
-      )}
-
-      {showProductForm && (
-        <ProductForm
-          storeId={storeData.id}
-          onProductCreated={handleProductCreated}
-          onClose={() => setShowProductForm(false)}
-        />
-      )}
     </div>
   );
 }

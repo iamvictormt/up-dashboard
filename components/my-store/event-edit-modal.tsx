@@ -324,7 +324,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
                 <div>
                   <Label className="text-[#511A2B] font-medium">Participantes Confirmados</Label>
-                  <p className="text-2xl font-bold text-[#511A2B]">{event.participantsCount}</p>
+                  <p className="text-2xl font-bold text-[#511A2B]">{event.participantsCount || 0}</p>
                 </div>
               </div>
             </CardContent>

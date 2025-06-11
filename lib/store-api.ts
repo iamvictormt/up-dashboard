@@ -5,6 +5,10 @@ export async function fetchMyStore(): Promise<AxiosResponse> {
   return await api.get('stores/my-store');
 }
 
-export async function updateStore(data: any): Promise<AxiosResponse> {
-  return await api.patch(`stores/my-store`, data);
+export async function createStore(data: any): Promise<AxiosResponse> {
+  return await api.post(`stores`, data);
+}
+
+export async function updateStore(id: string, data: any): Promise<AxiosResponse> {
+  return await api.patch(`stores/${id}/my-store`, data);
 }
