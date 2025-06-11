@@ -51,7 +51,6 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
   const [editingEvent, setEditingEvent] = useState<number | null>(null);
   const [storeData, setStoreData] = useState<StoreData | null>(null);
-  const [editData, setEditData] = useState<StoreData | null>(null);
   const [showStoreForm, setShowStoreForm] = useState(false);
 
   useEffect(() => {
@@ -60,8 +59,6 @@ export function StoreContent({ supplierId }: StoreContentProps) {
         setIsLoading(true);
         const data = await fetchStoreData(supplierId);
         setStoreData(data);
-        setEditData(data);
-        console.log(data);
       } catch (error) {
         console.error('Erro ao carregar dados da loja:', error);
       } finally {

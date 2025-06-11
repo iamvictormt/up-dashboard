@@ -15,8 +15,8 @@ interface Event {
   points: number
   totalSpots: number
   filledSpots: number
+  storeId: string
   address: {
-    id: string
     state: string
     city: string
     district: string
@@ -28,21 +28,16 @@ interface Event {
   store: {
     id: string
     name: string
-    description: string | null
-    website: string | null
     rating: number
-    openingHours: string | null
-    addressId: string
-    partnerId: string
   }
-  participants: any[]
 }
 
 interface EventCardProps {
   event: Event
+  onEventClick: (event: Event) => void
 }
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({ event, onEventClick }: EventCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return {
@@ -70,6 +65,8 @@ export function EventCard({ event }: EventCardProps) {
         return "bg-blue-100 text-blue-700 border-blue-200"
       case "hackathon":
         return "bg-orange-100 text-orange-700 border-orange-200"
+      case "workshop":
+        return "bg-green-100 text-green-700 border-green-200"
       default:
         return "bg-[#FEC460]/20 text-[#D56235] border-[#FEC460]/30"
     }
@@ -160,7 +157,11 @@ export function EventCard({ event }: EventCardProps) {
           >
             {spotsLeft > 0 ? "Participar" : "Lista de Espera"}
           </Button>
-          <Button variant="outline" className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl">
+          <Button
+            variant="outline"
+            className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+            onClick={() => onEventClick(event)}
+          >
             Detalhes
           </Button>
         </div>

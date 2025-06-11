@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EventCard } from './event-card';
+import { EventDetailModal } from './event-detail-modal';
 import { EventCardSkeleton } from './event-card-skeleton';
 
 interface Event {
@@ -17,8 +19,8 @@ interface Event {
   points: number;
   totalSpots: number;
   filledSpots: number;
+  storeId: string;
   address: {
-    id: string;
     state: string;
     city: string;
     district: string;
@@ -30,19 +32,38 @@ interface Event {
   store: {
     id: string;
     name: string;
-    description: string | null;
-    website: string | null;
     rating: number;
-    openingHours: string | null;
-    addressId: string;
-    partnerId: string;
   };
-  participants: any[];
 }
 
 const mockEvents: Event[] = [
   {
     id: '1ca62497-f22f-4aa0-8d56-3fa724bf3217',
+    name: 'Workshop de TypeScript',
+    description: 'Evento para aprender TypeScript avançado com foco em desenvolvimento web moderno',
+    date: '2025-06-10T14:00:00.000Z',
+    type: 'Workshop',
+    points: 50,
+    totalSpots: 30,
+    filledSpots: 12,
+    storeId: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
+    address: {
+      state: 'SP',
+      city: 'São Paulo',
+      district: 'Centro',
+      street: 'Rua da Tecnologia',
+      complement: 'Sala 5',
+      number: '123',
+      zipCode: '01000-000',
+    },
+    store: {
+      id: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
+      name: 'Super Soluções',
+      rating: 4.2,
+    },
+  },
+  {
+    id: '2ba51396-e11e-3bb9-7c45-2ea613ae2f06',
     name: 'Conferência de Tecnologia 2025',
     description: 'O maior evento de tecnologia do ano com palestrantes renomados',
     date: '2025-09-15T09:00:00.000Z',
@@ -50,8 +71,8 @@ const mockEvents: Event[] = [
     points: 100,
     totalSpots: 500,
     filledSpots: 342,
+    storeId: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
     address: {
-      id: '669b752d-5522-4f81-9314-a50135312ade',
       state: 'SP',
       city: 'São Paulo',
       district: 'Vila Olímpia',
@@ -61,19 +82,13 @@ const mockEvents: Event[] = [
       zipCode: '04578-000',
     },
     store: {
-      id: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
-      name: 'Super Soluções',
-      description: null,
-      website: null,
-      rating: 4.2,
-      openingHours: null,
-      addressId: 'c9af52cc-4739-4f3e-a62a-399ca480ffc5',
-      partnerId: '5527e77a-d669-4872-b4c9-a46768c32f0e',
+      id: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
+      name: 'TechnoMax',
+      rating: 4.8,
     },
-    participants: [],
   },
   {
-    id: '2ba51396-e11e-3bb9-7c45-2ea613ae2f06',
+    id: '3ca40285-d00d-2aa8-6b34-1da502ad1e95',
     name: 'Meetup de Desenvolvedores',
     description: 'Encontro mensal da comunidade de desenvolvedores locais',
     date: '2025-07-20T19:00:00.000Z',
@@ -81,8 +96,8 @@ const mockEvents: Event[] = [
     points: 25,
     totalSpots: 80,
     filledSpots: 65,
+    storeId: 'q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6',
     address: {
-      id: '559a641c-4411-3e70-8203-a40024201bcd',
       state: 'RJ',
       city: 'Rio de Janeiro',
       district: 'Botafogo',
@@ -92,47 +107,10 @@ const mockEvents: Event[] = [
       zipCode: '22250-040',
     },
     store: {
-      id: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
-      name: 'TechnoMax',
-      description: null,
-      website: null,
-      rating: 4.8,
-      openingHours: null,
-      addressId: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
-      partnerId: '7f3a9b2c-8e4d-4a1b-9c5e-6f7a8b9c0d1e',
-    },
-    participants: [],
-  },
-  {
-    id: '3ca40285-d00d-2aa8-6b34-1da502ad1e95',
-    name: 'Hackathon Sustentabilidade',
-    description: '48 horas criando soluções para um mundo mais sustentável',
-    date: '2025-08-05T08:00:00.000Z',
-    type: 'Hackathon',
-    points: 150,
-    totalSpots: 120,
-    filledSpots: 89,
-    address: {
-      id: '448a530b-3300-2d5f-7102-a30013100abc',
-      state: 'MG',
-      city: 'Belo Horizonte',
-      district: 'Funcionários',
-      street: 'Av. do Contorno',
-      complement: 'Innovation Hub',
-      number: '4747',
-      zipCode: '30110-017',
-    },
-    store: {
       id: 'q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6',
       name: 'EcoVerde',
-      description: null,
-      website: null,
       rating: 4.5,
-      openingHours: null,
-      addressId: 'q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6',
-      partnerId: '9a8b7c6d-5e4f-3g2h-1i0j-k9l8m7n6o5p4',
     },
-    participants: [],
   },
 ];
 
@@ -140,6 +118,7 @@ export function EventsContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -157,6 +136,10 @@ export function EventsContent() {
       event.store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+  };
 
   return (
     <div className="p-6 md:p-8 w-full">
@@ -178,10 +161,7 @@ export function EventsContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button
-              size="lg"
-              className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6"
-            >
+            <Button variant="outline" className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl">
               <Filter className="w-4 h-4 mr-2" />
               Filtrar
             </Button>
@@ -238,7 +218,7 @@ export function EventsContent() {
           /* Events Grid */
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} onEventClick={handleEventClick} />
             ))}
           </div>
         )}
@@ -250,6 +230,9 @@ export function EventsContent() {
           </div>
         )}
       </div>
+
+      {/* Modal de Detalhes do Evento */}
+      {selectedEvent && <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
     </div>
   );
 }

@@ -6,10 +6,6 @@ interface SupplierDetailPageProps {
   };
 }
 
-export default function SupplierDetailPage({ params }: SupplierDetailPageProps) {
-  return (
-    <>
-      <StoreContent supplierId={params.id} />
-    </>
-  );
+export default async function SupplierDetailPage({ params }: SupplierDetailPageProps) {
+  return <StoreContent supplierId={params.id} />;
 }
