@@ -3,250 +3,33 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Loader2, Store, Star, Package, Calendar } from 'lucide-react';
+import { Search, Filter, Store, Star, Package, Calendar } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SupplierCard } from './supplier-card';
 import { SupplierCardSkeleton } from './supplier-card-skeleton';
-
-// Tipo para o formato de dados do fornecedor
-interface Supplier {
-  id: string;
-  name: string;
-  description: string;
-  website: string;
-  rating: number;
-  openingHours: string;
-  address: {
-    state: string;
-    city: string;
-    district: string;
-    street: string;
-    complement: string | null;
-    number: string;
-    zipCode: string;
-  };
-  products: Array<{
-    name: string;
-    description: string;
-    price: number;
-    link: string;
-    featured: boolean;
-    promotion: boolean;
-  }>;
-  events: Array<{
-    name: string;
-    description: string;
-    date: string;
-    type: string;
-    points: number;
-    totalSpots: number;
-    filledSpots: number;
-    participantsCount: number;
-    address: {
-      state: string;
-      city: string;
-      district: string;
-      street: string;
-      complement: string | null;
-      number: string;
-      zipCode: string;
-    };
-  }>;
-}
-
-// Dados mockados para simulação
-const mockSuppliers: Supplier[] = [
-  {
-    id: 's1f2e3d4-5678-9101-1121-314151617181',
-    name: 'Loja do Fornecedor ABC',
-    description: 'Uma loja especializada em produtos elétricos e hidráulicos.',
-    website: 'https://lojaabc.com.br',
-    rating: 4.5,
-    openingHours: '08:00 - 18:00',
-    address: {
-      state: 'SP',
-      city: 'São Paulo',
-      district: 'Mooca',
-      street: 'Av. Paes de Barros',
-      complement: 'Loja 1',
-      number: '456',
-      zipCode: '03100-000',
-    },
-    products: [
-      {
-        name: 'Chave de Fenda',
-        description: 'Ferramenta para apertar e soltar parafusos.',
-        price: 19.99,
-        link: 'https://lojaabc.com.br/produtos/chave-de-fenda',
-        featured: true,
-        promotion: false,
-      },
-      {
-        name: 'Fita Isolante',
-        description: 'Ideal para instalações elétricas.',
-        price: 5.5,
-        link: 'https://lojaabc.com.br/produtos/fita-isolante',
-        featured: false,
-        promotion: true,
-      },
-    ],
-    events: [
-      {
-        name: 'Workshop de Instalação Elétrica',
-        description: 'Evento voltado para profissionais da área elétrica.',
-        date: '2025-07-10T09:00:00Z',
-        type: 'Workshop',
-        points: 50,
-        totalSpots: 30,
-        filledSpots: 10,
-        participantsCount: 10,
-        address: {
-          state: 'SP',
-          city: 'São Paulo',
-          district: 'Vila Mariana',
-          street: 'Rua Domingos de Morais',
-          complement: 'Auditório',
-          number: '350',
-          zipCode: '04010-000',
-        },
-      },
-    ],
-  },
-  {
-    id: 's2a3b4c5-6789-0123-4567-890123456789',
-    name: 'Materiais Construção XYZ',
-    description: 'Fornecedor completo de materiais para construção civil e reformas.',
-    website: 'https://materiaisxyz.com.br',
-    rating: 4.8,
-    openingHours: '07:00 - 17:00',
-    address: {
-      state: 'SP',
-      city: 'São Paulo',
-      district: 'Vila Prudente',
-      street: 'Rua do Oratório',
-      complement: null,
-      number: '1200',
-      zipCode: '03220-000',
-    },
-    products: [
-      {
-        name: 'Cimento Portland',
-        description: 'Cimento de alta qualidade para construção.',
-        price: 28.9,
-        link: 'https://materiaisxyz.com.br/produtos/cimento',
-        featured: true,
-        promotion: false,
-      },
-      {
-        name: 'Tijolo Cerâmico',
-        description: 'Tijolo de qualidade superior.',
-        price: 0.85,
-        link: 'https://materiaisxyz.com.br/produtos/tijolo',
-        featured: false,
-        promotion: true,
-      },
-      {
-        name: 'Tinta Acrílica',
-        description: 'Tinta lavável para paredes internas e externas.',
-        price: 89.9,
-        link: 'https://materiaisxyz.com.br/produtos/tinta',
-        featured: true,
-        promotion: false,
-      },
-    ],
-    events: [
-      {
-        name: 'Feira de Materiais de Construção',
-        description: 'Exposição dos melhores materiais com preços especiais.',
-        date: '2025-08-15T08:00:00Z',
-        type: 'Feira',
-        points: 30,
-        totalSpots: 100,
-        filledSpots: 45,
-        participantsCount: 45,
-        address: {
-          state: 'SP',
-          city: 'São Paulo',
-          district: 'Expo Center Norte',
-          street: 'Rua José Bernardo Pinto',
-          complement: 'Pavilhão A',
-          number: '333',
-          zipCode: '02055-000',
-        },
-      },
-    ],
-  },
-  {
-    id: 's3d4e5f6-7890-1234-5678-901234567890',
-    name: 'Ferramentas Pro',
-    description: 'Especialista em ferramentas profissionais e equipamentos industriais.',
-    website: 'https://ferramentaspro.com.br',
-    rating: 4.3,
-    openingHours: '08:30 - 18:30',
-    address: {
-      state: 'SP',
-      city: 'São Paulo',
-      district: 'Brás',
-      street: 'Rua Oriente',
-      complement: 'Galpão 5',
-      number: '789',
-      zipCode: '03016-000',
-    },
-    products: [
-      {
-        name: 'Furadeira Profissional',
-        description: 'Furadeira de impacto com alta potência.',
-        price: 299.9,
-        link: 'https://ferramentaspro.com.br/produtos/furadeira',
-        featured: true,
-        promotion: true,
-      },
-      {
-        name: 'Kit de Chaves',
-        description: 'Conjunto completo de chaves Phillips e fenda.',
-        price: 45.0,
-        link: 'https://ferramentaspro.com.br/produtos/kit-chaves',
-        featured: false,
-        promotion: false,
-      },
-    ],
-    events: [
-      {
-        name: 'Treinamento de Ferramentas',
-        description: 'Aprenda a usar ferramentas profissionais com segurança.',
-        date: '2025-09-20T14:00:00Z',
-        type: 'Treinamento',
-        points: 40,
-        totalSpots: 25,
-        filledSpots: 8,
-        participantsCount: 8,
-        address: {
-          state: 'SP',
-          city: 'São Paulo',
-          district: 'Brás',
-          street: 'Rua Oriente',
-          complement: 'Sala de Treinamento',
-          number: '789',
-          zipCode: '03016-000',
-        },
-      },
-    ],
-  },
-];
+import { fetchStores } from '@/lib/store-api';
+import { StoreData } from '@/types';
 
 export function SuppliersContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [suppliers, setSuppliers] = useState<StoreData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Simular carregamento de dados
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setSuppliers(mockSuppliers);
-      setIsLoading(false);
-    }, 2000);
+    async function loadSuppliersStore() {
+      try {
+        setIsLoading(true);
+        const response = await fetchStores();
+        setSuppliers(response.data);
+      } catch (error) {
+        console.error('Error loading partner suppliers:', error);
+        setSuppliers([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    return () => clearTimeout(timer);
+    loadSuppliersStore();
   }, []);
 
   const filteredSuppliers = suppliers.filter(
@@ -258,8 +41,8 @@ export function SuppliersContent() {
   );
 
   // Calcular estatísticas
-  const totalProducts = suppliers.reduce((acc, supplier) => acc + supplier.products.length, 0);
-  const totalEvents = suppliers.reduce((acc, supplier) => acc + supplier.events.length, 0);
+  const totalProducts = suppliers.reduce((acc, supplier) => acc + supplier.products?.length, 0);
+  const totalEvents = suppliers.reduce((acc, supplier) => acc + supplier.events?.length, 0);
   const averageRating =
     suppliers.length > 0
       ? (suppliers.reduce((acc, supplier) => acc + supplier.rating, 0) / suppliers.length).toFixed(1)

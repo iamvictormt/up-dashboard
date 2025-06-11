@@ -3,9 +3,9 @@ import { EventData } from './event';
 import { ProductData } from './product';
 
 export interface StoreData {
-  id: string;
-  name?: string;
-  description?: string;
+  id?: string;
+  name: string;
+  description: string;
   website: string;
   rating: number;
   openingHours: string;

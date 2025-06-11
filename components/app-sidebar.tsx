@@ -111,7 +111,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     {
       title: 'Fornecedores parceiros',
       icon: Store,
-      url: '/suppliers',
+      url: '/suppliers-store',
       roles: ['professional'],
     },
     {
@@ -129,7 +129,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     {
       title: 'Minha Loja',
       icon: ShoppingCart,
-      url: '/my-store',
+      url: '/store-info',
       roles: ['partnerSupplier'],
     },
     {

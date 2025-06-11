@@ -3,46 +3,36 @@
 import { useState, useEffect } from 'react';
 import {
   Star,
-  MapPin,
-  Share,
   Store,
-  Mail,
   Globe,
   Package,
   Calendar,
-  Clock,
-  Users,
   Award,
-  Phone,
   Edit3,
-  Save,
-  X,
   Plus,
   ExternalLink,
-  Map,
+  Heart,
+  MapPin,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import { EventForm } from '@/components/my-store/event-form';
-import { MyStoreContentSkeleton } from './my-store-skeleton';
+import { EventForm } from '@/components/store/event-form';
+import { MyStoreContentSkeleton } from './store-skeleton';
 import { EventEditModal } from './event-edit-modal';
-import { fetchMyStore, updateStore } from '@/lib/store-api';
+import { fetchMyStore, fetchStoreById } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
-import MapCard from '../map-card';
 import { StoreForm } from './store-form';
 import { NoStoreView } from './no-store-view';
 import { ProductFormModal } from './product-form';
+import StoreInfoSection from './store-info-section';
 
-const fetchStoreData = async (): Promise<StoreData | null> => {
-  const response = await fetchMyStore();
+const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData | null> => {
+  const response = supplierId ? await fetchStoreById(supplierId) : await fetchMyStore();
   if (response.status === 200) {
     return response.data;
   }
@@ -50,9 +40,12 @@ const fetchStoreData = async (): Promise<StoreData | null> => {
   return null;
 };
 
-export function MyStoreContent() {
+interface StoreContentProps {
+  supplierId?: string;
+}
+
+export function StoreContent({ supplierId }: StoreContentProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
@@ -65,7 +58,7 @@ export function MyStoreContent() {
     const loadStoreData = async () => {
       try {
         setIsLoading(true);
-        const data = await fetchStoreData();
+        const data = await fetchStoreData(supplierId);
         setStoreData(data);
         setEditData(data);
         console.log(data);
@@ -78,62 +71,6 @@ export function MyStoreContent() {
 
     loadStoreData();
   }, []);
-
-  const processStoreHours = (openingHours: string) => {
-    const now = new Date();
-    const currentDay = now.getDay(); // 0 = Domingo, 1 = Segunda, etc.
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Minutos desde meia-noite
-
-    const dayNames = [
-      'Domingo',
-      'Segunda-feira',
-      'Terça-feira',
-      'Quarta-feira',
-      'Quinta-feira',
-      'Sexta-feira',
-      'Sábado',
-    ];
-
-    // Criar objeto com todos os dias da semana
-    const weekSchedule = dayNames.map((day) => ({ day, hours: 'Fechado' }));
-
-    // Processar horários cadastrados
-    const schedules = openingHours.split(' | ');
-    schedules.forEach((schedule) => {
-      const [day, hours] = schedule.split(': ');
-      const dayIndex = dayNames.indexOf(day);
-      if (dayIndex !== -1) {
-        weekSchedule[dayIndex].hours = hours;
-      }
-    });
-
-    // Verificar se está aberto hoje
-    const todaySchedule = weekSchedule[currentDay];
-    let isOpen = false;
-    let closingTime = null;
-    let nextOpenTime = null;
-
-    if (todaySchedule.hours !== 'Fechado') {
-      const [openTime, closeTime] = todaySchedule.hours.split(' - ');
-      const [openHour, openMin] = openTime.split(':').map(Number);
-      const [closeHour, closeMin] = closeTime.split(':').map(Number);
-
-      const openMinutes = openHour * 60 + openMin;
-      const closeMinutes = closeHour * 60 + closeMin;
-
-      isOpen = currentTime >= openMinutes && currentTime < closeMinutes;
-      closingTime = isOpen ? closeTime : null;
-      nextOpenTime = !isOpen && currentTime < openMinutes ? openTime : null;
-    }
-
-    return {
-      weekSchedule,
-      isOpen,
-      closingTime,
-      nextOpenTime,
-      currentDay,
-    };
-  };
 
   const handleStoreCreated = (newStoreData: StoreData) => {
     setStoreData(newStoreData);
@@ -240,13 +177,23 @@ export function MyStoreContent() {
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         {/* Floating Action Buttons */}
         <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
-          <Button
-            onClick={() => setShowStoreForm(true)}
-            size="icon"
-            className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
-          >
-            <Edit3 className="w-5 h-5" />
-          </Button>
+          {!supplierId ? (
+            <Button
+              onClick={() => setShowStoreForm(true)}
+              size="icon"
+              className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
+            >
+              <Edit3 className="w-5 h-5" />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => setShowStoreForm(true)}
+              size="icon"
+              className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
+            >
+              <Heart className="w-5 h-5" />
+            </Button>
+          )}
         </div>
 
         {/* Hero Section */}
@@ -268,7 +215,6 @@ export function MyStoreContent() {
                 {/* Informações Principais */}
                 <div className="w-full lg:flex-1 text-center lg:text-left text-white break-words max-w-full">
                   <h1 className="text-3xl md:text-5xl font-bold mb-4">{storeData.name}</h1>
-                  <p className="text-lg md:text-2xl text-white/90 mb-6">Minha Loja Especializada</p>
 
                   {/* Rating */}
                   <div className="flex items-center justify-center lg:justify-start mb-6">
@@ -363,16 +309,24 @@ export function MyStoreContent() {
             <section>
               <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                 <div>
-                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Meus Produtos</h2>
-                  <p className="text-[#511A2B]/70">Gerencie sua linha completa de produtos</p>
+                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
+                    {!supplierId ? 'Gerenciar produtos' : 'Produtos da loja'}
+                  </h2>
+                  <p className="text-[#511A2B]/70">
+                    {!supplierId
+                      ? 'Organize e atualize sua linha de produtos com facilidade'
+                      : 'Conheça a linha completa de produtos desta loja'}
+                  </p>
                 </div>
-                <Button
-                  onClick={() => setShowProductForm(true)}
-                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Adicionar Produto
-                </Button>
+                {!supplierId && (
+                  <Button
+                    onClick={() => setShowProductForm(true)}
+                    className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar Produto
+                  </Button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -399,15 +353,17 @@ export function MyStoreContent() {
                             <Badge className="bg-red-500 text-white hover:bg-red-600 shadow-lg">Promoção</Badge>
                           )}
                         </div>
-                        <div className="absolute top-3 right-3">
-                          <Button
-                            size="icon"
-                            className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-                            onClick={() => setEditingProduct(index)}
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </Button>
-                        </div>
+                        {!supplierId && (
+                          <div className="absolute top-3 right-3">
+                            <Button
+                              size="icon"
+                              className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
+                              onClick={() => setEditingProduct(index)}
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -438,16 +394,24 @@ export function MyStoreContent() {
             <section>
               <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                 <div>
-                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Meus Eventos</h2>
-                  <p className="text-[#511A2B]/70">Organize eventos e workshops para sua comunidade</p>
+                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
+                    {!supplierId ? 'Gerenciar eventos' : 'Eventos disponíveis'}
+                  </h2>
+                  <p className="text-[#511A2B]/70">
+                    {!supplierId
+                      ? 'Leve conhecimento e conexão à sua comunidade com eventos e workshops'
+                      : 'Atividades e workshops promovidos pela loja'}
+                  </p>
                 </div>
-                <Button
-                  onClick={() => setShowEventForm(true)}
-                  className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Criar Evento
-                </Button>
+                {!supplierId && (
+                  <Button
+                    onClick={() => setShowEventForm(true)}
+                    className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Criar Evento
+                  </Button>
+                )}
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -473,15 +437,17 @@ export function MyStoreContent() {
                           </div>
                         </div>
                       </div>
-                      <div className="absolute top-4 right-4">
-                        <Button
-                          size="icon"
-                          className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 hover:bg-white/30 text-white border border-white/30"
-                          onClick={() => setEditingEvent(index)}
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      {!supplierId && (
+                        <div className="absolute top-4 right-4">
+                          <Button
+                            size="icon"
+                            className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                            onClick={() => setEditingEvent(index)}
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
 
                     <CardContent className="p-6">
@@ -525,170 +491,8 @@ export function MyStoreContent() {
               </div>
             </section>
 
-            <section>
-              <div className="text-center mb-12">
-                <h2 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-4">Informações da Loja</h2>
-                <p className="text-[#511A2B]/70 max-w-2xl mx-auto">
-                  Conheça mais detalhes sobre nossa loja, localização e horários de funcionamento
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Card de Localização */}
-                <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-                  <CardHeader className="bg-[#46142b] text-white p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <MapPin className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold">Localização</h3>
-                        <p className="text-white/90 text-sm">Onde nos encontrar</p>
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="p-6 flex-1">
-                    <div className="relative w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden mb-6">
-                      <MapCard cep={storeData.address.zipCode} />
-                    </div>
-
-                    {/* Endereço Completo */}
-                    <div className="space-y-5">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-[#511A2B]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <MapPin className="w-5 h-5 text-[#511A2B]" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-[#511A2B] text-lg">Endereço Completo</h4>
-                          <p className="text-[#511A2B]/80 mt-1">
-                            {storeData.address.street}, {storeData.address.number}
-                            {storeData.address.complement && `, ${storeData.address.complement}`}
-                          </p>
-                          <p className="text-[#511A2B]/80 mt-1">
-                            {storeData.address.district}, {storeData.address.city} - {storeData.address.state}
-                          </p>
-                          <p className="text-[#511A2B]/70 text-sm mt-1">CEP: {storeData.address.zipCode}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-[#D56235]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Globe className="w-5 h-5 text-[#D56235]" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-[#511A2B] text-lg">Região</h4>
-                          <p className="text-[#511A2B]/80">
-                            {storeData.address.city} - {storeData.address.state}
-                          </p>
-                          <p className="text-[#511A2B]/70 text-sm mt-1">Bairro: {storeData.address.district}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 bg-[#FEC460]/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Store className="w-5 h-5 text-[#FEC460]" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-[#511A2B] text-lg">Referência</h4>
-                          <p className="text-[#511A2B]/80">
-                            {storeData.name} - {storeData.address.street}
-                          </p>
-                          <p className="text-[#511A2B]/70 text-sm mt-1">
-                            Próximo ao centro de {storeData.address.district}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                {/* Card de Horário de Funcionamento */}
-                <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-                  <CardHeader className="bg-[#46142b] text-white p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                        <Clock className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold">Horário de Funcionamento</h3>
-                        <p className="text-white/90 text-sm">Quando estamos abertos</p>
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="space-y-3 mb-6 flex-1">
-                      {(() => {
-                        const storeHours = processStoreHours(storeData.openingHours);
-                        return storeHours.weekSchedule.map((schedule, index) => {
-                          const isToday = storeHours.currentDay === index;
-                          const isClosed = schedule.hours === 'Fechado';
-
-                          return (
-                            <div
-                              key={index}
-                              className={`flex items-center justify-between p-3 rounded-xl transition-colors ${
-                                isToday ? 'bg-[#511A2B]/10 border border-[#511A2B]/20' : 'bg-gray-50'
-                              }`}
-                            >
-                              <span
-                                className={`font-medium ${isToday ? 'text-[#511A2B] font-bold' : 'text-[#511A2B]'}`}
-                              >
-                                {schedule.day}
-                                {isToday && (
-                                  <span className="ml-2 text-xs bg-[#511A2B] text-white px-2 py-1 rounded-full">
-                                    Hoje
-                                  </span>
-                                )}
-                              </span>
-                              <Badge
-                                variant="secondary"
-                                className={`px-3 py-1 ${
-                                  isClosed
-                                    ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                    : isToday
-                                    ? 'bg-[#511A2B] text-white hover:bg-[#511A2B]/90'
-                                    : 'bg-[#511A2B]/10 text-[#511A2B] hover:bg-[#511A2B]/20'
-                                }`}
-                              >
-                                {schedule.hours}
-                              </Badge>
-                            </div>
-                          );
-                        });
-                      })()}
-                    </div>
-
-                    {(() => {
-                      const storeHours = processStoreHours(storeData.openingHours);
-                      return (
-                        <div
-                          className={`p-4 rounded-xl border ${
-                            storeHours.isOpen ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className={`w-3 h-3 rounded-full ${storeHours.isOpen ? 'bg-green-500' : 'bg-red-500'}`}
-                            ></div>
-                            <span
-                              className={`font-medium text-sm ${storeHours.isOpen ? 'text-green-700' : 'text-red-700'}`}
-                            >
-                              {storeHours.isOpen ? 'Aberto agora' : 'Fechado agora'}
-                            </span>
-                          </div>
-                          <p className={`text-sm mt-1 ${storeHours.isOpen ? 'text-green-600' : 'text-red-600'}`}>
-                            {storeHours.isOpen && storeHours.closingTime && `Fecha às ${storeHours.closingTime}`}
-                            {!storeHours.isOpen && storeHours.nextOpenTime && `Abre às ${storeHours.nextOpenTime}`}
-                            {!storeHours.isOpen && !storeHours.nextOpenTime && 'Fechado hoje'}
-                          </p>
-                        </div>
-                      );
-                    })()}
-                  </CardContent>
-                </Card>
-              </div>
-            </section>
+            {/* Eventos Section */}
+            <StoreInfoSection storeData={storeData} />
           </div>
         </div>
 

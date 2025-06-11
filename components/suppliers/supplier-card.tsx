@@ -1,5 +1,5 @@
 "use client"
-import { Star, MapPin, Store, MoreHorizontal, Package, Calendar, ExternalLink, Clock } from "lucide-react"
+import { Star, MapPin, Store, MoreHorizontal, Package, Calendar, ExternalLink, Clock, Heart } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -74,8 +74,8 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
 
           {/* Store Info */}
           <div className="flex items-start space-x-3 h-full">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
-              <Store className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Store className="w-8 h-8 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-bold mb-1 truncate pr-16">{name}</h3>
@@ -97,10 +97,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
           </div>
 
           {/* Opening Hours - Altura fixa */}
-          <div className="flex items-center space-x-2 mb-4 h-[20px]">
-            <Clock className="w-4 h-4 text-green-600 flex-shrink-0" />
-            <span className="text-sm text-[#511A2B] font-medium truncate">{openingHours}</span>
-          </div>
+
 
           {/* Products Section - Altura fixa */}
           <div className="mb-4 h-[120px] flex flex-col">
@@ -183,7 +180,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
 
           {/* Action Buttons - Altura fixa no final */}
           <div className="flex space-x-2 mt-auto">
-            <Link href={`/suppliers/${id}`} className="flex-1">
+            <Link href={`/suppliers-store/${id}`} className="flex-1">
               <Button className="w-full bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl text-sm">
                 Ver Loja
               </Button>
@@ -196,11 +193,10 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
               <ExternalLink className="w-4 h-4" />
             </Button>
             <Button
-              variant="ghost"
-              size="icon"
-              className="text-[#511A2B]/50 hover:text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
+              variant="outline"
+              className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
             >
-              <MoreHorizontal className="w-4 h-4" />
+              <Heart className="w-4 h-4" />
             </Button>
           </div>
         </div>

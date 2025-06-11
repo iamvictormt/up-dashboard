@@ -19,9 +19,9 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl.pathname;
   const role = request.cookies.get('role')?.value;
   const permissions: any = {
-    partnerSupplier: ['/', '/my-store', '/dashboard', '/orders'],
-    professional: ['/', '/projects', '/appointments'],
-    loveDecoration: ['/', '/inspiration', '/profile', '/help'],
+    partnerSupplier: ['/mural', '/recommended-professionals', '/store-info', '/benefits', '/help'],
+    professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help'],
+    loveDecoration: ['/mural', '/recommended-professionals', '/help'],
   };
 
   if (!isAuthPage && (!token || isTokenExpired(token))) {
@@ -46,8 +46,9 @@ export function middleware(request: NextRequest) {
 
       const allowedRoutes = permissions[JSON.parse(role)];
       const isAllowed = allowedRoutes?.some((route: string) => url.startsWith(route));
+
       if (!isAllowed) {
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.redirect(new URL('/mural', request.url));
       }
     }
   }
