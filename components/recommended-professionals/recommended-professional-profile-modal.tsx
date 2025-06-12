@@ -1,78 +1,78 @@
-"use client"
+'use client';
 
-import { Linkedin, Instagram, Phone, MapPin, Mail, Calendar, X, MessageCircle } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
+import { Linkedin, Instagram, Phone, MapPin, Mail, Calendar, X, MessageCircle } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 interface Professional {
-  id: string
-  name: string
-  profession: string
-  description: string
-  phone: string
-  email: string
-  profileImage: string
+  id: string;
+  name: string;
+  profession: string;
+  description: string;
+  phone: string;
+  email: string;
+  profileImage: string;
   address: {
-    state: string
-    city: string
-    district: string
-    street: string
-    complement?: string
-    number: string
-    zipCode: string
-  }
+    state: string;
+    city: string;
+    district: string;
+    street: string;
+    complement?: string;
+    number: string;
+    zipCode: string;
+  };
   socialMedia: {
-    linkedin?: string
-    instagram?: string
-    whatsapp: string
-  }
+    linkedin?: string;
+    instagram?: string;
+    whatsapp: string;
+  };
   availableDays: {
-    dayOfWeek: string
-  }[]
-  isActive: boolean
+    dayOfWeek: string;
+  }[];
+  isActive: boolean;
 }
 
 interface ProfessionalProfileModalProps {
-  professional: Professional
-  isOpen: boolean
-  onClose: () => void
+  professional: Professional;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 // Função para formatar os dias disponíveis completos
 const formatAvailableDaysFull = (days: { dayOfWeek: string }[]) => {
-  if (!days || days.length === 0) return ["Não disponível"]
+  if (!days || days.length === 0) return ['Não disponível'];
 
   const dayMap: Record<string, string> = {
-    MONDAY: "Segunda-feira",
-    TUESDAY: "Terça-feira",
-    WEDNESDAY: "Quarta-feira",
-    THURSDAY: "Quinta-feira",
-    FRIDAY: "Sexta-feira",
-    SATURDAY: "Sábado",
-    SUNDAY: "Domingo",
-  }
+    MONDAY: 'Segunda-feira',
+    TUESDAY: 'Terça-feira',
+    WEDNESDAY: 'Quarta-feira',
+    THURSDAY: 'Quinta-feira',
+    FRIDAY: 'Sexta-feira',
+    SATURDAY: 'Sábado',
+    SUNDAY: 'Domingo',
+  };
 
-  return days.map((day) => dayMap[day.dayOfWeek] || day.dayOfWeek)
-}
+  return days.map((day) => dayMap[day.dayOfWeek] || day.dayOfWeek);
+};
 
 // Função para formatar endereço completo
-const formatFullAddress = (address: Professional["address"]) => {
-  const { street, number, complement, district, city, state, zipCode } = address
+const formatFullAddress = (address: Professional['address']) => {
+  const { street, number, complement, district, city, state, zipCode } = address;
 
-  const addressParts = [`${street}, ${number}`, complement, district, city, state, zipCode].filter(Boolean)
+  const addressParts = [`${street}, ${number}`, complement, district, city, state, zipCode].filter(Boolean);
 
-  return addressParts.join(", ")
-}
+  return addressParts.join(', ');
+};
 
 export function ProfessionalProfileModal({ professional, isOpen, onClose }: ProfessionalProfileModalProps) {
   const { name, profession, description, profileImage, isActive, phone, email, address, availableDays, socialMedia } =
-    professional
+    professional;
 
-  const availableDaysList = formatAvailableDaysFull(availableDays)
-  const fullAddress = formatFullAddress(address)
+  const availableDaysList = formatAvailableDaysFull(availableDays);
+  const fullAddress = formatFullAddress(address);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -92,12 +92,12 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           {/* Header do Perfil */}
           <div className="flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-6">
             <Avatar className="w-20 h-20 md:w-24 md:h-24 rounded-2xl mx-auto md:mx-0">
-              <AvatarImage src={profileImage || "/placeholder.svg"} />
+              <AvatarImage src={profileImage || '/placeholder.svg'} />
               <AvatarFallback className="rounded-2xl bg-[#511A2B] text-white text-xl md:text-2xl">
                 {name
-                  .split(" ")
+                  .split(' ')
                   .map((n) => n[0])
-                  .join("")}
+                  .join('')}
               </AvatarFallback>
             </Avatar>
 
@@ -109,11 +109,11 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                 <Badge
                   className={`${
                     isActive
-                      ? "bg-green-100 text-green-700 border-green-200"
-                      : "bg-gray-100 text-gray-600 border-gray-200"
+                      ? 'bg-green-100 text-green-700 border-green-200'
+                      : 'bg-gray-100 text-gray-600 border-gray-200'
                   } rounded-lg px-3 py-1 mx-auto md:mx-0`}
                 >
-                  {isActive ? "Profissional Ativo" : "Profissional Inativo"}
+                  {isActive ? 'Profissional Ativo' : 'Profissional Inativo'}
                 </Badge>
               </div>
 
@@ -196,7 +196,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     <Button
                       variant="outline"
                       className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl flex-1 md:flex-none"
-                      onClick={() => window.open(socialMedia.linkedin, "_blank")}
+                      onClick={() => window.open(socialMedia.linkedin, '_blank')}
                     >
                       <Linkedin className="w-4 h-4 mr-2" />
                       LinkedIn
@@ -207,7 +207,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     <Button
                       variant="outline"
                       className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl flex-1 md:flex-none"
-                      onClick={() => window.open(socialMedia.instagram, "_blank")}
+                      onClick={() => window.open(socialMedia.instagram, '_blank')}
                     >
                       <Instagram className="w-4 h-4 mr-2" />
                       Instagram
@@ -218,7 +218,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     <Button
                       variant="outline"
                       className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl flex-1 md:flex-none"
-                      onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, "")}`, "_blank")}
+                      onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
                     >
                       <MessageCircle className="w-4 h-4 mr-2" />
                       WhatsApp
@@ -236,7 +236,14 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             <Button
               className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3"
               disabled={!isActive}
-              onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, "")}`, "_blank")}
+              onClick={() =>
+                window.open(
+                  `https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
+                    'Olá! Consegui seu contato no UP Connection, tenho interesse nos seus serviços.'
+                  )}`,
+                  '_blank'
+                )
+              }
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               Contatar via WhatsApp
@@ -245,7 +252,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             <Button
               variant="outline"
               className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
-              onClick={() => window.open(`tel:${phone}`, "_blank")}
+              onClick={() => window.open(`tel:${phone}`, '_blank')}
             >
               <Phone className="w-4 h-4 mr-2" />
               Ligar
@@ -254,7 +261,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             <Button
               variant="outline"
               className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
-              onClick={() => window.open(`mailto:${email}`, "_blank")}
+              onClick={() => window.open(`mailto:${email}`, '_blank')}
             >
               <Mail className="w-4 h-4 mr-2" />
               E-mail
@@ -263,5 +270,5 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -168,7 +168,18 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
           </div>
 
           <div className="flex space-x-2">
-            <Button className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl" disabled={!isActive}>
+            <Button
+              className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl"
+              disabled={!isActive}
+              onClick={() =>
+                window.open(
+                  `https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
+                    'Olá! Consegui seu contato no UP Connection, tenho interesse nos seus serviços.'
+                  )}`,
+                  '_blank'
+                )
+              }
+            >
               <MessageCircle className="w-4 h-4 mr-2" />
               Contatar
             </Button>
