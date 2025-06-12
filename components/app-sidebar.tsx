@@ -127,13 +127,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       roles: ['professional'],
     },
     {
-      title: 'Minha Loja',
+      title: 'Minha loja',
       icon: ShoppingCart,
       url: '/store-info',
       roles: ['partnerSupplier'],
     },
     {
-      title: 'Meus Benefícios',
+      title: 'Meus benefícios',
       icon: Crown,
       url: '/benefits',
       roles: ['partnerSupplier'],

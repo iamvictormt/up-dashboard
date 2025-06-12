@@ -44,7 +44,7 @@ export async function unlikePost(likeId: string): Promise<void> {
 // Function to update a post
 export async function updatePost(
   postId: string,
-  data: { title?: string; content?: string; hashtags?: string[]; image?: string | null }
+  data: { title?: string; content?: string; hashtags?: string[]; attachedImage?: string | null }
 ): Promise<Post> {
   const response = await api.patch(`posts/${postId}`, data);
 

@@ -97,10 +97,10 @@ const PostDisplay = ({ post }: { post: any }) => (
     </div>
     {post.title && <h3 className="font-semibold text-[#511A2B] mb-2">{post.title}</h3>}
     <p className="text-[#511A2B]/80">{post.content}</p>
-    {post.imageUrl && (
+    {post.attachedImage && (
       <div className="mt-3 rounded-lg overflow-hidden">
         <img
-          src={post.imageUrl || "/placeholder.svg"}
+          src={post.attachedImage || "/placeholder.svg"}
           alt="Imagem do post"
           className="w-full h-auto object-cover max-h-[300px]"
         />

@@ -26,21 +26,21 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
     if (user?.professional) {
       return {
         icon: <User className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar Perfil Profissional",
+        title: "Editar perfil",
         type: "professional" as const,
       }
     }
     if (user?.partnerSupplier) {
       return {
         icon: <Building className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar Perfil da Empresa",
+        title: "Editar perfil",
         type: "supplier" as const,
       }
     }
     if (user?.loveDecoration) {
       return {
         icon: <Heart className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar Perfil Love Decoration",
+        title: "Editar perfil",
         type: "loveDecoration" as const,
       }
     }

@@ -5,7 +5,7 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
   hashtags: string[];
-  image?: string;
+  attachedImage?: string;
 
   author: {
     id: string;
@@ -32,6 +32,7 @@ export interface CreatePost {
   authorId: string;
   communityId: string;
   hashtags: string[];
+  attachedImage?: string;
 }
 
 export interface PostStats {

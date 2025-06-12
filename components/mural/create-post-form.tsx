@@ -14,6 +14,8 @@ import { uploadImage } from '@/utils/image-upload';
 import { createPost } from '@/lib/post-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
 import { Badge } from '../ui/badge';
+import { uploadImageCloudinary } from '@/lib/user-api';
+import { toast } from 'sonner';
 
 interface CreatePostFormProps {
   communityId: string;
@@ -69,10 +71,9 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
         addHashtag();
       }
 
-      // Upload image if present
-      let imageUrl = null;
+      let cloudinaryImageURL = null;
       if (image) {
-        imageUrl = await uploadImage(image);
+        cloudinaryImageURL = await uploadImageCloudinary(image);
       }
 
       // Create post
@@ -82,10 +83,11 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
         communityId,
         hashtags,
         authorId: user.id,
+        attachedImage: cloudinaryImageURL || '',
       });
 
       triggerUpdate();
-
+      toast.success('Post criado com sucesso!');
       onSuccess();
     } catch (err) {
       console.error('Error creating post:', err);
@@ -136,7 +138,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
     }
   };
 
-  if(communityId === "") {
+  if (communityId === '') {
     return;
   }
 

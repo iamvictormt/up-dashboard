@@ -14,6 +14,8 @@ import { uploadImage } from '@/utils/image-upload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { updatePost } from '@/lib/post-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
+import { uploadImageCloudinary } from '@/lib/user-api';
+import { toast } from 'sonner';
 
 interface EditPostModalProps {
   isOpen: boolean;
@@ -29,7 +31,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
   const [hashtags, setHashtags] = useState<string[]>(post.hashtags || []);
   const [hashtagInput, setHashtagInput] = useState('');
   const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(post.image || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(post.attachedImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hashtagInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,16 +45,16 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
         addHashtag();
       }
 
-      let imageUrl = post.image;
+      let cloudinaryImageURL = null;
       if (image) {
-        imageUrl = await uploadImage(image);
+        cloudinaryImageURL = await uploadImageCloudinary(image);
       }
 
       const updatedPost = await updatePost(post.id, {
         title: title.trim(),
         content: content.trim(),
         hashtags,
-        image: imageUrl,
+        attachedImage: cloudinaryImageURL || post.attachedImage || '',
       });
 
       if (onPostUpdated) {
@@ -60,7 +62,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
       }
 
       triggerUpdate();
-
+      toast.success('Post editado com sucesso!');
       onClose();
     } catch (error) {
       console.error('Error updating post:', error);

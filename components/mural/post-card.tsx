@@ -213,12 +213,13 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
             <p>{post.content}</p>
           </div>
 
-          {post.image && (
-            <div className="mt-4 rounded-lg overflow-hidden">
+          {post.attachedImage && (
+            <div className="mt-4 rounded-lg overflow-hidden place-items-center">
               <img
-                src={post.image || '/placeholder.svg'}
+                src={post.attachedImage || '/placeholder.svg'}
                 alt="Post attachment"
-                className="w-full h-auto object-cover"
+                className="object-cover"
+                style={{ width: '50vh', height: '50vh' }}
               />
             </div>
           )}
