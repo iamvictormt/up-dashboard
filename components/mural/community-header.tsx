@@ -41,7 +41,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
               <div className="flex items-center gap-1">
                 <LucideIcons.Rss className="h-3.5 w-3.5" />
                 <span>
-                  {`${community.postsCount ?? 0} publica${(community.postsCount ?? 0) === 1 ? 'ção' : 'ções'}`}
+                  {`${community.postsCount ?? 0} publicaç${(community.postsCount ?? 0) === 1 ? 'ão' : 'ões'}`}
                 </span>
               </div>
 

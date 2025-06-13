@@ -10,12 +10,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/contexts/user-context';
 import { useCommunity } from '@/contexts/community-context';
 import { ImageIcon, X, Loader2, Hash } from 'lucide-react';
-import { uploadImage } from '@/utils/image-upload';
 import { createPost } from '@/lib/post-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
 import { Badge } from '../ui/badge';
 import { uploadImageCloudinary } from '@/lib/user-api';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface CreatePostFormProps {
   communityId: string;
@@ -25,7 +24,7 @@ interface CreatePostFormProps {
 
 export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostFormProps) {
   const { user } = useUser();
-  const { selectedCommunity } = useCommunity();
+  const { selectedCommunity, updateSelectedCommunity } = useCommunity();
   const { triggerUpdate } = useMuralUpdate();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -36,6 +35,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const hashtagInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   if (!user) return null;
 
@@ -87,7 +87,12 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
       });
 
       triggerUpdate();
-      toast.success('Post criado com sucesso!');
+      toast({
+        title: 'Post publicado com sucesso! 🚀',
+        description: 'Seu post já está visível para todos.',
+        duration: 2000,
+      });
+      updateSelectedCommunity({ postsCount: (selectedCommunity?.postsCount || 0) + 1 });
       onSuccess();
     } catch (err) {
       console.error('Error creating post:', err);

@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { updatePost } from '@/lib/post-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
 import { uploadImageCloudinary } from '@/lib/user-api';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface EditPostModalProps {
   isOpen: boolean;
@@ -34,6 +34,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
   const [imagePreview, setImagePreview] = useState<string | null>(post.attachedImage || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hashtagInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const handleSubmit = async () => {
     if (!content.trim()) return;
@@ -62,7 +63,11 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
       }
 
       triggerUpdate();
-      toast.success('Post editado com sucesso!');
+      toast({
+        title: 'Post atualizado com sucesso! ✨',
+        description: 'As alterações foram salvas.',
+        duration: 2000,
+      });
       onClose();
     } catch (error) {
       console.error('Error updating post:', error);

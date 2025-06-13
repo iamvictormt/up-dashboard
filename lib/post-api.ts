@@ -36,8 +36,8 @@ export async function likePost(createLike: CreateLike): Promise<string> {
 }
 
 // Function to unlike a post
-export async function unlikePost(likeId: string): Promise<void> {
-  await api.delete(`likes/${likeId}`);
+export async function unlikePost(postId: string): Promise<void> {
+  await api.delete(`likes/post/${postId}`);
   return Promise.resolve();
 }
 

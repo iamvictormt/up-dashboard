@@ -33,6 +33,7 @@ import {
 } from '../ui/alert-dialog';
 import { EditPostModal } from './edit-post-modal';
 import { useToast } from '@/hooks/use-toast';
+import { useMuralUpdate } from '@/contexts/mural-update-context';
 
 interface PostCardProps {
   post: Post;
@@ -43,7 +44,8 @@ interface PostCardProps {
 
 export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: PostCardProps) {
   const { user } = useUser();
-  const { selectedCommunity } = useCommunity();
+  const { selectedCommunity, updateSelectedCommunity } = useCommunity();
+  const { triggerUpdate } = useMuralUpdate();
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [likesCount, setLikesCount] = useState(post.likes || 0);
   const [commentsCount, setCommentsCount] = useState(post.comments || 0);
@@ -70,20 +72,21 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
       setIsLikeLoading(true);
       let likeId = '';
 
-      if (isLiked && post.likeId) {
-        await unlikePost(post.likeId);
+      if (isLiked) {
+        await unlikePost(post.id);
         setLikesCount((prev) => prev - 1);
         toast({
           title: 'Curtida removida 💔',
-          description: 'Você removeu sua curtida do post.',
+          description: 'Você retirou sua reação deste post.',
           duration: 2000,
         });
       } else {
         likeId = await likePost({ userId: user.id, postId: post.id });
         setLikesCount((prev) => prev + 1);
         toast({
-          title: 'Post curtido! ❤️',
-          description: 'Você curtiu este post.',
+          title: 'Like adicionado! ❤️',
+          description: 'Você acabou de curtir este conteúdo.',
+
           duration: 2000,
         });
       }
@@ -110,6 +113,13 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
       if (onPostDeleted) {
         onPostDeleted(post.id);
       }
+      updateSelectedCommunity({ postsCount: (selectedCommunity?.postsCount || 0) - 1 });
+      toast({
+        title: 'Post excluído! 🗑️',
+        description: 'Esse post não está mais disponível.',
+        duration: 2000,
+      });
+      triggerUpdate();
     } catch (error) {
       console.error('Error deleting post:', error);
     } finally {

@@ -9,6 +9,7 @@ interface CommunityContextType {
   communities: Community[];
   selectedCommunity: Community | null;
   selectCommunity: (community: Community) => void;
+  updateSelectedCommunity: any;
   loading: boolean;
   error: string | null;
 }
@@ -23,29 +24,37 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
   const { updateCount } = useMuralUpdate();
 
   useEffect(() => {
-    async function loadCommunities() {
-      try {
-        setLoading(true);
-        const data = await fetchCommunities();
-        setCommunities(data);
-
-        // Select the first community by default
-        if (data.length > 0 && !selectedCommunity) {
-          setSelectedCommunity(data[0]);
-        }
-      } catch (err) {
-        setError('Failed to load communities');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadCommunities();
   }, [updateCount]);
 
+  async function loadCommunities() {
+    try {
+      setLoading(true);
+      const data = await fetchCommunities();
+      setCommunities(data);
+
+      // Select the first community by default
+      if (data.length > 0 && !selectedCommunity) {
+        setSelectedCommunity(data[0]);
+      }
+    } catch (err) {
+      setError('Failed to load communities');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const selectCommunity = (community: Community) => {
     setSelectedCommunity(community);
+  };
+
+  const updateSelectedCommunity = (updatedFields: Partial<Community>) => {
+    loadCommunities();
+    setSelectedCommunity((prev) => {
+      if (!prev) return null;
+      return { ...prev, ...updatedFields };
+    });
   };
 
   return (
@@ -54,6 +63,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
         communities,
         selectedCommunity,
         selectCommunity,
+        updateSelectedCommunity,
         loading,
         error,
       }}

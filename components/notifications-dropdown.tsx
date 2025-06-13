@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { fetchNotifications, markNotificationAsRead, markAllNotificationsAsRead } from '@/lib/notifications-api';
 import { cn } from '@/lib/utils';
 import { Notification } from '@/types';
+import { toast } from 'sonner';
 
 export function NotificationsDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -101,6 +102,7 @@ export function NotificationsDropdown() {
           notification.id === notificationId ? { ...notification, isRead: true } : notification
         )
       );
+      toast.success('A notificação foi marcada como lida.');
     } catch (error) {
       console.error('Error marking notification as read:', error);
     }
@@ -111,6 +113,7 @@ export function NotificationsDropdown() {
       await markAllNotificationsAsRead();
       setNotifications((prev) => prev.map((notification) => ({ ...notification, isRead: true })));
       setHasNewNotifications(false);
+      toast.success('Todas as notificações foram marcadas como lidas.');
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
     }
@@ -200,7 +203,10 @@ export function NotificationsDropdown() {
           <Button
             variant="ghost"
             size="icon"
-            className={cn('relative rounded-xl text-white hover:bg-white/10 hover:text-white', hasNewNotifications && 'animate-pulse')}
+            className={cn(
+              'relative rounded-xl text-white hover:bg-white/10 hover:text-white',
+              hasNewNotifications && 'animate-pulse'
+            )}
           >
             <Bell className="h-4 w-4 md:h-5 md:w-5" />
             {unreadCount > 0 && (
