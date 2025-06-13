@@ -9,7 +9,6 @@ import { UserProvider } from '@/contexts/user-context';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Toaster } from 'sonner';
-import { useMobile } from '@/hooks/use-mobile';
 import { PaymentProtection } from '@/components/plans/payment-protection';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -47,8 +46,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const isMobile = useMobile();
-
   return (
     <html lang="pt-BR">
       <body className={inter.className}>

@@ -143,7 +143,6 @@ export function LoginContent() {
         setPhoto(dataUrl);
 
         URL.revokeObjectURL(imageUrl);
-        console.log(imageUrl);
       };
 
       img.onerror = () => {
@@ -212,7 +211,7 @@ export function LoginContent() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
       toast.success('Login realizado com sucesso!');
       setTimeout(() => {
-        window.location.href = appUrl.mural;
+        router.push(appUrl.mural);
       }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);
