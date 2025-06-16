@@ -480,9 +480,9 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B] flex items-center">
               <Store className="w-6 h-6 mr-2" />
-              {isEditing ? 'Editar Loja' : 'Criar Loja'}
+              {isEditing ? 'Editar Loja' : 'Cadastrar Loja'}
             </DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+            <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
               <X className="w-5 h-5 text-[#511A2B]" />
             </Button>
           </div>
@@ -514,9 +514,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="Ex: Super Soluções"
-                    className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.name ? 'border-red-500' : ''
-                    }`}
+                    className={`${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                 </div>
@@ -530,9 +528,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     placeholder="Descreva sua loja, produtos e serviços..."
-                    className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.description ? 'border-red-500' : ''
-                    }`}
+                    className={`${errors.description ? 'border-red-500' : ''}`}
                     rows={3}
                   />
                   {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -547,9 +543,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.website}
                     onChange={(e) => handleInputChange('website', e.target.value)}
                     placeholder="https://meusite.com.br"
-                    className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                      errors.website ? 'border-red-500' : ''
-                    }`}
+                    className={` ${errors.website ? 'border-red-500' : ''}`}
                   />
                   {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
                 </div>
@@ -588,9 +582,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.zipCode}
                       onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
                       placeholder="00000-000"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.zipCode'] ? 'border-red-500' : ''
-                      }`}
+                      className={`${errors['address.zipCode'] ? 'border-red-500' : ''}`}
                     />
                     {errors['address.zipCode'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.zipCode']}</p>
@@ -606,9 +598,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.city}
                       onChange={(e) => handleInputChange('address.city', e.target.value)}
                       placeholder="São Paulo"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.city'] ? 'border-red-500' : ''
-                      }`}
+                      className={` ${errors['address.city'] ? 'border-red-500' : ''}`}
+                      disabled
                     />
                     {errors['address.city'] && <p className="text-red-500 text-sm mt-1">{errors['address.city']}</p>}
                   </div>
@@ -622,9 +613,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.state}
                       onChange={(e) => handleInputChange('address.state', e.target.value)}
                       placeholder="SP"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.state'] ? 'border-red-500' : ''
-                      }`}
+                      className={`${errors['address.state'] ? 'border-red-500' : ''}`}
+                      disabled
                     />
                     {errors['address.state'] && <p className="text-red-500 text-sm mt-1">{errors['address.state']}</p>}
                   </div>
@@ -640,9 +630,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.street}
                       onChange={(e) => handleInputChange('address.street', e.target.value)}
                       placeholder="Av. Principal"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.street'] ? 'border-red-500' : ''
-                      }`}
+                      className={`${errors['address.street'] ? 'border-red-500' : ''}`}
+                      disabled
                     />
                     {errors['address.street'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.street']}</p>
@@ -658,9 +647,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.number}
                       onChange={(e) => handleInputChange('address.number', e.target.value)}
                       placeholder="100"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.number'] ? 'border-red-500' : ''
-                      }`}
+                      className={`${errors['address.number'] ? 'border-red-500' : ''}`}
                     />
                     {errors['address.number'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.number']}</p>
@@ -676,9 +663,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                       value={formData.address.district}
                       onChange={(e) => handleInputChange('address.district', e.target.value)}
                       placeholder="Centro"
-                      className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
-                        errors['address.district'] ? 'border-red-500' : ''
-                      }`}
+                      className={`${errors['address.district'] ? 'border-red-500' : ''}`}
+                      disabled
                     />
                     {errors['address.district'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.district']}</p>
@@ -695,7 +681,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.address.complement}
                     onChange={(e) => handleInputChange('address.complement', e.target.value)}
                     placeholder="Ex: Sala 101, Andar 2, etc."
-                    className="mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl"
+                    className=""
                   />
                 </div>
               </CardContent>
@@ -725,7 +711,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    {isEditing ? 'Atualizar Loja' : 'Criar Loja'}
+                    {isEditing ? 'Atualizar Loja' : 'Cadastrar Loja'}
                   </>
                 )}
               </Button>

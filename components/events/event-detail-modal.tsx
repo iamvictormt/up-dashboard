@@ -93,7 +93,7 @@ export function EventDetailModal({ event, onClose }: EventDetailModalProps) {
         <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-10">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Detalhes do Evento</DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+            <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
               <X className="w-5 h-5 text-[#511A2B]" />
             </Button>
           </div>

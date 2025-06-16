@@ -207,7 +207,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
                     <Button
                       type="button"
                       variant="ghost"
-                      size="icon"
+                      size="lg"
                       className="h-4 w-4 rounded-full p-0 hover:bg-gray-300"
                       onClick={() => removeHashtag(tag)}
                     >
@@ -239,7 +239,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
               <Button
                 type="button"
                 variant="destructive"
-                size="icon"
+                size="lg"
                 className="absolute top-2 right-2 h-8 w-8 rounded-full"
                 onClick={removeImage}
               >

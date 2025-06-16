@@ -169,7 +169,7 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
               <Calendar className="w-6 h-6 mr-2" />
               Criar Novo Evento
             </DialogTitle>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+            <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
               <X className="w-5 h-5 text-[#511A2B]" />
             </Button>
           </div>

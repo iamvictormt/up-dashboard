@@ -19,7 +19,16 @@ export function middleware(request: NextRequest) {
   const url = request.nextUrl.pathname;
   const role = request.cookies.get('role')?.value;
   const permissions: any = {
-    partnerSupplier: ['/mural', '/recommended-professionals', '/store-info', '/benefits', '/help'],
+    partnerSupplier: [
+      '/mural',
+      '/recommended-professionals',
+      '/store-info',
+      '/benefits',
+      '/help',
+      '/plans',
+      '/payment-confirmed',
+      '/payment-confirmation',
+    ],
     professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help'],
     loveDecoration: ['/mural', '/recommended-professionals', '/help'],
   };

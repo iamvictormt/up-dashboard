@@ -202,7 +202,7 @@ export function NotificationsDropdown() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
+            size="lg"
             className={cn(
               'relative rounded-xl text-white hover:bg-white/10 hover:text-white',
               hasNewNotifications && 'animate-pulse'

@@ -177,7 +177,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           {!supplierId ? (
             <Button
               onClick={() => setShowStoreForm(true)}
-              size="icon"
+              size="lg"
               className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Edit3 className="w-5 h-5" />
@@ -185,7 +185,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           ) : (
             <Button
               onClick={() => setShowStoreForm(true)}
-              size="icon"
+              size="lg"
               className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Heart className="w-5 h-5" />
@@ -353,7 +353,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         {!supplierId && (
                           <div className="absolute top-3 right-3">
                             <Button
-                              size="icon"
+                              size="lg"
                               className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
                               onClick={() => setEditingProduct(index)}
                             >
@@ -437,7 +437,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                       {!supplierId && (
                         <div className="absolute top-4 right-4">
                           <Button
-                            size="icon"
+                            size="lg"
                             className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 hover:bg-white/30 text-white border border-white/30"
                             onClick={() => setEditingEvent(index)}
                           >

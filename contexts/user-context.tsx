@@ -10,8 +10,8 @@ import api from '@/services/api';
 import { Profession } from '@/types';
 import { fetchUserAuthenticated } from '@/lib/user-api';
 import { AddressData } from '@/types/address';
+import { toast } from 'sonner';
 
-// Tipos para o usuário
 interface User {
   id: string;
   email: string;
@@ -65,6 +65,12 @@ interface User {
     instagram: string;
     tiktok: string;
   } | null;
+
+  subscription?: {
+    active: boolean;
+    planName: 'silver' | 'gold' | 'premium';
+    periodEndsAt: string;
+  } | null;
 }
 
 interface UserContextType {
@@ -102,7 +108,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [role, setRole] = useState<string>('');
-
   const router = useRouter();
 
   useEffect(() => {
@@ -119,6 +124,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
         const result = await fetchUserAuthenticated();
         setUser(result.data);
+        if (result.data?.partnerSupplier) await refreshSubscription(result.data);
       } catch (err) {
         console.error('Erro ao carregar usuário:', err);
         setError('Erro ao carregar usuário');
@@ -135,6 +141,39 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const roleFromCookie = Cookies.get('role');
     if (roleFromCookie) setRole(JSON.parse(roleFromCookie));
   }, []);
+
+  const refreshSubscription = async (user: User) => {
+    if (!user?.email) {
+      setUser({
+        ...user,
+        subscription: null,
+      });
+      return;
+    }
+    try {
+      const res = await fetch('/api/subscription/status', {
+        method: 'POST',
+        body: JSON.stringify({ email: user.email }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) throw new Error('Erro ao buscar assinatura');
+      const data = await res.json();
+      setUser({
+        ...user,
+        subscription: {
+          active: data.active,
+          planName: data.planName,
+          periodEndsAt: data.periodEndsAt,
+        },
+      });
+    } catch (err: any) {
+      toast.error(err.message || 'Erro ao buscar assinatura');
+      setUser({
+        ...user,
+        subscription: null,
+      });
+    }
+  };
 
   const logout = () => {
     deleteCookie('token');
@@ -188,7 +227,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     logout,
     updateUser,
     updateProfileImage,
-    role,
+    role
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

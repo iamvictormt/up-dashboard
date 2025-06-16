@@ -223,7 +223,7 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                      <Button variant="ghost" size="lg" className="h-7 w-7">
                         <MoreHorizontal className="h-4 w-4" />
                         <span className="sr-only">Mais opções</span>
                       </Button>

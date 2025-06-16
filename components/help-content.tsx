@@ -98,6 +98,7 @@ export function HelpContent() {
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-[#511A2B] rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -127,7 +128,7 @@ export function HelpContent() {
                 className={`rounded-xl ${
                   selectedCategory === category
                     ? 'bg-[#511A2B] hover:bg-[#511A2B]/90 text-white'
-                    : 'border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10'
+                    : 'border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 hover:text-[#511A2B]'
                 }`}
                 onClick={() => setSelectedCategory(category)}
               >
@@ -191,67 +192,6 @@ export function HelpContent() {
           {/* Contact Section */}
           <div>
             <h2 className="text-xl font-bold text-[#511A2B] mb-6">Ainda precisa de ajuda?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Chat Support */}
-              <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl hover:shadow-lg transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <MessageCircle className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-[#511A2B] mb-2">Whatsapp</h3>
-                  <p className="text-sm text-[#511A2B]/70 mb-4">Converse com nossa equipe em tempo real</p>
-                  <div className="flex items-center justify-center space-x-2 mb-4">
-                    <Clock className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-green-600 font-medium">Online agora</span>
-                  </div>
-                  <Button className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl">Iniciar Chat</Button>
-                </CardContent>
-              </Card>
-
-              {/* Email Support */}
-              <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl hover:shadow-lg transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-[#511A2B] rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <Mail className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-[#511A2B] mb-2">Email</h3>
-                  <p className="text-sm text-[#511A2B]/70 mb-4">Envie sua dúvida por email</p>
-                  <div className="flex items-center justify-center space-x-2 mb-4">
-                    <Clock className="w-4 h-4 text-[#511A2B]/60" />
-                    <span className="text-sm text-[#511A2B]/60">Resposta em 24h</span>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
-                    onClick={() => window.open('mailto:suporte@upconnection.com.br')}
-                  >
-                    Enviar Email
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Phone Support */}
-              <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl hover:shadow-lg transition-shadow">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <Phone className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-[#511A2B] mb-2">Telefone</h3>
-                  <p className="text-sm text-[#511A2B]/70 mb-4">Fale diretamente com nosso suporte</p>
-                  <div className="flex items-center justify-center space-x-2 mb-4">
-                    <Clock className="w-4 h-4 text-[#511A2B]/60" />
-                    <span className="text-sm text-[#511A2B]/60">Seg-Sex 9h-18h</span>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="w-full border-green-500/30 text-green-600 hover:bg-green-50 rounded-xl"
-                    onClick={() => window.open('tel:+5511999999999')}
-                  >
-                    (11) 99999-9999
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Additional Contact Info */}
             <Card className="bg-gradient-to-r from-[#511A2B]/5 to-[#FEC460]/5 border-[#511A2B]/10 rounded-2xl mt-8">
@@ -262,11 +202,11 @@ export function HelpContent() {
                     <div className="space-y-2 text-sm text-[#511A2B]/80">
                       <div className="flex items-center space-x-2">
                         <Mail className="w-4 h-4" />
-                        <span>suporte@upconnection.com.br</span>
+                        <span>upconnection01@gmail.com</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Phone className="w-4 h-4" />
-                        <span>+55 (11) 99999-9999</span>
+                        <span>+55 (11) 96454-0818</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <MapPin className="w-4 h-4" />
@@ -282,6 +222,7 @@ export function HelpContent() {
                 </div>
               </CardContent>
             </Card>
+          </div>
         </div>
       </div>
     </div>

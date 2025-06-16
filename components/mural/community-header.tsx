@@ -48,7 +48,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
               {isMobile ? (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+                    <Button variant="ghost" size="lg" className="h-6 w-6 rounded-full">
                       <Info className="h-3.5 w-3.5" />
                       <span className="sr-only">Informações da comunidade</span>
                     </Button>
@@ -61,7 +61,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 rounded-full">
+                      <Button variant="ghost" size="sm" className="h-6 w-6 rounded-full">
                         <Info className="h-3.5 w-3.5" />
                         <span className="sr-only">Informações da comunidade</span>
                       </Button>

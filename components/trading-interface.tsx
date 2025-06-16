@@ -37,7 +37,7 @@ export function TradingInterface() {
           <div className="flex justify-center">
             <Button
               variant="ghost"
-              size="icon"
+              size="lg"
               className="rounded-full bg-white/80 border border-[#511A2B]/20 hover:bg-white/90"
             >
               <ArrowUpRight className="w-4 h-4 rotate-90 text-[#511A2B]" />

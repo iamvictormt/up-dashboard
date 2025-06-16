@@ -97,7 +97,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
-            size="icon"
+            size="lg"
             className="md:hidden text-white hover:bg-white/10 rounded-xl mr-2"
             onClick={toggleMobileMenu}
           >
@@ -127,7 +127,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
-          size="icon"
+          size="lg"
           className="md:hidden rounded-xl text-gray-300 hover:text-white hover:bg-white/10 p-8 md:p-6"
           onClick={toggleMobileMenu}
         >

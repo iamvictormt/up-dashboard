@@ -5,7 +5,6 @@ import type React from 'react';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/contexts/user-context';
-import { toast } from 'sonner';
 
 interface PaymentProtectionProps {
   children: React.ReactNode;
@@ -17,28 +16,36 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Não aplicar proteção se ainda estiver carregando
     if (isLoading) return;
 
-    // Não aplicar proteção nas páginas de login e planos
-    const allowedPaths = ['/login', '/plans'];
-    if (allowedPaths.includes(pathname)) return;
+    const alwaysAllowedPaths = ['/login', '/payment-confirmation', '/payment-confirmed'];
+    if (alwaysAllowedPaths.includes(pathname)) return;
 
-    // Verificar se é um partner/supplier não pago
-    if (user?.partnerSupplier && !user.partnerSupplier.isPaid) {
-      toast.info('Para acessar outras abas do sistema, você precisa estar vinculado a um plano.');
-      router.push('/plans');
-      return;
+    if (pathname === '/plans') {
+      const shouldNotSeePlans =
+        user?.professional || user?.loveDecoration || (user?.partnerSupplier && user.subscription?.active === true);
+
+      if (shouldNotSeePlans) {
+        router.push('/mural');
+        return;
+      }
+    }
+
+    if (user?.partnerSupplier) {
+      const hasActiveSubscription = user.subscription?.active === true;
+
+      if (!hasActiveSubscription) {
+        router.push('/plans');
+        return;
+      }
     }
   }, [user, isLoading, router, pathname]);
 
-  // Mostrar loading enquanto verifica
   if (isLoading) {
     return <></>;
   }
 
-  // Se é partner não pago e não está na página de planos, não mostrar conteúdo
-  if (user?.partnerSupplier && !user.partnerSupplier.isPaid && pathname !== '/plans') {
+  if (user?.partnerSupplier && !user.subscription?.active && pathname !== '/plans') {
     return null;
   }
 

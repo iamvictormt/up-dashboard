@@ -211,7 +211,7 @@ export function LoginContent() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
       toast.success('Login realizado com sucesso!');
       setTimeout(() => {
-        router.push(appUrl.mural);
+        window.location.href = appUrl.mural;
       }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);
