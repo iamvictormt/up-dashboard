@@ -123,7 +123,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
           <div className="flex space-x-2 mb-4">
             {socialMedia.linkedin && (
               <Button
-                variant="secondary"
+                variant="ghost"
                 size="lg"
                 className="rounded-full w-8 h-8 p-0"
                 onClick={() => window.open(socialMedia.linkedin, '_blank')}
@@ -134,7 +134,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             )}
             {socialMedia.instagram && (
               <Button
-                variant="secondary"
+                variant="ghost"
                 size="lg"
                 className="rounded-full w-8 h-8 p-0"
                 onClick={() => window.open(socialMedia.instagram, '_blank')}
@@ -145,7 +145,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             )}
             {socialMedia.whatsapp && (
               <Button
-                variant="secondary"
+                variant="ghost"
                 size="lg"
                 className="rounded-full w-8 h-8 p-0"
                 onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
@@ -155,7 +155,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
               </Button>
             )}
             <Button
-              variant="secondary"
+              variant="ghost"
               size="lg"
               className="rounded-full w-8 h-8 p-0 md:hidden flex"
               onClick={() => window.open(`tel:${phone}`, '_blank')}
@@ -171,7 +171,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
               onClick={() => setIsModalOpen(true)}
             >
               <User2 className="w-4 h-4 mr-2" />
-              Ver Perfil
+              Ver perfil
             </Button>
           </div>
         </CardContent>

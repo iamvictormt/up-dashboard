@@ -125,15 +125,15 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             </DialogTitle>
             <div className="flex items-center space-x-2">
               <Button
-                variant="outline"
+                variant="destructive"
                 size="lg"
                 onClick={() => setShowDeleteConfirm(true)}
-                className="rounded-full border-red-300 text-red-600 hover:bg-red-50"
+                className="rounded-full"
                 disabled={isSubmitting}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+              <Button variant="ghost" size="sm" onClick={onClose}>
                 <X className="w-5 h-5 text-[#511A2B]" />
               </Button>
             </div>

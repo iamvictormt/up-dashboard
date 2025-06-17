@@ -189,7 +189,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="lg" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8">
                 <MoreHorizontal className="h-5 w-5" />
                 <span className="sr-only">Mais opções</span>
               </Button>
@@ -255,18 +255,20 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
             disabled={isLikeLoading}
           >
             <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+            <span>{isLiked ? 'Curtido' : 'Curtir'}</span>
             <span>{likesCount}</span>
           </Button>
 
           <Button variant="ghost" size="sm" className="gap-2" onClick={handleCommentToggle}>
             <MessageSquare className="h-5 w-5" />
+            <span>Comentar</span>
             <span>{commentsCount || 0}</span>
           </Button>
 
-          <Button variant="ghost" size="sm" className="gap-2">
+          {/* <Button variant="ghost" size="sm" className="gap-2">
             <Share2 className="h-5 w-5" />
             <span>Compartilhar</span>
-          </Button>
+          </Button> */}
         </div>
       </div>
 

@@ -4,15 +4,15 @@ import { Skeleton } from '../ui/skeleton';
 export function MyStoreContentSkeleton() {
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#46142b]/10 shadow-lg w-full">
         {/* Floating Action Buttons Skeleton */}
         <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
-          <Skeleton className="w-12 h-12 rounded-full" />
+          <Skeleton className="w-20 h-12 rounded-full" />
         </div>
 
         {/* Hero Section Skeleton */}
         <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[#511A2B] rounded-xl" />
+          <div className="absolute inset-0 bg-[#46142b] rounded-xl" />
           <div className="relative px-6 py-16 md:py-24">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center gap-12">

@@ -33,6 +33,17 @@ export function middleware(request: NextRequest) {
     loveDecoration: ['/mural', '/recommended-professionals', '/help'],
   };
 
+  const isStatic =
+    url.startsWith('/_next') ||
+    url.startsWith('/favicon.ico') ||
+    url.startsWith('/logo-up') ||
+    url.startsWith('/images') ||
+    url.startsWith('/sounds') ||
+    url.match(/\.(.*)$/);
+  if (isStatic) {
+    return NextResponse.next();
+  }
+
   if (!isAuthPage && (!token || isTokenExpired(token))) {
     deleteCookie('token');
 

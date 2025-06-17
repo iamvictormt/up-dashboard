@@ -67,9 +67,12 @@ interface User {
   } | null;
 
   subscription?: {
+    subscriptionId: string;
     active: boolean;
     planName: 'silver' | 'gold' | 'premium';
     periodEndsAt: string;
+    amount: number;
+    status: string;
   } | null;
 }
 
@@ -161,9 +164,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       setUser({
         ...user,
         subscription: {
-          active: data.active,
-          planName: data.planName,
-          periodEndsAt: data.periodEndsAt,
+          ...data,
         },
       });
     } catch (err: any) {
@@ -227,7 +228,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     logout,
     updateUser,
     updateProfileImage,
-    role
+    role,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

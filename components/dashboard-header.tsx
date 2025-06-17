@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, User, Settings, Menu, X, ImageIcon } from 'lucide-react';
+import { LogOut, User, Settings, Menu, X, ImageIcon, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -18,6 +18,7 @@ import { AppSidebar } from './app-sidebar';
 import { NotificationsDropdown } from './notifications-dropdown';
 import { UserEditModal } from './user/user-edit-modal';
 import { UserImageModal } from './user/user-image-modal';
+import { MyPlanModal } from './plans/my-plan-modal';
 
 interface DashboardHeaderProps {
   isSidebarExpanded?: boolean;
@@ -28,6 +29,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -178,11 +180,18 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 <ImageIcon className="mr-2 h-4 w-4" />
                 <span>Alterar imagem de perfil</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-[#511A2B] hover:bg-[#511A2B]/10 cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Configurações</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-[#511A2B]/10" />
+              {user.partnerSupplier && (
+                <>
+                  <DropdownMenuItem
+                    className="text-[#511A2B] hover:bg-[#511A2B]/10 cursor-pointer"
+                    onClick={() => setIsPlanModalOpen(true)}
+                  >
+                    <Coins className="mr-2 h-4 w-4" />
+                    <span>Minha assinatura</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-[#511A2B]/10" />
+                </>
+              )}
               <DropdownMenuItem className="text-red-600 hover:bg-red-50 cursor-pointer" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Logout</span>
@@ -191,6 +200,9 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
           </DropdownMenu>
         </div>
       </header>
+
+      {/* Modal de Meu Plano */}
+      {isPlanModalOpen && <MyPlanModal isOpen={isPlanModalOpen} onClose={() => setIsPlanModalOpen(false)} />}
 
       {/* Modal de Edição de Perfil */}
       {isProfileModalOpen && <UserEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />}

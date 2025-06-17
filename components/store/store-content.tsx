@@ -177,7 +177,6 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           {!supplierId ? (
             <Button
               onClick={() => setShowStoreForm(true)}
-              size="lg"
               className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Edit3 className="w-5 h-5" />
@@ -185,7 +184,6 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           ) : (
             <Button
               onClick={() => setShowStoreForm(true)}
-              size="lg"
               className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Heart className="w-5 h-5" />
@@ -225,7 +223,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         />
                       ))}
                     </div>
-                    <span className="ml-3 text-2xl font-bold">{storeData.rating.toFixed(1) || 0}</span>
+                    <span className="ml-3 text-2xl font-bold">{storeData?.rating.toFixed(1) || 0}</span>
                     <span className="ml-2 text-white/80 hidden md:block">• Excelente</span>
                   </div>
 
@@ -261,7 +259,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Star className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-[#511A2B]">{storeData.rating.toFixed(1) || 0}</div>
+                  <div className="text-2xl font-bold text-[#511A2B]">{storeData?.rating.toFixed(1) || 0}</div>
                   <div className="text-sm text-[#511A2B]/70">Avaliação</div>
                 </CardContent>
               </Card>
@@ -372,11 +370,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         <div className="text-2xl font-bold text-[#511A2B]">
                           R$ {product.price.toFixed(2).replace('.', ',')}
                         </div>
-                        <Button
-                          size="sm"
-                          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl shadow-lg"
-                          onClick={() => window.open(product.link, '_blank')}
-                        >
+                        <Button variant="primary" onClick={() => window.open(product.link, '_blank')}>
                           <ExternalLink className="w-4 h-4 mr-1" />
                           Ver
                         </Button>
@@ -388,19 +382,14 @@ export function StoreContent({ supplierId }: StoreContentProps) {
             </section>
 
             {/* Eventos Section */}
-            <section>
-              <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
-                <div>
-                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
-                    {!supplierId ? 'Gerenciar eventos' : 'Eventos disponíveis'}
-                  </h2>
-                  <p className="text-[#511A2B]/70">
-                    {!supplierId
-                      ? 'Leve conhecimento e conexão à sua comunidade com eventos e workshops'
-                      : 'Atividades e workshops promovidos pela loja'}
-                  </p>
-                </div>
-                {!supplierId && (
+            {storeData.events && (
+              <section>
+                <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
+                  <div>
+                    <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Eventos disponíveis</h2>
+                    <p className="text-[#511A2B]/70">Atividades e workshops promovidos pela loja</p>
+                  </div>
+                  {/* {!supplierId && (
                   <Button
                     onClick={() => setShowEventForm(true)}
                     className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
@@ -408,87 +397,71 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                     <Plus className="w-4 h-4 mr-2" />
                     Criar Evento
                   </Button>
-                )}
-              </div>
+                )} */}
+                </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {storeData.events.map((event, index) => (
-                  <Card
-                    key={index}
-                    className="bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden group"
-                  >
-                    <div className="relative h-48 bg-gradient-to-r from-[#511A2B] to-[#D56235]">
-                      <div className="absolute inset-0 bg-black/20" />
-                      <div className="relative p-6 h-full flex flex-col justify-between text-white">
-                        <div>
-                          <Badge className="bg-white/20 text-white border-white/30 mb-3">{event.type}</Badge>
-                          <h3 className="text-xl font-bold mb-2">{event.name}</h3>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="text-3xl font-bold text-[#FEC460]">+{event.points}</div>
-                          <div className="text-right">
-                            <div className="text-sm opacity-90">Vagas</div>
-                            <div className="font-bold">
-                              {event.filledSpots}/{event.totalSpots}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {storeData.events.map((event, index) => (
+                    <Card
+                      key={index}
+                      className="bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden group"
+                    >
+                      <div className="relative h-48 bg-[#46142b]">
+                        <div className="relative p-6 h-full flex flex-col justify-between text-white">
+                          <div>
+                            <Badge className="bg-white/20 text-white border-white/30 mb-3">{event.type}</Badge>
+                            <h3 className="text-xl font-bold mb-2">{event.name}</h3>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="text-3xl font-bold text-[#FEC460]">+{event.points} pontos</div>
+                            <div className="text-right">
+                              <div className="text-sm opacity-90">Vagas</div>
+                              <div className="font-bold">
+                                {event.filledSpots}/{event.totalSpots}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      {!supplierId && (
-                        <div className="absolute top-4 right-4">
-                          <Button
-                            size="lg"
-                            className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/20 hover:bg-white/30 text-white border border-white/30"
-                            onClick={() => setEditingEvent(index)}
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </Button>
+
+                      <CardContent className="p-6">
+                        <p className="text-[#511A2B]/80 mb-4">{event.description}</p>
+
+                        <div className="space-y-3 mb-6">
+                          <div className="flex items-center gap-3">
+                            <Calendar className="w-4 h-4 text-[#511A2B]/70" />
+                            <span className="text-sm font-medium text-[#511A2B]">
+                              {new Date(event.date).toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <MapPin className="w-4 h-4 text-[#511A2B]/70" />
+                            <span className="text-sm font-medium text-[#511A2B]">
+                              {event.address.district}, {event.address.city}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <Users className="w-4 h-4 text-[#511A2B]/70" />
+                            <span className="text-sm font-medium text-[#511A2B]">
+                              {event.participantsCount ?? 0} participantes confirmados
+                            </span>
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
 
-                    <CardContent className="p-6">
-                      <p className="text-[#511A2B]/80 mb-4">{event.description}</p>
-
-                      <div className="space-y-3 mb-6">
-                        <div className="flex items-center gap-3">
-                          <Calendar className="w-4 h-4 text-[#511A2B]/70" />
-                          <span className="text-sm font-medium text-[#511A2B]">
-                            {new Date(event.date).toLocaleDateString('pt-BR', {
-                              day: '2-digit',
-                              month: 'long',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <MapPin className="w-4 h-4 text-[#511A2B]/70" />
-                          <span className="text-sm font-medium text-[#511A2B]">
-                            {event.address.district}, {event.address.city}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <Users className="w-4 h-4 text-[#511A2B]/70" />
-                          <span className="text-sm font-medium text-[#511A2B]">
-                            {event.participantsCount} participantes confirmados
-                          </span>
-                        </div>
-                      </div>
-
-                      <Button className="w-full bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3 font-semibold shadow-lg">
-                        Gerenciar Evento
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
-
-            {/* Eventos Section */}
             <StoreInfoSection storeData={storeData} />
           </div>
         </div>

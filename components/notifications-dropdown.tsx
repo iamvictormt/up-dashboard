@@ -30,7 +30,7 @@ export function NotificationsDropdown() {
   useEffect(() => {
     loadNotifications();
 
-    checkIntervalRef.current = setInterval(checkForNewNotifications, 60000);
+    checkIntervalRef.current = setInterval(checkForNewNotifications, 600000);
 
     return () => {
       if (checkIntervalRef.current) {

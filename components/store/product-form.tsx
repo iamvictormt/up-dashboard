@@ -239,7 +239,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               type="button"
               onClick={onClose}
               variant="outline"
-              className="flex-1 border-gray-300 text-gray-600 hover:bg-gray-50 rounded-xl"
+              className="flex-1 rounded-xl"
               disabled={isSubmitting}
             >
               Cancelar

@@ -23,7 +23,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => {
     pendingRequests = Math.max(pendingRequests - 1, 0);
-    hideGlobalBlocker(pendingRequests);
+    setTimeout(() => {
+      hideGlobalBlocker(pendingRequests);
+    }, 2000);
+
     return response;
   },
   (error) => {

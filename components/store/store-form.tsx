@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { X, Save, Store, MapPin, Clock, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { createStore, updateStore } from '@/lib/store-api';
 import { useUser } from '@/contexts/user-context';
+import { applyZipCodeMask } from '@/utils/masks';
+import { fetchAddressByZipCode } from '@/lib/address-api';
 
 interface StoreFormProps {
   storeData?: {
@@ -236,9 +238,8 @@ function OpeningHoursInput({
         <Button
           type="button"
           size="sm"
-          variant="outline"
+          variant="destructive"
           onClick={setAllDaysClosed}
-          className="text-xs bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
         >
           <X className="w-3 h-3 mr-1" />
           Fechar Todos
@@ -472,6 +473,27 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     }
   };
 
+  useEffect(() => {
+    const zip = formData.address.zipCode.replace(/\D/g, '');
+
+    if (zip.length === 8) {
+      const fetchAddress = async () => {
+        const address = await fetchAddressByZipCode(zip);
+        if (address) {
+          setFormData({
+            ...formData,
+            address: {
+              ...formData.address,
+              ...address,
+            },
+          });
+        }
+      };
+
+      fetchAddress();
+    }
+  }, [formData.address.zipCode]);
+
   // Sempre renderizar como modal
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -482,7 +504,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
               <Store className="w-6 h-6 mr-2" />
               {isEditing ? 'Editar Loja' : 'Cadastrar Loja'}
             </DialogTitle>
-            <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+            <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="w-5 h-5 text-[#511A2B]" />
             </Button>
           </div>
@@ -580,8 +602,12 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Input
                       id="zipCode"
                       value={formData.address.zipCode}
-                      onChange={(e) => handleInputChange('address.zipCode', e.target.value)}
+                      onChange={(e) => {
+                        const masked = applyZipCodeMask(e.target.value);
+                        handleInputChange('address.zipCode', masked);
+                      }}
                       placeholder="00000-000"
+                      maxLength={9}
                       className={`${errors['address.zipCode'] ? 'border-red-500' : ''}`}
                     />
                     {errors['address.zipCode'] && (

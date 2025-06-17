@@ -36,13 +36,20 @@ export async function POST(req: Request) {
 
     const currentPeriodEnd = latestInvoice.lines.data[0]?.period?.end;
     const isStillValid = currentPeriodEnd ? Date.now() < currentPeriodEnd * 1000 : false;
-
     const planName =
       typeof subscription.plan.product === 'object' ? subscription.plan.product.name : 'Plano desconhecido';
+    let status: 'active' | 'canceled' | 'none' = 'none';
+
+    if (subscription.status === 'active') {
+      status = subscription.cancel_at_period_end ? 'canceled' : 'active';
+    }
 
     return NextResponse.json({
+      subscriptionId: subscription.id,
       active: isStillValid,
       planName,
+      status,
+      amount: latestInvoice.total,
       periodEndsAt: currentPeriodEnd ? new Date(currentPeriodEnd * 1000).toISOString() : null,
     });
   } catch (error) {

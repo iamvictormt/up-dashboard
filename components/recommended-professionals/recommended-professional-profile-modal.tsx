@@ -81,7 +81,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           <DialogHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Perfil do Profissional</DialogTitle>
-              <Button variant="ghost" size="lg" onClick={onClose} className="rounded-full hover:bg-[#511A2B]/10">
+              <Button variant="ghost" size="sm" onClick={onClose}>
                 <X className="w-5 h-5 text-[#511A2B]" />
               </Button>
             </div>
