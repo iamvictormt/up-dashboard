@@ -181,10 +181,8 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
                   <Badge key={tag} variant="secondary" className="pl-2 pr-1 py-1 flex items-center gap-1">
                     #{tag}
                     <Button
-                      type="button"
                       variant="ghost"
-                      size="lg"
-                      className="h-4 w-4 rounded-full"
+                      size="xs"
                       onClick={() => removeHashtag(tag)}
                     >
                       <X className="h-3 w-3" />
@@ -193,10 +191,9 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
                   </Badge>
                 ))}
                 <Button
-                  type="button"
                   variant="ghost"
-                  size="sm"
-                  className="h-6 text-xs text-gray-500 hover:text-gray-700"
+                  size="xs"
+                  className='p-4'
                   onClick={focusHashtagInput}
                 >
                   + Adicionar mais

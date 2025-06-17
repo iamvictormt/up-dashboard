@@ -39,7 +39,7 @@ export function MuralContent() {
               <div className="flex flex-col md:flex-row gap-6">
                 {/* Desktop Community Sidebar */}
                 {!isMobile && (
-                  <div className="hidden md:block w-[280px] flex-shrink-0">
+                  <div className="hidden md:block w-[350px] flex-shrink-0">
                     <div className="sticky top-[12vh]">
                       <CommunityList />
                     </div>
@@ -106,7 +106,7 @@ export function MuralContent() {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="hidden lg:block w-[280px] flex-shrink-0">
+                <div className="hidden lg:block w-[350px] flex-shrink-0">
                   <div className="sticky top-[12vh] space-y-6">
                     {/* <WeeklySpotlight /> */}
                     <TrendingTopics />

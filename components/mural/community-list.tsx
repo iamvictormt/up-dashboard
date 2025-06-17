@@ -32,8 +32,13 @@ export function CommunityList() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4">
-      <h2 className="text-lg font-semibold mb-4 px-2">Comunidades</h2>
-      <ScrollArea className="max-h-[calc(80vh-180px)]">
+      <div className="p-3">
+        <div className="flex items-center gap-2">
+          <LucideIcons.Handshake className="h-4 w-4 text-[#6c2144]" />
+          <h3 className="font-semibold text-sm text-gray-900">Comunidades</h3>
+        </div>
+      </div>
+      <ScrollArea className="max-h-[calc(80vh-180px)] p-3">
         <div className="space-y-1 pr-2">
           {communities.map((community) => {
             const Icon = getIconByName(community.icon);
@@ -54,7 +59,7 @@ export function CommunityList() {
                 >
                   <Icon className="h-5 w-5" />
                 </div>
-                <span className="truncate">{community.name}</span>
+                <span className="truncate text-sm">{community.name}</span>
               </button>
             );
           })}
