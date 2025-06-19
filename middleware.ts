@@ -15,8 +15,8 @@ function isTokenExpired(token: string): boolean {
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login');
   const url = request.nextUrl.pathname;
+  const isAuthPage = url.startsWith('/auth/login') || url.startsWith('/auth/register');
   const role = request.cookies.get('role')?.value;
   const permissions: any = {
     partnerSupplier: [
@@ -47,7 +47,7 @@ export function middleware(request: NextRequest) {
   if (!isAuthPage && (!token || isTokenExpired(token))) {
     deleteCookie('token');
 
-    const url = new URL('/login', request.url);
+    const url = new URL('/auth/login', request.url);
 
     if (token && isTokenExpired(token)) {
       url.searchParams.set('expired', 'true');
@@ -58,7 +58,7 @@ export function middleware(request: NextRequest) {
 
   if (!isAuthPage) {
     if (!role) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return NextResponse.redirect(new URL('/auth/login', request.url));
     } else {
       if (url === '/') {
         return NextResponse.next();

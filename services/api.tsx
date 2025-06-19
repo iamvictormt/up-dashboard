@@ -40,7 +40,7 @@ api.interceptors.response.use(
 
       setTimeout(() => {
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = '/auth/login';
         }
       }, 2000);
     }

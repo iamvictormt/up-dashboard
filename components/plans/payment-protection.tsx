@@ -18,7 +18,7 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
   useEffect(() => {
     if (isLoading) return;
 
-    const alwaysAllowedPaths = ['/login', '/payment-confirmation', '/payment-confirmed'];
+    const alwaysAllowedPaths = ['/auth/login', '/payment-confirmation', '/payment-confirmed'];
     if (alwaysAllowedPaths.includes(pathname)) return;
 
     if (pathname === '/plans') {

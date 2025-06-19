@@ -37,7 +37,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   };
 
   const getUserName = () => {
