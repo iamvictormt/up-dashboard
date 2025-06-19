@@ -381,7 +381,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                   }}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="bg-[#511A2B] border border-white/10 rounded-xl shadow-xl min-w-48 py-2">
+                  <div className="bg-[#46142b] border border-white/10 rounded-xl shadow-xl min-w-48 py-2">
                     {/* Header do submenu */}
                     <div className="px-4 py-2 border-b border-white/10">
                       <div className="flex items-center space-x-2">
@@ -428,7 +428,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                     </div>
 
                     {/* Seta do tooltip */}
-                    <div className="absolute left-0 top-6 transform -translate-x-1 w-2 h-2 bg-[#511A2B] rotate-45 border-l border-b border-white/10" />
+                    <div className="absolute left-0 top-6 transform -translate-x-1 w-2 h-2 bg-[#46142b] rotate-45 border-l border-b border-white/10" />
                   </div>
                 </div>
               );
@@ -450,9 +450,9 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                   }}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="bg-[#511A2B] text-white text-sm font-medium px-3 py-2 rounded-lg shadow-lg border border-white/10 whitespace-nowrap">
+                  <div className="bg-[#46142b] text-white text-sm font-medium px-3 py-2 rounded-lg shadow-lg border border-white/10 whitespace-nowrap">
                     {item.title}
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-[#511A2B] rotate-45 border-l border-b border-white/10" />
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-[#46142b] rotate-45 border-l border-b border-white/10" />
                   </div>
                 </div>
               );

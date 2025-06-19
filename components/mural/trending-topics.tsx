@@ -35,7 +35,7 @@ export function TrendingTopics() {
   }, [updateCount]);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 p-4">
       <div className="p-3">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-[#6c2144]" />
@@ -44,7 +44,7 @@ export function TrendingTopics() {
       </div>
 
       {loading ? (
-        <div className="space-y-3 p-4">
+        <div className="space-y-3 p-3">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex items-center justify-between">
               <Skeleton className="h-5 w-24" />
@@ -53,7 +53,7 @@ export function TrendingTopics() {
           ))}
         </div>
       ) : (
-        <div className="space-y-2 p-4">
+        <div className="space-y-2 p-3">
           {topics.length > 0 ? (
             topics.map((topic, index) => (
               <div key={index} className="flex items-center justify-between">

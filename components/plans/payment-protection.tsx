@@ -23,7 +23,9 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
 
     if (pathname === '/plans') {
       const shouldNotSeePlans =
-        user?.professional || user?.loveDecoration || (user?.partnerSupplier && user.subscription?.active === true);
+        user?.professional ||
+        user?.loveDecoration ||
+        (user?.partnerSupplier && user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE');
 
       if (shouldNotSeePlans) {
         router.push('/mural');
@@ -32,7 +34,7 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
     }
 
     if (user?.partnerSupplier) {
-      const hasActiveSubscription = user.subscription?.active === true;
+      const hasActiveSubscription = user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE';
 
       if (!hasActiveSubscription) {
         router.push('/plans');
@@ -45,7 +47,11 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
     return <></>;
   }
 
-  if (user?.partnerSupplier && !user.subscription?.active && pathname !== '/plans') {
+  if (
+    user?.partnerSupplier &&
+    user.partnerSupplier.subscription?.subscriptionStatus === 'CANCELED' &&
+    pathname !== '/plans'
+  ) {
     return null;
   }
 

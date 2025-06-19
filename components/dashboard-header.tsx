@@ -151,10 +151,12 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 variant="ghost"
                 className="flex items-center text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-8 md:p-6"
               >
-                <span className="hidden sm:inline">Olá, {getUserName().split(' ')[0]}</span>
-                <Avatar className="md:ml-3 w-8 h-8">
-                  <AvatarImage src={getProfileImage() || '/placeholder.svg'} />
-                </Avatar>
+                <span className="hidden sm:inline text-md font-bold md:mr-2">Olá, {getUserName().split(' ')[0]}</span>
+                <img
+                  src={getProfileImage() || '/placeholder.svg'}
+                  alt="profileImage"
+                  className="w-10 h-10 object-cover rounded-full"
+                />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-white border-[#511A2B]/20" align="end" forceMount>

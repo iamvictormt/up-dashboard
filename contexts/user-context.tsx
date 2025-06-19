@@ -40,6 +40,19 @@ interface User {
     addressId: string;
     accessPending: boolean;
     isPaid?: boolean;
+    subscription?: {
+      id: string;
+      partnerSupplier: string;
+      partnerSupplierId: string;
+      stripeCustomerId: string;
+      subscriptionId: string;
+      subscriptionStatus: string;
+      planType: string;
+      currentPeriodEnd: string;
+      cancelAtPeriodEnd: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
   } | null;
   professional?: {
     id: string;
@@ -64,15 +77,6 @@ interface User {
     contact: string;
     instagram: string;
     tiktok: string;
-  } | null;
-
-  subscription?: {
-    subscriptionId: string;
-    active: boolean;
-    planName: 'silver' | 'gold' | 'premium';
-    periodEndsAt: string;
-    amount: number;
-    status: string;
   } | null;
 }
 
@@ -127,7 +131,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
         const result = await fetchUserAuthenticated();
         setUser(result.data);
-        if (result.data?.partnerSupplier) await refreshSubscription(result.data);
       } catch (err) {
         console.error('Erro ao carregar usuário:', err);
         setError('Erro ao carregar usuário');
@@ -144,37 +147,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const roleFromCookie = Cookies.get('role');
     if (roleFromCookie) setRole(JSON.parse(roleFromCookie));
   }, []);
-
-  const refreshSubscription = async (user: User) => {
-    if (!user?.email) {
-      setUser({
-        ...user,
-        subscription: null,
-      });
-      return;
-    }
-    try {
-      const res = await fetch('/api/subscription/status', {
-        method: 'POST',
-        body: JSON.stringify({ email: user.email }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!res.ok) throw new Error('Erro ao buscar assinatura');
-      const data = await res.json();
-      setUser({
-        ...user,
-        subscription: {
-          ...data,
-        },
-      });
-    } catch (err: any) {
-      toast.error(err.message || 'Erro ao buscar assinatura');
-      setUser({
-        ...user,
-        subscription: null,
-      });
-    }
-  };
 
   const logout = () => {
     deleteCookie('token');

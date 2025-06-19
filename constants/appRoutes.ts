@@ -9,4 +9,5 @@ export const appUrl = {
   profile: `${BASE_URL}/profile`,
   settings: `${BASE_URL}/settings`,
   logout: `${BASE_URL}/logout`,
+  help: `${BASE_URL}/help`,
 };

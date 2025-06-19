@@ -44,7 +44,7 @@ export function MyPostsStats() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 p-4">
       <div className="p-3">
         <div className="flex items-center gap-2">
           <Star className="h-4 w-4 text-[#6c2144]" />
@@ -54,7 +54,7 @@ export function MyPostsStats() {
 
       {/* Estatísticas gerais */}
       {stats && (
-        <div className="p-4">
+        <div className="p-3">
           <div className="grid grid-cols-3 gap-2 p-3 mb-4 bg-gray-50 rounded-xl">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 text-green-500 mb-1">
