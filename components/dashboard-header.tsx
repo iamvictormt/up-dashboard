@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useUser } from '@/contexts/user-context';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { AppSidebar } from './app-sidebar';
 import { NotificationsDropdown } from './notifications-dropdown';
@@ -70,26 +69,12 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
   };
 
   // Classes dinâmicas para o header baseadas no estado da sidebar
-  const headerClasses = `fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-[#46142b] transition-all duration-300 w-full left-0 px-4 md:px-6 ${
+  const headerClasses = `fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-background transition-all duration-300 w-full left-0 px-4 md:px-6 ${
     isSidebarExpanded ? 'md:left-72 md:w-[calc(100%-18rem)]' : 'md:left-24 md:w-[calc(100%-6rem)]'
   }`;
 
   if (isLoading) {
-    return (
-      <>
-        <header className={headerClasses}>
-          <div className="flex items-center space-x-4 ml-12 md:ml-0">
-            <Skeleton className="h-6 w-32 bg-white/20" />
-          </div>
-
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <Skeleton className="h-8 w-8 rounded-xl bg-white/20" />
-            <Skeleton className="h-8 w-24 rounded-xl bg-white/20" />
-            <Skeleton className="h-8 w-8 rounded-full bg-white/20" />
-          </div>
-        </header>
-      </>
-    );
+    return <></>;
   }
 
   if (!user) {

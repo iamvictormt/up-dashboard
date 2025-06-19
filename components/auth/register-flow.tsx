@@ -157,7 +157,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
 
   return (
     <div className="space-y-6">
-      <ProgressIndicator steps={steps.length} currentStep={currentStepIndex + 1} title={getStepTitle()} />
+      <ProgressIndicator steps={steps.length} currentStep={currentStepIndex + 1} title={getStepTitle()} userType={userType} />
 
       <AnimatePresence mode="wait">
         {currentStep === 'user-type' && (

@@ -40,7 +40,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
             <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
               <div className="flex items-center gap-1">
                 <LucideIcons.Rss className="h-3.5 w-3.5" />
-                <span>
+                <span className='text-muted'>
                   {`${community.postsCount ?? 0} publicaç${(community.postsCount ?? 0) === 1 ? 'ão' : 'ões'}`}
                 </span>
               </div>

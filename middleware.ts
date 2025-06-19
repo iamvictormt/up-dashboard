@@ -23,13 +23,12 @@ export function middleware(request: NextRequest) {
       '/mural',
       '/recommended-professionals',
       '/store-info',
-      '/benefits',
       '/help',
       '/plans',
       '/payment-confirmed',
       '/payment-confirmation',
     ],
-    professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help'],
+    professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help', '/benefits'],
     loveDecoration: ['/mural', '/recommended-professionals', '/help'],
   };
 

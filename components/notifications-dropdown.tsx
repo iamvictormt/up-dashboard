@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -182,20 +181,6 @@ export function NotificationsDropdown() {
     </div>
   );
 
-  const NotificationSkeleton = () => (
-    <div className="p-4 border-b border-gray-100">
-      <div className="flex items-start gap-3">
-        <Skeleton className="h-10 w-10 rounded-full" />
-        <div className="flex-1">
-          <Skeleton className="h-4 w-3/4 mb-2" />
-          <Skeleton className="h-3 w-full mb-2" />
-          <Skeleton className="h-3 w-1/2 mb-1" />
-          <Skeleton className="h-2 w-16 mt-2" />
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -237,13 +222,7 @@ export function NotificationsDropdown() {
           </div>
 
           <ScrollArea className="h-[400px]">
-            {loading ? (
-              <div className="divide-y divide-gray-100">
-                {[1, 2, 3].map((i) => (
-                  <NotificationSkeleton key={i} />
-                ))}
-              </div>
-            ) : notifications.length > 0 ? (
+            {!loading && notifications.length > 0 ? (
               <div>
                 {notifications.slice(0, 5).map((notification) => (
                   <NotificationItem key={notification.id} notification={notification} />
@@ -302,13 +281,7 @@ export function NotificationsDropdown() {
           </DialogHeader>
 
           <ScrollArea className="flex-1 pr-4 overflow-auto">
-            {loading ? (
-              <div className="divide-y divide-gray-100">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <NotificationSkeleton key={i} />
-                ))}
-              </div>
-            ) : notifications.length > 0 ? (
+            {!loading && notifications.length > 0 ? (
               <div className="divide-y divide-gray-100">
                 {notifications.map((notification) => (
                   <NotificationItem key={notification.id} notification={notification} />

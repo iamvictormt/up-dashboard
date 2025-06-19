@@ -7,15 +7,28 @@ interface ProgressIndicatorProps {
   steps: number;
   currentStep: number;
   title: string;
+  userType: 'love-decorations' | 'professionals' | 'partner-suppliers';
 }
 
-export function ProgressIndicator({ steps, currentStep, title }: ProgressIndicatorProps) {
+export function ProgressIndicator({ steps, currentStep, title, userType }: ProgressIndicatorProps) {
   return (
     <div className="space-y-4">
       <div className="text-center">
         <h2 className="text-xl font-semibold text-primary mb-1">{title}</h2>
         <p className="text-sm text-muted-foreground">
           Etapa {currentStep} de {steps}
+          <br />
+          {currentStep !== 1 && (
+            <span>
+              (
+              {userType === 'professionals'
+                ? 'Profissional'
+                : userType === 'love-decorations'
+                ? 'Eu amo decoração'
+                : 'Fornecedor parceiro'}
+              )
+            </span>
+          )}
         </p>
       </div>
 

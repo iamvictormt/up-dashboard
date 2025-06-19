@@ -136,7 +136,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       title: 'Meus benefícios',
       icon: Crown,
       url: '/benefits',
-      roles: ['partnerSupplier'],
+      roles: ['professional'],
     },
   ];
 
@@ -267,7 +267,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen bg-[#46142b] z-50
+          fixed top-0 left-0 h-screen bg-background z-50
           transition-all duration-300 ease-in-out flex flex-col
           ${isExpanded ? 'w-72' : 'w-24'}
           ${isDesktop ? 'translate-x-0' : isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

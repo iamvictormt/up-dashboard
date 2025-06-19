@@ -76,6 +76,11 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  h1,
+  h2,
+  h3 {
+    @apply text-gray-900;
+  }
 }
 
 /* Animações e efeitos */
@@ -91,6 +96,7 @@ body {
 
 .animate-pulse {
   animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: #C1C1C1 !important;
 }
 
 @keyframes glow {
@@ -232,4 +238,3 @@ html:has(aside.w-72) .sidebar-curve {
     gap: 1rem;
   }
 }
-

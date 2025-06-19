@@ -96,6 +96,10 @@ html {
   }
 }
 
+.h3 {
+  @apply shadow-lg border border-border/50;
+}
+
 .card {
   @apply shadow-lg border border-border/50;
 }

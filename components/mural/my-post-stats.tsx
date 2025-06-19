@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { FileText, Hash, Heart, MessageCircle, Rss, Star } from 'lucide-react';
 import { fetchMyPostsStats } from '@/lib/post-api';
 import { PostStats } from '@/types/post';
@@ -28,19 +27,8 @@ export function MyPostsStats() {
     loadUserPosts();
   }, [updateCount]);
 
-  if (loading) {
-    return (
-      <div className="bg-white rounded-lg p-4">
-        <h3 className="font-semibold text-gray-900 mb-4">Engajamento dos meus posts</h3>
-        <div className="space-y-3">
-          <div className="rounded-lg">
-            <div className="flex gap-2">
-              <Skeleton className="h-16 w-[100%]" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (!loading) {
+    return <></>;
   }
 
   return (

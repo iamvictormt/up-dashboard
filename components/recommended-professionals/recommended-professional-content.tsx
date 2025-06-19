@@ -5,11 +5,9 @@ import { ProfessionalCard } from '@/components/recommended-professionals/recomme
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, Users, UserCheck, MapPin, Briefcase } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { fetchRecommendedProfessionals } from '@/lib/recommended-professional-api';
 import { toast } from 'sonner';
 import { RecommendedProfessionalData } from '@/types';
-import { RecommendedProfessionalCardSkeleton } from './recommended-professional-card-skeleton';
 
 export function RecommendedProfessionalsContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -85,16 +83,7 @@ export function RecommendedProfessionalsContent() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {isLoading ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                  <Skeleton className="h-8 w-16 mb-2" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
-              ))}
-            </>
-          ) : (
+          {!isLoading && (
             <>
               <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                 <div className="flex items-center space-x-2 mb-2">
@@ -130,11 +119,7 @@ export function RecommendedProfessionalsContent() {
 
         {/* Loading State */}
         {isLoading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <RecommendedProfessionalCardSkeleton key={`skeleton-${index}`} />
-            ))}
-          </div>
+          <></>
         ) : (
           <>
             {/* Results Info */}

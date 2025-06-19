@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '../ui/skeleton';
 
 export function CommunityList() {
   const { communities, selectedCommunity, selectCommunity } = useCommunity();
@@ -17,16 +16,7 @@ export function CommunityList() {
 
   if (!selectedCommunity) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-4">
-        <h2 className="text-lg font-semibold mb-4 px-2">Comunidades</h2>
-        <div className="space-y-1 pr-2">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="rounded-lg">
-              <Skeleton className="h-14 w-[100%]" />
-            </div>
-          ))}
-        </div>
-      </div>
+      <></>
     );
   }
 
@@ -59,7 +49,12 @@ export function CommunityList() {
                 >
                   <Icon className="h-5 w-5" />
                 </div>
-                <span className="truncate text-sm">{community.name}</span>
+                <span
+                  className="truncate text-sm"
+                  style={{ color: community.color, fontWeight: isSelected ? "bolder" : "" }}
+                >
+                  {community.name}
+                </span>
               </button>
             );
           })}

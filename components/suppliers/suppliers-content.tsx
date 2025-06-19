@@ -4,9 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter, Store, Star, Package, Calendar } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { SupplierCard } from './supplier-card';
-import { SupplierCardSkeleton } from './supplier-card-skeleton';
 import { fetchStores } from '@/lib/store-api';
 import { StoreData } from '@/types';
 
@@ -78,16 +76,7 @@ export function SuppliersContent() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {isLoading ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                  <Skeleton className="h-8 w-16 mb-2" />
-                  <Skeleton className="h-4 w-24" />
-                </div>
-              ))}
-            </>
-          ) : (
+          {!isLoading && (
             <>
               <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                 <div className="flex items-center mb-2">
@@ -122,13 +111,7 @@ export function SuppliersContent() {
         </div>
 
         {/* Loading State */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <SupplierCardSkeleton key={`skeleton-${index}`} />
-            ))}
-          </div>
-        ) : (
+        {!isLoading && (
           /* Suppliers Grid */
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredSuppliers.map((supplier) => (

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp } from 'lucide-react';
 import { fetchTrendingTopics } from '@/lib/trending-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
@@ -43,16 +42,7 @@ export function TrendingTopics() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="space-y-3 p-3">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex items-center justify-between">
-              <Skeleton className="h-5 w-24" />
-              <Skeleton className="h-5 w-8" />
-            </div>
-          ))}
-        </div>
-      ) : (
+      {!loading && (
         <div className="space-y-2 p-3">
           {topics.length > 0 ? (
             topics.map((topic, index) => (

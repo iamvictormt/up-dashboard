@@ -9,11 +9,9 @@ import { CreatePostForm } from './create-post-form';
 import { PostList } from './post-lits';
 import { TrendingTopics } from './trending-topics';
 import { MuralUpdateProvider } from '@/contexts/mural-update-context';
-import { Skeleton } from '../ui/skeleton';
 import { MobileCommunitiesFAB } from './mobile-communities-fab';
 import { Toaster } from '../ui/toaster';
 import { MyPostsStats } from './my-post-stats';
-import { WeeklySpotlight } from './weekly-spotlight';
 
 export function MuralContent() {
   const isMobile = useMobile();
@@ -48,7 +46,7 @@ export function MuralContent() {
 
                 {/* Main Content */}
                 <div className="flex-1 max-w-3xl mx-auto w-full">
-                  {selectedCommunity ? (
+                  {selectedCommunity && (
                     <>
                       <CommunityHeader community={selectedCommunity} onCreatePost={() => setShowCreatePost(true)} />
 
@@ -64,44 +62,6 @@ export function MuralContent() {
 
                       <PostList communityId={selectedCommunity.id} />
                     </>
-                  ) : (
-                    <div className="space-y-6">
-                      <>
-                        <div className="bg-white rounded-xl shadow-sm p-5">
-                          <div className="flex items-center gap-4">
-                            <Skeleton className="w-12 h-12 rounded-xl" />
-
-                            <div className="flex flex-col gap-2">
-                              <Skeleton className="h-6 w-32" />
-                              <div className="flex items-center gap-3">
-                                <Skeleton className="h-4 w-24" />
-                                <Skeleton className="h-6 w-6 rounded-full" />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="bg-white rounded-xl shadow-sm p-5">
-                            <div className="flex items-start gap-3 mb-4">
-                              <Skeleton className="h-10 w-10 rounded-full" />
-                              <div className="flex-1">
-                                <Skeleton className="h-5 w-32 mb-2" />
-                                <Skeleton className="h-4 w-24" />
-                              </div>
-                            </div>
-                            <Skeleton className="h-4 w-full mb-2" />
-                            <Skeleton className="h-4 w-full mb-2" />
-                            <Skeleton className="h-4 w-3/4 mb-4" />
-                            <Skeleton className="h-32 w-full rounded-lg mb-4" />
-                            <div className="flex justify-between">
-                              <Skeleton className="h-8 w-20" />
-                              <Skeleton className="h-8 w-20" />
-                              <Skeleton className="h-8 w-20" />
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    </div>
                   )}
                 </div>
 

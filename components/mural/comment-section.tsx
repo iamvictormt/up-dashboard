@@ -8,7 +8,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Send, MoreHorizontal, Flag, Pencil, Trash2 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -195,17 +194,7 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
         </h4>
 
         {loading ? (
-          <div className="space-y-4">
-            {[1, 2].map((i) => (
-              <div key={i} className="flex gap-3">
-                <Skeleton className="h-8 w-8 rounded-full" />
-                <div className="flex-1">
-                  <Skeleton className="h-4 w-32 mb-2" />
-                  <Skeleton className="h-16 w-full rounded-md" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <></>
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="flex gap-3">

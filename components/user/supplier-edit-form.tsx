@@ -170,7 +170,7 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
               value={formData.tradeName}
               onChange={(e) => setFormData((prev) => ({ ...prev, tradeName: e.target.value }))}
               placeholder="Ex: Padaria Doce Sabor"
-              className={validationErrors.tradeName ? 'border-red-500' : ''}
+              className={`${validationErrors.tradeName} ? 'border-red-500' : ''`}
             />
             <FieldError error={validationErrors.tradeName} />
           </div>

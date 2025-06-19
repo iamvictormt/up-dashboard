@@ -20,7 +20,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { EventForm } from '@/components/store/event-form';
-import { MyStoreContentSkeleton } from './store-skeleton';
 import { EventEditModal } from './event-edit-modal';
 import { fetchMyStore, fetchStoreById } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
@@ -154,7 +153,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   };
 
   if (isLoading) {
-    return <MyStoreContentSkeleton />;
+    return <></>;
   }
 
   if (!storeData) {
