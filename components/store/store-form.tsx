@@ -235,12 +235,7 @@ function OpeningHoursInput({
           <Clock className="w-3 h-3 mr-1" />
           Horário Comercial
         </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="destructive"
-          onClick={setAllDaysClosed}
-        >
+        <Button type="button" size="sm" variant="destructive" onClick={setAllDaysClosed}>
           <X className="w-3 h-3 mr-1" />
           Fechar Todos
         </Button>
@@ -497,8 +492,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
   // Sempre renderizar como modal
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0">
-        <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-10">
+      <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white p-0">
+        <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-[9999]">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B] flex items-center">
               <Store className="w-6 h-6 mr-2" />
@@ -536,7 +531,9 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     placeholder="Ex: Super Soluções"
-                    className={`${errors.name ? 'border-red-500' : ''}`}
+                    className={`pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
+                      errors.name ? 'border-red-500' : ''
+                    }`}
                   />
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                 </div>
@@ -570,7 +567,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
                 </div>
 
-                <div>
+                <div className='z-[1]'>
                   <Label htmlFor="openingHours" className="text-[#511A2B] font-medium">
                     Horário de Funcionamento *
                   </Label>

@@ -68,7 +68,7 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
       await updateImageUser(user.id, cloudinaryImageURL);
       updateProfileImage(cloudinaryImageURL);
       toast.success('Imagem de perfil atualizada com sucesso!');
-      
+
       onClose();
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
@@ -93,10 +93,10 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-6">
           <div className="flex items-center space-x-3">
             <Camera className="w-6 h-6 text-[#511A2B]" />
-            <h2 className="text-xl font-semibold text-[#511A2B]">Alterar Imagem de Perfil</h2>
+            <h2 className="text-xl font-semibold text-[#511A2B]">Alterar imagem de perfil</h2>
           </div>
           <Button variant="ghost" size="sm" onClick={onClose} disabled={isLoading}>
             <X className="w-5 h-5" />
@@ -122,15 +122,29 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
 
           {/* Current/Preview Image */}
           <div className="flex flex-col items-center space-y-4">
-            <Avatar className="w-64 h-64">
-              <AvatarImage src={currentImage || '/placeholder.svg'} className="object-cover" />
-            </Avatar>
+            <div className="relative">
+              <div className="w-64 h-64 rounded-full overflow-hidden border-3 border-primary/30 shadow-md">
+                <img src={currentImage || '/placeholder.svg'} alt="Profile" className="w-full h-full object-cover" />
+              </div>
+              {selectedFile && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
+                  onClick={handleClearSelection}
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              )}
+            </div>
 
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 {previewImage ? 'Nova imagem selecionada' : 'Imagem atual do perfil'}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Tamanho máximo: 2MB • Formatos: JPG, PNG</p>
+              <p className="text-xs text-muted-foreground mt-1">Tamanho máximo: 2MB • Formatos: JPG, PNG</p>
+              <p className="text-xs text-muted-foreground mt-1">{selectedFile ? 'Clique no X para remover' : ''}</p>
             </div>
           </div>
 
@@ -145,41 +159,24 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
               disabled={isLoading}
             />
 
-            <div className="grid grid-cols-1 gap-3">
+            <div className={`grid ${selectedFile ? 'grid-cols-2' : 'grid-cols-1'}  gap-3 pb-4`}>
               <Button
-                variant="outline"
+                variant="accent"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isLoading}
                 className="flex items-center justify-center space-x-2"
               >
                 <Upload className="w-4 h-4" />
-                <span>Selecionar Nova Imagem</span>
+                Escolher nova imagem
               </Button>
-
               {selectedFile && (
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={handleUpload}
-                    disabled={isLoading}
-                    className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-                  >
-                    <Save className="w-4 h-4" />
-                    {isLoading ? 'Salvando...' : 'Salvar Nova Imagem'}
-                  </Button>
-                  <Button variant="outline" onClick={handleClearSelection} disabled={isLoading}>
-                    Cancelar
-                  </Button>
-                </div>
+                <Button onClick={handleUpload} disabled={isLoading} variant="secondary">
+                  <Save className="w-4 h-4" />
+                  {isLoading ? 'Salvando...' : 'Salvar nova imagem'}
+                </Button>
               )}
             </div>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex justify-end p-6 border-t border-gray-100">
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
-            Fechar
-          </Button>
         </div>
       </div>
     </div>

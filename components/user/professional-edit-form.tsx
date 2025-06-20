@@ -196,11 +196,11 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações Pessoais</h3>
+        <h3 className="font-medium text-primary pb-2">Informações Pessoais</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name">Nome completo *</Label>
+            <Label className="text-[#511A2B]" htmlFor="name" className='text-[#511A2B]'>Nome completo *</Label>
             <Input
               id="name"
               value={formData.name}
@@ -212,7 +212,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="document">CPF/CNPJ</Label>
+            <Label className="text-[#511A2B]" htmlFor="document">CPF/CNPJ</Label>
             <Input
               id="document"
               value={formData.document}
@@ -229,7 +229,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="phone">Whatsapp *</Label>
+            <Label className="text-[#511A2B]" htmlFor="phone">Whatsapp *</Label>
             <Input
               id="phone"
               value={formData.phone}
@@ -244,7 +244,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="officeName">Nome do Escritório</Label>
+            <Label className="text-[#511A2B]" htmlFor="officeName">Nome do Escritório</Label>
             <Input
               id="officeName"
               value={formData.officeName}
@@ -256,11 +256,11 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
       </div>
 
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações Profissionais</h3>
+        <h3 className="font-medium text-primary pb-2">Informações Profissionais</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="professionId">Profissão</Label>
+            <Label className="text-[#511A2B]" htmlFor="professionId">Profissão</Label>
             <Select
               value={formData.professionId}
               onValueChange={(value) => setFormData((prev) => ({ ...prev, professionId: value }))}
@@ -279,7 +279,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="generalRegister">Registro Geral</Label>
+            <Label className="text-[#511A2B]" htmlFor="generalRegister">Registro Geral</Label>
             <Input
               id="generalRegister"
               value={formData.generalRegister}
@@ -290,7 +290,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label htmlFor="registrationAgency">CREA/CAU/ABD</Label>
+            <Label className="text-[#511A2B]" htmlFor="registrationAgency">CREA/CAU/ABD</Label>
             <Input
               id="registrationAgency"
               value={formData.registrationAgency}
@@ -302,7 +302,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
         </div>
 
         {/* <div>
-          <Label htmlFor="description">Descrição</Label>
+          <Label className="text-[#511A2B]" htmlFor="description">Descrição</Label>
           <Textarea
             id="description"
             value={formData.description}
@@ -313,7 +313,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
         </div>
 
         <div>
-          <Label htmlFor="experience">Experiência</Label>
+          <Label className="text-[#511A2B]" htmlFor="experience">Experiência</Label>
           <Textarea
             id="experience"
             value={formData.experience}
@@ -326,13 +326,10 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
 
       {/* Footer */}
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-        <Button variant="outline" onClick={onClose} disabled={isLoading}>
-          Cancelar
-        </Button>
         <Button
           onClick={handleSave}
+          variant="secondary"
           disabled={isLoading || !hasChanges()}
-          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
         >
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Alterações'}

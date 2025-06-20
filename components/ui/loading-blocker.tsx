@@ -200,7 +200,7 @@ export function showGlobalBlocker() {
       overflow: hidden !important;
       background: linear-gradient(135deg, rgba(108, 33, 68, 0.95), rgba(139, 69, 19, 0.9));
       backdrop-filter: blur(10px);
-      z-index: 9999;
+      z-index: 999999;
       cursor: wait;
       pointer-events: all;
       display: flex;
@@ -280,7 +280,7 @@ export function showGlobalBlocker() {
       font-weight: 600;
       color: white;
     `
-    loadingText.textContent = "Carregando sua página..."
+    loadingText.textContent = "Carregando..."
 
     loadingSection.appendChild(miniSpinner)
     loadingSection.appendChild(loadingText)
@@ -290,7 +290,7 @@ export function showGlobalBlocker() {
     const showAd = shouldShowAd();
     let adContainer: HTMLElement | null = null;
 
-    if (showAd) {
+    if (showAd && !window.location.pathname.startsWith('/auth')) {
       // Explicação dos anúncios
       const adExplanation = document.createElement('p');
       adExplanation.style.cssText = `

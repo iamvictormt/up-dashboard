@@ -163,7 +163,7 @@ export function MyPlanModal({ isOpen, onClose }: MyPlanModalProps) {
                     <Crown className="w-8 h-8" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold">Plano {planInfo.name}</h3>
+                    <h3 className="text-2xl font-bold text-white">Plano {planInfo.name}</h3>
                     <p className="text-white/80">Assinatura mensal ativa</p>
                   </div>
                 </div>
@@ -248,29 +248,6 @@ export function MyPlanModal({ isOpen, onClose }: MyPlanModalProps) {
             <p className="text-xs text-gray-500 text-center mt-3">
               Será aberta uma nova guia para o portal seguro do Stripe para gerenciar sua assinatura
             </p>
-          </div>
-
-          {/* Informação de Suporte */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
-            <div className="flex items-start gap-4">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Headphones className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <h5 className="font-semibold text-gray-900 mb-1">Precisa de ajuda?</h5>
-                <p className="text-sm text-gray-600 mb-3">
-                  Nossa equipe está pronta para ajudar você com qualquer dúvida sobre sua assinatura.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href="mailto:suporte@upconnection.com"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    📧 suporte@upconnection.com
-                  </a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </DialogContent>

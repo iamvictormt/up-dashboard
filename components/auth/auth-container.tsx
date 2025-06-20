@@ -16,6 +16,7 @@ interface AuthContainerProps {
   footerText: string;
   footerLinkText: string;
   footerLinkHref: string;
+  leftSideContent?: React.ReactNode;
 }
 
 export function AuthContainer({
@@ -26,6 +27,7 @@ export function AuthContainer({
   footerText,
   footerLinkText,
   footerLinkHref,
+  leftSideContent,
 }: AuthContainerProps) {
   return (
     <div className="min-h-screen flex">
@@ -43,44 +45,7 @@ export function AuthContainer({
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center px-12 text-white">
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <div className="flex place-content-center gap-3 mb-12">
-              <div className="relative w-32 h-32">
-                <Image src={appImages.logoUpSvg.src} alt="UP Club Logo" fill className="object-contain" priority />
-              </div>
-            </div>
-
-            <h2 className="text-4xl font-bold mb-4 leading-tight">
-              {type === 'login' ? 'Conecte-se com profissionais incríveis' : 'Faça parte da nossa comunidade'}
-            </h2>
-
-            <p className="text-lg text-purple-100 mb-8 leading-relaxed">
-              {type === 'login'
-                ? 'Acesse sua conta e continue explorando oportunidades, conectando-se com outros profissionais e expandindo sua rede.'
-                : 'Junte-se a milhares de profissionais, entusiastas e fornecedores que já fazem parte da nossa plataforma.'}
-            </p>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                <span className="text-purple-100">Conecte-se com profissionais</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-pink-400 rounded-full" />
-                <span className="text-purple-100">Descubra oportunidades</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-blue-400 rounded-full" />
-                <span className="text-purple-100">Expanda sua rede</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+        <div className="relative z-10 flex flex-col justify-center px-12 text-white w-full">{leftSideContent}</div>
       </motion.div>
 
       {/* Right Side - Form */}

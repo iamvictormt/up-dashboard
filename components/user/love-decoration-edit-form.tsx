@@ -150,11 +150,11 @@ export function LoveDecorationEditForm({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações Pessoais</h3>
+        <h3 className="font-medium text-primary pb-2">Informações Pessoais</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="name">Nome *</Label>
+            <Label className="text-[#511A2B]" htmlFor="name">Nome *</Label>
             <Input
               id="name"
               value={formData.name}
@@ -166,7 +166,7 @@ export function LoveDecorationEditForm({
           </div>
 
           <div>
-            <Label htmlFor="contact">Telefone *</Label>
+            <Label className="text-[#511A2B]" htmlFor="contact">Telefone *</Label>
             <Input
               id="contact"
               value={formData.contact}
@@ -180,11 +180,11 @@ export function LoveDecorationEditForm({
       </div>
 
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Redes Sociais</h3>
+        <h3 className="font-medium text-primary pb-2">Redes Sociais</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="instagram">Instagram</Label>
+            <Label className="text-[#511A2B]" htmlFor="instagram">Instagram</Label>
             <Input
               id="instagram"
               value={formData.instagram}
@@ -196,7 +196,7 @@ export function LoveDecorationEditForm({
           </div>
 
           <div>
-            <Label htmlFor="tiktok">TikTok</Label>
+            <Label className="text-[#511A2B]" htmlFor="tiktok">TikTok</Label>
             <Input
               id="tiktok"
               value={formData.tiktok}
@@ -210,14 +210,11 @@ export function LoveDecorationEditForm({
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-        <Button variant="outline" onClick={onClose} disabled={isLoading}>
-          Cancelar
-        </Button>
+      <div className="flex justify-end space-x-3 pt-4">
         <Button
           onClick={handleSave}
+          variant="secondary"
           disabled={isLoading || !hasChanges()}
-          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
         >
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Alterações'}

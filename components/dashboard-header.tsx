@@ -154,14 +154,14 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-[#511A2B]/10" />
               <DropdownMenuItem
-                className="text-[#511A2B] hover:bg-[#511A2B]/10 cursor-pointer"
+                className="text-[#511A2B]"
                 onClick={() => setIsProfileModalOpen(true)}
               >
                 <User className="mr-2 h-4 w-4" />
                 <span>Alterar Perfil</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-[#511A2B] hover:bg-[#511A2B]/10 cursor-pointer"
+                className="text-[#511A2B]"
                 onClick={() => setIsImageModalOpen(true)}
               >
                 <ImageIcon className="mr-2 h-4 w-4" />
@@ -170,7 +170,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
               {user.partnerSupplier && (
                 <>
                   <DropdownMenuItem
-                    className="text-[#511A2B] hover:bg-[#511A2B]/10 cursor-pointer"
+                    className="text-[#511A2B]"
                     onClick={() => setIsPlanModalOpen(true)}
                   >
                     <Coins className="mr-2 h-4 w-4" />

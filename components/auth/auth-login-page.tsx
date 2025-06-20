@@ -12,6 +12,7 @@ import { LoginForm } from './login-form';
 import { ForgotPasswordModal } from '../login/forgot-password-modal';
 import Image from 'next/image';
 import { appImages } from '@/constants/appImages';
+import { RegisterCarousel } from './register-carousel';
 
 export function AuthLoginPage() {
   const router = useRouter();
@@ -80,6 +81,7 @@ export function AuthLoginPage() {
         footerText="Não tem uma conta?"
         footerLinkText="Criar conta gratuita"
         footerLinkHref="/auth/register"
+        leftSideContent={<RegisterCarousel />}
       >
         <LoginForm
           formData={formData}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Save } from 'lucide-react';
+import { AlertCircle, Building, Fingerprint, Save, Tickets } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updatePartnerSupplier } from '@/lib/user-api';
@@ -160,85 +160,104 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações da Empresa</h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="tradeName">Nome fantasia *</Label>
-            <Input
-              id="tradeName"
-              value={formData.tradeName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, tradeName: e.target.value }))}
-              placeholder="Ex: Padaria Doce Sabor"
-              className={`${validationErrors.tradeName} ? 'border-red-500' : ''`}
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="trade-name">
+              Nome fantasia *
+            </Label>
+            <div className="relative">
+              <Input
+                id="tradeName"
+                value={formData.tradeName}
+                onChange={(e) => setFormData((prev) => ({ ...prev, tradeName: e.target.value }))}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                placeholder="Nome fantasia"
+              />
+              <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.tradeName} />
           </div>
 
-          <div>
-            <Label htmlFor="companyName">Razão Social *</Label>
-            <Input
-              id="companyName"
-              value={formData.companyName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, companyName: e.target.value }))}
-              placeholder="Ex: Padaria e Confeitaria São João LTDA"
-              className={validationErrors.companyName ? 'border-red-500' : ''}
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="companyName">
+              Razão Social *
+            </Label>
+            <div className="relative">
+              <Input
+                id="companyName"
+                value={formData.companyName}
+                onChange={(e) => setFormData((prev) => ({ ...prev, companyName: e.target.value }))}
+                placeholder="Razão social"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.companyName} />
           </div>
+        </div>
 
-          <div>
-            <Label htmlFor="document">CNPJ *</Label>
-            <Input
-              id="document"
-              value={formData.document}
-              onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentCnpjMask(e.target.value) }))}
-              onBlur={(e) => {
-                e.target.value.length !== 18 ? setFormData((prev) => ({ ...prev, document: '' })) : '';
-              }}
-              placeholder="00.000.000/0000-00"
-              className={validationErrors.document ? 'border-red-500' : ''}
-            />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="document">
+              CNPJ *
+            </Label>
+            <div className="relative">
+              <Input
+                id="document"
+                value={formData.document}
+                onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentCnpjMask(e.target.value) }))}
+                onBlur={(e) => {
+                  e.target.value.length !== 18 ? setFormData((prev) => ({ ...prev, document: '' })) : '';
+                }}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                placeholder="00.000.000/0000-00"
+              />{' '}
+              <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.document} />
           </div>
 
-          <div>
-            <Label htmlFor="contact">Telefone *</Label>
-            <Input
-              id="contact"
-              value={formData.contact}
-              onChange={(e) => setFormData((prev) => ({ ...prev, contact: applyPhoneMask(e.target.value) }))}
-              onBlur={(e) => {
-                e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, contact: '' })) : '';
-              }}
-              placeholder="(11) 99999-9999"
-              className={validationErrors.contact ? 'border-red-500' : ''}
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="contact">
+              Telefone *
+            </Label>
+            <div className="relative">
+              <Input
+                id="contact"
+                value={formData.contact}
+                onChange={(e) => setFormData((prev) => ({ ...prev, contact: applyPhoneMask(e.target.value) }))}
+                onBlur={(e) => {
+                  e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, contact: '' })) : '';
+                }}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                placeholder="(11) 99999-9999"
+              />
+              <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.contact} />
           </div>
 
-          <div>
-            <Label htmlFor="stateRegistration">Inscrição Estadual</Label>
-            <Input
-              id="stateRegistration"
-              value={formData.stateRegistration}
-              onChange={(e) => setFormData((prev) => ({ ...prev, stateRegistration: e.target.value }))}
-              placeholder="Número da inscrição estadual"
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="stateRegistration">
+              Inscrição Estadual
+            </Label>
+            <div className="relative">
+              <Input
+                id="stateRegistration"
+                value={formData.stateRegistration}
+                onChange={(e) => setFormData((prev) => ({ ...prev, stateRegistration: e.target.value }))}
+                placeholder="Número da inscrição estadual"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-        <Button variant="outline" onClick={onClose} disabled={isLoading}>
-          Cancelar
-        </Button>
-        <Button
-          onClick={handleSave}
-          disabled={isLoading || !hasChanges()}
-          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-        >
+      <div className="flex justify-end space-x-3 pt-4">
+        <Button onClick={handleSave} variant="secondary" disabled={isLoading || !hasChanges()}>
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Alterações'}
         </Button>

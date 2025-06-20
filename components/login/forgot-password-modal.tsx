@@ -13,11 +13,12 @@ import {
   Shield,
   Eye,
   EyeOff,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { forgotPassword, resetPassword, verifyResetCode } from '@/lib/auth-api';
 
@@ -245,7 +246,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           <Mail className="w-7 h-7" />
         </div>
 
-        <h1 className="text-2xl font-bold mb-2">Recuperar Senha</h1>
+        <h1 className="text-2xl font-bold mb-2 text-white">Recuperar Senha</h1>
         <p className="text-muted-foreground">
           Digite seu email para receber um código de verificação e redefinir sua senha.
         </p>
@@ -285,9 +286,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-3 font-medium"
         >
           {isLoading ? (
-            <>
-              Enviando código...
-            </>
+            <>Enviando código...</>
           ) : (
             <>
               Enviar código
@@ -305,7 +304,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
         <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
           <Shield className="w-7 h-7" />
         </div>
-        <h1 className="text-2xl font-bold mb-2">Verificar Código</h1>
+        <h1 className="text-2xl font-bold mb-2 text-white">Verificar Código</h1>
         <p className="text-muted-foreground">
           Digite o código de 5 dígitos enviado para <br /> <strong>{formData.email}</strong>
         </p>
@@ -324,7 +323,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
                 value={digit}
                 onChange={(e) => handleCodeChange(index, e.target.value)}
                 onKeyDown={(e) => handleCodeKeyDown(index, e)}
-                className={`w-12 h-12 text-center text-lg font-semibold border-2 rounded-xl`}
+                className={`w-12 h-12 p-0 bg-card/50 border-border/50  text-center text-lg font-semibold border-2 rounded-xl`}
                 disabled={isLoading}
               />
             ))}
@@ -337,25 +336,19 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           )}
         </div>
 
-        <div className="flex space-x-3">
-          <Button
-            onClick={handleBack}
-            variant="outline"
-            disabled={isLoading}
-            className="flex-1 border-primary/30 bg-secondary/10 hover:shadow-lg rounded-xl py-3"
-          >
+        <div className="flex space-x-3 pr-8 pl-8">
+          <Button onClick={handleBack} variant="accent" className="w-full" disabled={isLoading}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>
           <Button
             onClick={handleVerifyCode}
+            variant="secondary"
+            className="w-full"
             disabled={isLoading || formData.code.some((digit) => !digit)}
-            className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-xl py-3 font-medium"
           >
             {isLoading ? (
-              <>
-                Verificando...
-              </>
+              <>Verificando...</>
             ) : (
               <>
                 Verificar
@@ -386,7 +379,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           <Lock className="w-8 h-8" />
         </div>
 
-        <h1 className="text-2xl font-bold mb-2">Nova senha</h1>
+        <h1 className="text-2xl font-bold mb-2 text-white">Nova senha</h1>
         <p className="text-muted-foreground">Defina uma nova senha segura para sua conta.</p>
       </div>
 
@@ -414,9 +407,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? (
-                <Eye className="h-5 w-5 text-gray-200 hover:text-gray-400" />
+                <EyeOff className="w-4 h-4 text-muted-foreground hover:text-primary" />
               ) : (
-                <EyeOff className="h-5 w-5 text-gray-200 hover:text-gray-400" />
+                <Eye className="w-4 h-4 text-muted-foreground hover:text-primary" />
               )}
             </button>
           </div>
@@ -451,9 +444,9 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? (
-                <Eye className="h-5 w-5 text-gray-200 hover:text-gray-400" />
+                <EyeOff className="w-4 h-4 text-muted-foreground hover:text-primary" />
               ) : (
-                <EyeOff className="h-5 w-5 text-gray-200 hover:text-gray-400" />
+                <Eye className="w-4 h-4 text-muted-foreground hover:text-primary" />
               )}
             </button>
           </div>
@@ -465,25 +458,14 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
           )}
         </div>
 
-        <div className="flex space-x-3">
-          <Button
-            onClick={handleBack}
-            variant="outline"
-            disabled={isLoading}
-            className="flex-1 border-primary/30 bg-secondary/10 hover:shadow-lg rounded-xl py-3"
-          >
+        <div className="flex space-x-3 pr-8 pl-8">
+          <Button onClick={handleBack} variant="accent" className="w-full" disabled={isLoading}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>
-          <Button
-            onClick={handleResetPassword}
-            disabled={isLoading}
-            className="flex-1 bg-primary hover:bg-primary/90 text-white rounded-xl py-3 font-medium"
-          >
+          <Button onClick={handleResetPassword} disabled={isLoading} variant="secondary" className="w-full">
             {isLoading ? (
-              <>
-                Alterando...
-              </>
+              <>Alterando...</>
             ) : (
               <>
                 <CheckCircle className="w-4 h-4 mr-2" />
@@ -498,10 +480,13 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="bg-background sm:max-w-md" hideCloseButton>
         <DialogHeader>
           <DialogTitle className="sr-only">Recuperar Senha</DialogTitle>
         </DialogHeader>
+        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 focus:ring-ring focus:ring-offset-0 disabled:pointer-events-none data-[state=open]:bg-secondary text-white/90 hover:bg-[#6c2144]/10 hover:text-white h-8 px-3 text-xs">
+          <X className="h-4 w-4" />
+        </DialogClose>
 
         {/* Mensagem de Erro Geral */}
         {errors.general && (

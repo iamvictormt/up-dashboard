@@ -206,7 +206,7 @@ export function NotificationsDropdown() {
           </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="w-80 p-0 border border-gray-200 shadow-md rounded-lg">
+        <DropdownMenuContent className="w-80 p-0 bg-white border-[#511A2B]/20" align="end" forceMount>
           <div className="flex items-center justify-between p-4 border-b border-gray-100">
             <h3 className="font-medium text-gray-800">Notificações</h3>
             {unreadCount > 0 && (

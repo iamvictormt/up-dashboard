@@ -1,60 +1,60 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { X, User, Building, Heart, AlertCircle, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useUser } from "@/contexts/user-context"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ProfessionalEditForm } from "./professional-edit-form"
-import { SupplierEditForm } from "./supplier-edit-form"
-import { LoveDecorationEditForm } from "./love-decoration-edit-form"
-import { AddressEditForm } from "./addres-edit-form"
+import { useState } from 'react';
+import { X, User, Building, Heart, AlertCircle, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useUser } from '@/contexts/user-context';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ProfessionalEditForm } from './professional-edit-form';
+import { SupplierEditForm } from './supplier-edit-form';
+import { LoveDecorationEditForm } from './love-decoration-edit-form';
+import { AddressEditForm } from './addres-edit-form';
 
 interface UserEditModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
-  const { user } = useUser()
-  const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { user } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const getUserTypeInfo = () => {
     if (user?.professional) {
       return {
         icon: <User className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar perfil",
-        type: "professional" as const,
-      }
+        title: 'Editar perfil',
+        type: 'professional' as const,
+      };
     }
     if (user?.partnerSupplier) {
       return {
         icon: <Building className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar perfil",
-        type: "supplier" as const,
-      }
+        title: 'Editar perfil',
+        type: 'supplier' as const,
+      };
     }
     if (user?.loveDecoration) {
       return {
         icon: <Heart className="w-6 h-6 text-[#511A2B]" />,
-        title: "Editar perfil",
-        type: "loveDecoration" as const,
-      }
+        title: 'Editar perfil',
+        type: 'loveDecoration' as const,
+      };
     }
-    return null
-  }
+    return null;
+  };
 
-  const userTypeInfo = getUserTypeInfo()
-  if (!userTypeInfo) return null
+  const userTypeInfo = getUserTypeInfo();
+  if (!userTypeInfo) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99999] flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between p-6">
           <div className="flex items-center space-x-3">
             {userTypeInfo.icon}
             <h2 className="text-xl font-semibold text-[#511A2B]">{userTypeInfo.title}</h2>
@@ -87,7 +87,7 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
             </TabsList>
 
             <TabsContent value="profile" className="mt-6">
-              {userTypeInfo.type === "professional" && (
+              {userTypeInfo.type === 'professional' && (
                 <ProfessionalEditForm
                   professional={user?.professional}
                   isLoading={isLoading}
@@ -95,7 +95,7 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                   onClose={onClose}
                 />
               )}
-              {userTypeInfo.type === "supplier" && (
+              {userTypeInfo.type === 'supplier' && (
                 <SupplierEditForm
                   supplier={user?.partnerSupplier}
                   isLoading={isLoading}
@@ -103,7 +103,7 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
                   onClose={onClose}
                 />
               )}
-              {userTypeInfo.type === "loveDecoration" && (
+              {userTypeInfo.type === 'loveDecoration' && (
                 <LoveDecorationEditForm
                   loveDecoration={user?.loveDecoration}
                   isLoading={isLoading}
@@ -125,5 +125,5 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Save } from 'lucide-react';
+import { AlertCircle, Building, Hash, Map, MapPin, Plus, Save } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { applyZipCodeMask } from '@/utils/masks';
 import { fetchAddressByZipCode } from '@/lib/address-api';
@@ -164,104 +164,122 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-[#511A2B] border-b border-gray-100 pb-2">Informações de Endereço</h3>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <Label htmlFor="zipCode">CEP</Label>
-            <Input
-              id="zipCode"
-              value={formData.zipCode}
-              onChange={(e) => {
-                const masked = applyZipCodeMask(e.target.value);
-                setFormData((prev) => ({ ...prev, zipCode: masked }));
-              }}
-              placeholder="Ex: 00000-000"
-              maxLength={9}
-              className={validationErrors.zipCode ? 'border-red-500' : ''}
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="zipCode">CEP</Label>
+            <div className="relative">
+              <Input
+                id="zipCode"
+                value={formData.zipCode}
+                onChange={(e) => {
+                  const masked = applyZipCodeMask(e.target.value);
+                  setFormData((prev) => ({ ...prev, zipCode: masked }));
+                }}
+                placeholder="Ex: 00000-000"
+                maxLength={9}
+                className={`pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${validationErrors.zipCode ? 'border-red-500' : ''}`}
+              />
+              <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.zipCode} />
           </div>
 
-          <div>
-            <Label htmlFor="state">Estado</Label>
-            <Input
-              id="state"
-              value={formData.state}
-              onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
-              placeholder="Sigla do estado"
-              disabled
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="state">Estado</Label>
+            <div className="relative">
+              <Input
+                id="state"
+                value={formData.state}
+                onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
+                placeholder="Sigla do estado"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                disabled
+              />
+              <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="city">Cidade</Label>
-            <Input
-              id="city"
-              disabled
-              value={formData.city}
-              onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
-              placeholder="Nome da cidade"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="district">Bairro</Label>
-            <Input
-              id="district"
-              disabled
-              value={formData.district}
-              onChange={(e) => setFormData((prev) => ({ ...prev, district: e.target.value }))}
-              placeholder="Nome do bairro"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="street">Rua</Label>
-            <Input
-              id="street"
-              disabled
-              value={formData.street}
-              onChange={(e) => setFormData((prev) => ({ ...prev, street: e.target.value }))}
-              placeholder="Nome da rua"
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="city">Cidade</Label>
+            <div className="relative">
+              <Input
+                id="city"
+                disabled
+                value={formData.city}
+                onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
+                placeholder="Nome da cidade"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="number">Número</Label>
-            <Input
-              id="number"
-              value={formData.number}
-              onChange={(e) => setFormData((prev) => ({ ...prev, number: e.target.value }))}
-              placeholder="123"
-            />
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="district">Bairro</Label>
+            <div className="relative">
+              <Input
+                id="district"
+                disabled
+                value={formData.district}
+                onChange={(e) => setFormData((prev) => ({ ...prev, district: e.target.value }))}
+                placeholder="Nome do bairro"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="complement">Complemento</Label>
-            <Input
-              id="complement"
-              value={formData.complement}
-              onChange={(e) => setFormData((prev) => ({ ...prev, complement: e.target.value }))}
-              placeholder="Apartamento, sala, etc."
-            />
+          <div className="relative">
+            <Label className="text-[#511A2B]" htmlFor="street">Rua</Label>
+            <div className="relative">
+              <Input
+                id="street"
+                disabled
+                value={formData.street}
+                onChange={(e) => setFormData((prev) => ({ ...prev, street: e.target.value }))}
+                placeholder="Nome da rua"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="number">Número</Label>
+            <div className="relative">
+              <Input
+                id="number"
+                value={formData.number}
+                onChange={(e) => setFormData((prev) => ({ ...prev, number: e.target.value }))}
+                placeholder="123"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[#511A2B]" htmlFor="complement">Complemento</Label>
+            <div className="relative">
+              <Input
+                id="complement"
+                value={formData.complement}
+                onChange={(e) => setFormData((prev) => ({ ...prev, complement: e.target.value }))}
+                placeholder="Apartamento, sala, etc."
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Plus className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-        <Button variant="outline" onClick={onClose} disabled={isLoading}>
-          Cancelar
-        </Button>
-        <Button
-          onClick={handleSave}
-          disabled={isLoading || !hasChanges()}
-          className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-        >
+      <div className="flex justify-end space-x-3 pt-4">
+        <Button onClick={handleSave} variant="secondary" disabled={isLoading || !hasChanges()}>
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Endereço'}
         </Button>
@@ -269,3 +287,4 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
     </div>
   );
 }
+
