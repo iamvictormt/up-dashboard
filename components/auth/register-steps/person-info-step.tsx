@@ -3,9 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets } from 'lucide-react';
+import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard } from 'lucide-react';
 import { applyPhoneMask, applyDocumentMask, applyDocumentCnpjMask } from '@/utils/masks';
 import { PhotoUploadSimple } from './photo-upload-simple';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { fetchProfessions } from '@/lib/professions-api';
+import { useEffect, useState } from 'react';
+import { Profession } from '@/types';
+import { toast } from 'sonner';
 
 type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers';
 
@@ -26,6 +31,19 @@ export function PersonalInfoStep({
   onNext,
   onBack,
 }: PersonalInfoStepProps) {
+  const [professions, setProfessions] = useState<Profession[]>([]);
+
+  async function loadProfessions() {
+    try {
+      const response = await fetchProfessions();
+      setProfessions(response);
+    } catch (err) {
+      toast.error('Erro ao carregar as profissões, contate o administrador');
+      console.error(err);
+    } finally {
+    }
+  }
+
   const handleInputChange = (section: string, field: string, value: string) => {
     if (section === 'loveDecoration' && field === 'contact') {
       onUpdateNested(section, field, applyPhoneMask(value));
@@ -57,6 +75,10 @@ export function PersonalInfoStep({
     }
     return false;
   };
+
+  useEffect(() => {
+    loadProfessions();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -156,6 +178,32 @@ export function PersonalInfoStep({
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="profession" className="text-sm font-medium">
+                  Profissão
+                </Label>
+                <div className="relative">
+                  <Select
+                    value={formData.professionId}
+                    onValueChange={(value) => handleInputChange('professional', 'professionId', value)}
+                  >
+                    <SelectTrigger id="profession" className="pl-11 h-12">
+                      <SelectValue placeholder="Selecione a profissão" className='text-muted-foregroud' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {professions.map((profession) => (
+                        <SelectItem key={profession.id} value={profession.id}>
+                          {profession.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <IdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="office-name" className="text-sm font-medium">
                   Nome do escritório

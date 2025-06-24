@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Save } from 'lucide-react';
+import { AlertCircle, Building, Fingerprint, IdCard, Phone, Save, Tickets, User } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Profession } from '@/types';
@@ -196,108 +196,144 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-primary pb-2">Informações Pessoais</h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="name" className='text-[#511A2B]'>Nome completo *</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="Seu nome completo"
-              className={validationErrors.name ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="name">
+              Nome completo *
+            </Label>
+            <div className="relative">
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="Seu nome completo"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.name} />
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="document">CPF/CNPJ</Label>
-            <Input
-              id="document"
-              value={formData.document}
-              onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentMask(e.target.value) }))}
-              onBlur={(e) => {
-                e.target.value.length !== 14 && e.target.value.length !== 18
-                  ? setFormData((prev) => ({ ...prev, document: '' }))
-                  : '';
-              }}
-              placeholder="123.456.789-00"
-              className={validationErrors.document ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="document">
+              CPF/CNPJ
+            </Label>
+            <div className="relative">
+              <Input
+                id="document"
+                value={formData.document}
+                onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentMask(e.target.value) }))}
+                onBlur={(e) => {
+                  e.target.value.length !== 14 && e.target.value.length !== 18
+                    ? setFormData((prev) => ({ ...prev, document: '' }))
+                    : '';
+                }}
+                placeholder="123.456.789-00"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.document} />
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="phone">Whatsapp *</Label>
-            <Input
-              id="phone"
-              value={formData.phone}
-              placeholder="(11) 99999-9999"
-              onChange={(e) => setFormData((prev) => ({ ...prev, phone: applyPhoneMask(e.target.value) }))}
-              onBlur={(e) => {
-                e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, phone: '' })) : '';
-              }}
-              className={validationErrors.phone ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="phone">
+              Whatsapp *
+            </Label>
+            <div className="relative">
+              <Input
+                id="phone"
+                value={formData.phone}
+                placeholder="(11) 99999-9999"
+                onChange={(e) => setFormData((prev) => ({ ...prev, phone: applyPhoneMask(e.target.value) }))}
+                onBlur={(e) => {
+                  e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, phone: '' })) : '';
+                }}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.phone} />
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="officeName">Nome do Escritório</Label>
-            <Input
-              id="officeName"
-              value={formData.officeName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, officeName: e.target.value }))}
-              placeholder="Nome da sua empresa"
-            />
+            <Label className="text-[#511A2B]" htmlFor="officeName">
+              Nome do Escritório
+            </Label>
+            <div className="relative">
+              <Input
+                id="officeName"
+                value={formData.officeName}
+                onChange={(e) => setFormData((prev) => ({ ...prev, officeName: e.target.value }))}
+                placeholder="Nome da sua empresa"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h3 className="font-medium text-primary pb-2">Informações Profissionais</h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="professionId">Profissão</Label>
-            <Select
-              value={formData.professionId}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, professionId: value }))}
-            >
-              <SelectTrigger id="profession">
-                <SelectValue placeholder="Selecione a profissão" />
-              </SelectTrigger>
-              <SelectContent>
-                {professions.map((profession) => (
-                  <SelectItem key={profession.id} value={profession.id}>
-                    {profession.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label className="text-[#511A2B]" htmlFor="professionId">
+              Profissão
+            </Label>
+            <div className="relative">
+              <Select
+                value={formData.professionId}
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, professionId: value }))}
+              >
+                <SelectTrigger
+                  id="profession"
+                  className="pl-11 h-12 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                >
+                  <SelectValue placeholder="Selecione a profissão" />
+                </SelectTrigger>
+                <SelectContent className='z-[99999]'>
+                  {professions.map((profession) => (
+                    <SelectItem key={profession.id} value={profession.id}>
+                      {profession.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <IdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="generalRegister">Registro Geral</Label>
-            <Input
-              id="generalRegister"
-              value={formData.generalRegister}
-              onChange={(e) => setFormData((prev) => ({ ...prev, generalRegister: e.target.value }))}
-              placeholder="Número do registro"
-              maxLength={10}
-            />
+            <Label className="text-[#511A2B]" htmlFor="generalRegister">
+              RG
+            </Label>
+            <div className="relative">
+              <Input
+                id="generalRegister"
+                value={formData.generalRegister}
+                onChange={(e) => setFormData((prev) => ({ ...prev, generalRegister: e.target.value }))}
+                placeholder="Número do registro"
+                maxLength={10}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
-
           <div>
-            <Label className="text-[#511A2B]" htmlFor="registrationAgency">CREA/CAU/ABD</Label>
-            <Input
-              id="registrationAgency"
-              value={formData.registrationAgency}
-              onChange={(e) => setFormData((prev) => ({ ...prev, registrationAgency: e.target.value }))}
-              placeholder="1234567890-0/SP"
-              maxLength={20}
-            />
+            <Label className="text-[#511A2B]" htmlFor="registrationAgency">
+              CREA/CAU/ABD
+            </Label>
+            <div className="relative">
+              <Input
+                id="registrationAgency"
+                value={formData.registrationAgency}
+                onChange={(e) => setFormData((prev) => ({ ...prev, registrationAgency: e.target.value }))}
+                placeholder="1234567890-0/SP"
+                maxLength={20}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
           </div>
         </div>
 
@@ -326,11 +362,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
 
       {/* Footer */}
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
-        <Button
-          onClick={handleSave}
-          variant="secondary"
-          disabled={isLoading || !hasChanges()}
-        >
+        <Button onClick={handleSave} variant="secondary" disabled={isLoading || !hasChanges()}>
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
