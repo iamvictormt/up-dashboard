@@ -18,7 +18,7 @@ export function ProgressIndicator({ steps, currentStep, title, userType }: Progr
         <p className="text-sm text-muted-foreground">
           Etapa {currentStep} de {steps}
           <br />
-          {currentStep !== 1 && (
+          {currentStep !== 0 && (
             <span>
               (
               {userType === 'professionals'

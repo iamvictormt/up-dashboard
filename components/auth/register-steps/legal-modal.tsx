@@ -111,7 +111,7 @@ function TermosContent() {
         <h3 className="text-lg font-semibold text-slate-900 mb-3">7. Contato</h3>
         <p className="text-slate-700 leading-relaxed">
           Para dúvidas sobre estes Termos de Uso, entre em contato conosco através do email:
-          <span className="font-medium text-purple-600"> upconnection01@gmail.com</span>
+          <span className="font-medium text-purple-600">upconnection01@gmail.com</span>
         </p>
       </section>
     </>
