@@ -91,6 +91,11 @@ export function PersonalInfoStep({
                     onChange={(e) => handleInputChange('loveDecoration', 'contact', e.target.value)}
                     placeholder="(00) 00000-0000"
                     required
+                    onBlur={(e) => {
+                      e.target.value.length !== 14 &&
+                        e.target.value.length !== 15 &&
+                        handleInputChange('loveDecoration', 'contact', '');
+                    }}
                   />
                   <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
@@ -105,7 +110,6 @@ export function PersonalInfoStep({
                     value={formData.loveDecoration.instagram}
                     onChange={(e) => handleInputChange('loveDecoration', 'instagram', e.target.value)}
                     placeholder="@seuinstagram"
-                    required
                   />
                   <Instagram className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
@@ -121,7 +125,6 @@ export function PersonalInfoStep({
                   value={formData.loveDecoration.tiktok}
                   onChange={(e) => handleInputChange('loveDecoration', 'tiktok', e.target.value)}
                   placeholder="@seutiktok"
-                  required
                 />
                 <svg
                   className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors"
@@ -178,8 +181,13 @@ export function PersonalInfoStep({
                   <Input
                     value={formData.professional.document}
                     onChange={(e) => handleInputChange('professional', 'document', e.target.value)}
-                    placeholder="000.000.000-00"
+                    placeholder="000.000.000-00/00.000.000/0000-00"
                     required
+                    onBlur={(e) => {
+                      e.target.value.length !== 14 &&
+                        e.target.value.length !== 18 &&
+                        handleInputChange('professional', 'document', '');
+                    }}
                   />
                   <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
@@ -227,6 +235,11 @@ export function PersonalInfoStep({
                     onChange={(e) => handleInputChange('professional', 'phone', e.target.value)}
                     placeholder="(00) 00000-0000"
                     required
+                    onBlur={(e) => {
+                      e.target.value.length !== 15 &&
+                        e.target.value.length !== 14 &&
+                        handleInputChange('professional', 'phone', '');
+                    }}
                   />
                   <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
@@ -280,6 +293,9 @@ export function PersonalInfoStep({
                     onChange={(e) => handleInputChange('partnerSupplier', 'document', e.target.value)}
                     placeholder="00.000.000/0000-00"
                     required
+                    onBlur={(e) => {
+                      e.target.value.length !== 18 && handleInputChange('partnerSupplier', 'document', '');
+                    }}
                   />
                   <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
@@ -311,6 +327,11 @@ export function PersonalInfoStep({
                   onChange={(e) => handleInputChange('partnerSupplier', 'contact', e.target.value)}
                   placeholder="(00) 00000-0000"
                   required
+                  onBlur={(e) => {
+                    e.target.value.length !== 15 &&
+                      e.target.value.length !== 14 &&
+                      handleInputChange('partnerSupplier', 'contact', '');
+                  }}
                 />
                 <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               </div>

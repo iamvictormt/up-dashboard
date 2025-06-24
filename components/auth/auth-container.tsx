@@ -58,7 +58,7 @@ export function AuthContainer({
           transition={{ duration: 0.6 }}
         >
           <Link
-            href="https://up-landing-page.vercel.app/"
+            href="https://www.upconnection.app/"
             className="flex items-center gap-2 text-white hover:text-white/80 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

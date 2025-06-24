@@ -187,9 +187,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
         codeInputRefs.current[0]?.focus();
       }, 100);
     } catch (error) {
-      setErrors({
-        general: 'Erro ao enviar código. Tente novamente.',
-      });
+      toast.error('Erro ao enviar código. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -222,9 +220,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
       showToast.success('Senha alterada com sucesso! Você já pode fazer login com sua nova senha.');
       onClose();
     } catch (error) {
-      setErrors({
-        general: 'Erro ao alterar senha. Tente novamente.',
-      });
+      toast.error("Erro ao alterar senha. Tente novamente.")
     } finally {
       setIsLoading(false);
     }

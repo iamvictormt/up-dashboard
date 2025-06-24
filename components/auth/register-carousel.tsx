@@ -3,14 +3,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Users, TrendingUp, Shield, Heart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, TrendingUp, Shield, Heart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const carouselData = [
   {
     icon: Users,
     title: 'Conecte-se com Profissionais',
     description: 'Encontre e conecte-se com milhares de profissionais qualificados em diversas áreas do mercado.',
-    stats: '15.000+',
+    stats: '500+',
     statsLabel: 'profissionais ativos',
     color: 'from-blue-500 to-cyan-400',
     bgPattern: 'bg-gradient-to-br from-blue-500/20 to-cyan-400/20',

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Mail, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
-import Link from 'next/link';
+import { LegalModal } from '@/components/auth/register-steps/legal-modal';
 
 interface CredentialsStepProps {
   formData: any;
@@ -130,17 +130,10 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
             <Label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer">
               Aceito os termos de uso e política de privacidade
             </Label>
-            <p className="text-xs text-muted-foreground">
-              Ao criar sua conta, você concorda com nossos{' '}
-              <Link href="/terms" className="text-primary hover:underline">
-                Termos de Uso
-              </Link>{' '}
-              e{' '}
-              <Link href="/privacy" className="text-primary hover:underline">
-                Política de Privacidade
-              </Link>
-              .
-            </p>
+            <LegalModal
+              onTermsClick={() => console.log('Termos visualizados')}
+              onPrivacyClick={() => console.log('Política visualizada')}
+            />
           </div>
         </div>
       </div>

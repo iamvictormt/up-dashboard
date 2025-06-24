@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Camera, X } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface PhotoUploadSimpleProps {
   photo: string | null;
@@ -14,13 +15,19 @@ interface PhotoUploadSimpleProps {
 
 export function PhotoUploadSimple({ photo, onPhotoChange }: PhotoUploadSimpleProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const allowedTypes = ['image/jpeg', 'image/png'];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
 
-      if (!file.type.startsWith('image/')) {
-        alert('Por favor, selecione um arquivo de imagem');
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Por favor, selecione apenas arquivos de imagem.');
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('A imagem deve ter no máximo 2MB.');
         return;
       }
 
@@ -77,7 +84,7 @@ export function PhotoUploadSimple({ photo, onPhotoChange }: PhotoUploadSimplePro
           </div>
         )}
 
-        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+        <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png" onChange={handleFileChange} className="hidden" />
       </motion.div>
 
       <div className="text-center">
