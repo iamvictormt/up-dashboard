@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Save } from 'lucide-react';
+import { AlertCircle, Instagram, Phone, Save, User } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { updateLoveDecoration } from '@/lib/user-api';
 import { toast } from 'sonner';
@@ -150,60 +150,85 @@ export function LoveDecorationEditForm({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="font-medium text-primary pb-2">Informações Pessoais</h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="name">Nome *</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="Seu nome completo"
-              className={validationErrors.name ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="name">
+              Nome *
+            </Label>
+            <div className="relative">
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="Seu nome completo"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.name} />
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="contact">Telefone *</Label>
-            <Input
-              id="contact"
-              value={formData.contact}
-              onChange={(e) => setFormData((prev) => ({ ...prev, contact: e.target.value }))}
-              placeholder="(11) 99999-9999"
-              className={validationErrors.contact ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="contact">
+              Telefone *
+            </Label>{' '}
+            <div className="relative">
+              <Input
+                id="contact"
+                value={formData.contact}
+                onChange={(e) => setFormData((prev) => ({ ...prev, contact: e.target.value }))}
+                placeholder="(11) 99999-9999"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                onBlur={(e) => {
+                  e.target.value.length !== 15 ? setFormData((prev) => ({ ...prev, contact: '' })) : '';
+                }}
+              />
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.contact} />
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h3 className="font-medium text-primary pb-2">Redes Sociais</h3>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="instagram">Instagram</Label>
-            <Input
-              id="instagram"
-              value={formData.instagram}
-              onChange={(e) => setFormData((prev) => ({ ...prev, instagram: e.target.value }))}
-              placeholder="@seuinstagram"
-              className={validationErrors.instagram ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="instagram">
+              Instagram
+            </Label>
+            <div className="relative">
+              <Input
+                id="instagram"
+                value={formData.instagram}
+                onChange={(e) => setFormData((prev) => ({ ...prev, instagram: e.target.value }))}
+                placeholder="@seuinstagram"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Instagram className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
             <FieldError error={validationErrors.instagram} />
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="tiktok">TikTok</Label>
-            <Input
-              id="tiktok"
-              value={formData.tiktok}
-              onChange={(e) => setFormData((prev) => ({ ...prev, tiktok: e.target.value }))}
-              placeholder="@seutiktok"
-              className={validationErrors.tiktok ? 'border-red-500' : ''}
-            />
+            <Label className="text-[#511A2B]" htmlFor="tiktok">
+              TikTok
+            </Label>
+            <div className="relative">
+              <Input
+                id="tiktok"
+                value={formData.tiktok}
+                onChange={(e) => setFormData((prev) => ({ ...prev, tiktok: e.target.value }))}
+                placeholder="@seutiktok"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <svg
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M9 0h1.98c.144.715.54 1.617 1.235 2.512C12.895 3.389 13.797 4 15 4v2c-1.753 0-3.07-.814-4-1.829V11a5 5 0 1 1-5-5v2a3 3 0 1 0 3 3z" />
+              </svg>
+            </div>
             <FieldError error={validationErrors.tiktok} />
           </div>
         </div>
@@ -211,11 +236,7 @@ export function LoveDecorationEditForm({
 
       {/* Footer */}
       <div className="flex justify-end space-x-3 pt-4">
-        <Button
-          onClick={handleSave}
-          variant="secondary"
-          disabled={isLoading || !hasChanges()}
-        >
+        <Button onClick={handleSave} variant="secondary" disabled={isLoading || !hasChanges()}>
           <Save className="w-4 h-4 mr-2" />
           {isLoading ? 'Salvando...' : 'Salvar Alterações'}
         </Button>

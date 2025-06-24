@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, Building, Fingerprint, Save, Tickets } from 'lucide-react';
+import { AlertCircle, Building, Fingerprint, Phone, Save, Tickets } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updatePartnerSupplier } from '@/lib/user-api';
@@ -232,7 +232,7 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
                 className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                 placeholder="(11) 99999-9999"
               />
-              <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>
             <FieldError error={validationErrors.contact} />
           </div>

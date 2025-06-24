@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { PaymentProtection } from '@/components/plans/payment-protection';
 import { Toaster } from 'sonner';
+import { FooterContent } from '@/components/footer.content';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,8 +30,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   // Layout normal para outras páginas
   return (
-    <div className="flex min-h-screen bg-[#FFEDC1]">
-      {/* <div className="fixed inset-0 z-0">
+    <div className="min-h-screen flex flex-col bg-[#FFEDC1]">
+      <div className="flex flex-1">
+        {/* <div className="fixed inset-0 z-0">
         <div
           className="absolute w-[600px] h-[600px] rounded-full blur-[160px] opacity-60"
           style={{
@@ -80,20 +82,26 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           }}
         />
       </div> */}
-      {/* Sidebar apenas para desktop */}
-      <div className="hidden md:block">
-        <AppSidebar
-          isMobileOpen={false}
-          onToggleMobile={() => {}}
-          onExpandedChange={handleSidebarExpandedChange}
-          isDesktop={true}
-        />
+        {/* Sidebar apenas para desktop */}
+        <div className="hidden md:block">
+          <AppSidebar
+            isMobileOpen={false}
+            onToggleMobile={() => {}}
+            onExpandedChange={handleSidebarExpandedChange}
+            isDesktop={true}
+          />
+        </div>
+        <div
+          className={`flex-1 transition-all duration-300 ${
+            isSidebarExpanded ? 'md:ml-72' : 'md:ml-24'
+          } relative min-w-0`}
+        >
+          <DashboardHeader isSidebarExpanded={isSidebarExpanded} />
+          <main className="pt-[10vh] w-full">{children}</main>
+        </div>
       </div>
-      <div
-        className={`flex-1 transition-all duration-300 ${isSidebarExpanded ? 'md:ml-72' : 'md:ml-24'} relative min-w-0`}
-      >
-        <DashboardHeader isSidebarExpanded={isSidebarExpanded} />
-        <main className="pt-[10vh] w-full">{children}</main>
+      <div className={`transition-all duration-300 ${isSidebarExpanded ? 'md:ml-72' : 'md:ml-24'} relative min-w-0`}>
+        <FooterContent />
       </div>
     </div>
   );

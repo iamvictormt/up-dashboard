@@ -45,7 +45,7 @@ export function PersonalInfoStep({
   const isFormValid = () => {
     if (userType === 'love-decorations') {
       const data = formData.loveDecoration;
-      return data.name && data.contact && data.instagram && data.tiktok;
+      return data.name && data.contact;
     } else if (userType === 'professionals') {
       const data = formData.professional;
       return (

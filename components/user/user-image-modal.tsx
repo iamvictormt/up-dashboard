@@ -140,11 +140,11 @@ export function UserImageModal({ isOpen, onClose }: ProfileImageModalProps) {
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[#511A2B]/70">
                 {previewImage ? 'Nova imagem selecionada' : 'Imagem atual do perfil'}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Tamanho máximo: 2MB • Formatos: JPG, PNG</p>
-              <p className="text-xs text-muted-foreground mt-1">{selectedFile ? 'Clique no X para remover' : ''}</p>
+              <p className="text-xs text-[#511A2B]/70 mt-1">Tamanho máximo: 2MB • Formatos: JPG, PNG</p>
+              <p className="text-xs text-[#511A2B]/70 mt-1">{selectedFile ? 'Clique no X para remover' : ''}</p>
             </div>
           </div>
 

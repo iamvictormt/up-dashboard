@@ -20,6 +20,8 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [modalType, setModalType] = useState<'terms' | 'privacy' | null>(null);
+
   const handleInputChange = (field: string, value: string) => {
     onUpdate(field, value);
   };
@@ -130,10 +132,18 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
             <Label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer">
               Aceito os termos de uso e política de privacidade
             </Label>
-            <LegalModal
-              onTermsClick={() => console.log('Termos visualizados')}
-              onPrivacyClick={() => console.log('Política visualizada')}
-            />
+            <p className="text-xs text-muted-foreground">
+              Ao criar sua conta, você concorda com nossos{' '}
+              <span onClick={() => setModalType('terms')} className="text-primary hover:underline cursor-pointer">
+                Termos de Uso
+              </span>{' '}
+              e{' '}
+              <span onClick={() => setModalType('privacy')} className="text-primary hover:underline cursor-pointer">
+                Política de Privacidade
+              </span>
+              .
+            </p>
+            <LegalModal openType={modalType} onClose={() => setModalType(null)} />
           </div>
         </div>
       </div>

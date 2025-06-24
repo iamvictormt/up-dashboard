@@ -10,9 +10,8 @@ import { appUrl } from '@/constants/appRoutes';
 import { AuthContainer } from './auth-container';
 import { LoginForm } from './login-form';
 import { ForgotPasswordModal } from '../login/forgot-password-modal';
-import Image from 'next/image';
-import { appImages } from '@/constants/appImages';
 import { RegisterCarousel } from './register-carousel';
+import api from '@/services/api';
 
 export function AuthLoginPage() {
   const router = useRouter();
@@ -34,33 +33,20 @@ export function AuthLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+      const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        email: formData.email,
+        password: formData.password,
       });
+      console.log('response: ', response)
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (response.status === 401) toast.error(errorData.message || 'Email ou senha inválidos');
-        if (response.status === 403) toast.info(errorData.message);
-        return;
-      }
-
-      const data = await response.json();
+      const data = await response.data;
       Cookies.set('token', data.access_token, { expires: 1 / 24 });
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      setTimeout(() => {
-        window.location.href = appUrl.mural;
-      }, 1500);
+      router.push(appUrl.mural);
     } catch (error) {
-      console.error('Erro no login:', error);
-      toast.error('Erro de conexão. Tente novamente.');
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
