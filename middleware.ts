@@ -16,7 +16,7 @@ function isTokenExpired(token: string): boolean {
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const url = request.nextUrl.pathname;
-  const isAuthPage = url.startsWith('/auth/login') || url.startsWith('/auth/register');
+  const isAuthPage = url.startsWith('/auth');
   const role = request.cookies.get('role')?.value;
   const permissions: any = {
     partnerSupplier: [

@@ -2,7 +2,7 @@
 
 import { appUrl } from '@/constants/appRoutes';
 import { deleteCookie } from 'cookies-next';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import Cookies from 'js-cookie';
@@ -116,6 +116,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [role, setRole] = useState<string>('');
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -123,8 +124,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setIsLoading(true);
         setError(null);
 
-        const token = getCookie('token');
+        if(pathname.includes("/auth")) {
+          return;
+        }
 
+        const token = getCookie('token');
+        
         if (!token) {
           router.push(appUrl.login);
           return;

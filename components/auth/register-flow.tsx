@@ -9,6 +9,7 @@ import { AddressStep } from './register-steps/address-setp';
 import { CredentialsStep } from './register-steps/credentials-step';
 import { saveUser } from '@/lib/user-api';
 import { toast } from 'sonner';
+import { useSearchParams } from 'next/navigation';
 
 type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers';
 type Step = 'user-type' | 'personal-info' | 'address' | 'credentials';
@@ -18,10 +19,7 @@ interface RegisterFlowProps {
 }
 
 export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
-  const [currentStep, setCurrentStep] = useState<Step>('user-type');
-  const [userType, setUserType] = useState<UserType>('love-decorations');
   const [isLoading, setIsLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     // Common fields
     email: '',
@@ -70,6 +68,25 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
     },
   });
 
+  const getInitialStep = (param: string | null): Step => {
+    return param ? 'personal-info' : 'user-type';
+  };
+  const getTypeFromParam = (param: string | null): UserType => {
+    switch (param) {
+      case 'professional':
+        return 'professionals';
+      case 'partner-supplier':
+        return 'partner-suppliers';
+      case 'love-decoration':
+        return 'love-decorations';
+      default:
+        return 'love-decorations';
+    }
+  };
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get('type');
+  const [currentStep, setCurrentStep] = useState<Step>(getInitialStep(typeParam));
+  const [userType, setUserType] = useState<UserType>(getTypeFromParam(typeParam));
   const steps: Step[] = ['user-type', 'personal-info', 'address', 'credentials'];
   const currentStepIndex = steps.indexOf(currentStep);
 
@@ -155,9 +172,22 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
     }
   };
 
+  const getProgressSteps = () => {
+    return typeParam ? steps.length - 1 : steps.length;
+  };
+
+  const getProgressCurrent = () => {
+    return typeParam ? currentStepIndex : currentStepIndex + 1;
+  };
+
   return (
     <div className="space-y-6">
-      <ProgressIndicator steps={steps.length} currentStep={currentStepIndex + 1} title={getStepTitle()} userType={userType} />
+      <ProgressIndicator
+        steps={getProgressSteps()}
+        currentStep={getProgressCurrent()}
+        title={getStepTitle()}
+        userType={userType}
+      />
 
       <AnimatePresence mode="wait">
         {currentStep === 'user-type' && (
