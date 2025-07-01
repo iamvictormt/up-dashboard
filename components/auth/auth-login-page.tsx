@@ -37,14 +37,13 @@ export function AuthLoginPage() {
         email: formData.email,
         password: formData.password,
       });
-      console.log('response: ', response)
 
       const data = await response.data;
       Cookies.set('token', data.access_token, { expires: 1 / 24 });
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      router.push(appUrl.mural);
+      window.location.href = appUrl.mural;
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
