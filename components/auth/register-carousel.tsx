@@ -139,7 +139,7 @@ export function RegisterCarousel() {
         </AnimatePresence>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between mt-32">
+        <div className="flex items-center justify-between mt-[45%]">
           <button
             onClick={prevSlide}
             className="group w-12 h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 transition-all duration-300"

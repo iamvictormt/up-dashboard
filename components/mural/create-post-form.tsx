@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useUser } from '@/contexts/user-context';
 import { useCommunity } from '@/contexts/community-context';
-import { ImageIcon, X, Loader2, Hash } from 'lucide-react';
+import { ImageIcon, X, Loader2, Hash, Quote } from 'lucide-react';
 import { createPost } from '@/lib/post-api';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
 import { Badge } from '../ui/badge';
@@ -170,24 +170,26 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
         </div>
 
         <div className="space-y-4">
-          <Input
-            placeholder="Título (opcional)"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border-gray-200"
-          />
+          <div className="relative group">
+            <Input
+              placeholder="Título (opcional)"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+            />
+            <Quote className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 group-focus-within:text-primary transition-colors text-gray-400" />
+          </div>
 
           <Textarea
             placeholder="O que você quer compartilhar?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="min-h-[120px] border-gray-200"
+            className="min-h-[120px] bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
             required
           />
 
           <div className="space-y-2">
             <div className="relative group">
-              <Hash className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 ref={hashtagInputRef}
                 placeholder="Hashtags (espaço ou vírgula para adicionar)"
@@ -195,31 +197,23 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
                 onChange={(e) => setHashtagInput(e.target.value)}
                 onKeyDown={handleHashtagInputKeyDown}
                 onBlur={handleHashtagInputBlur}
-                className="pl-10 border-gray-200"
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
               />
+              <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 group-focus-within:text-primary transition-colors text-gray-400" />
             </div>
 
             {hashtags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {hashtags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="pl-2 pr-1 py-1 flex items-center gap-1">
+                  <Badge key={tag} variant="default" className="pl-2 pr-1 flex items-center gap-1">
                     {tag}
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => removeHashtag(tag)}
-                    >
+                    <Button variant="ghost" size="xs" onClick={() => removeHashtag(tag)}>
                       <X className="h-3 w-3" />
                       <span className="sr-only">Remover hashtag</span>
                     </Button>
                   </Badge>
                 ))}
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  className='p-4'
-                  onClick={focusHashtagInput}
-                >
+                <Button variant="ghost" size="xs" className="p-4" onClick={focusHashtagInput}>
                   + Adicionar mais
                 </Button>
               </div>
