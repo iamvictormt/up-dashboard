@@ -220,7 +220,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
         <div className="mt-4">
           {post.title && <h3 className="text-lg font-semibold mb-2">{post.title}</h3>}
           <div className="prose prose-sm max-w-none">
-            <p>{post.content}</p>
+            <p className='text-black'>{post.content}</p>
           </div>
 
           {post.attachedImage && (
