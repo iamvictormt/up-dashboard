@@ -205,7 +205,7 @@ export function CreatePostForm({ communityId, onCancel, onSuccess }: CreatePostF
             {hashtags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {hashtags.map((tag) => (
-                  <Badge key={tag} variant="default" className="pl-2 pr-1 flex items-center gap-1">
+                  <Badge key={tag} className="bg-gray-100 hover:bg-gray-200 text-gray-700 pl-2 pr-1 py-1 flex items-center gap-1">
                     {tag}
                     <Button variant="ghost" size="xs" onClick={() => removeHashtag(tag)}>
                       <X className="h-3 w-3" />

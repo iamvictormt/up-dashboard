@@ -169,7 +169,7 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
               placeholder="Escreva um comentário..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              className="min-h-[80px] resize-none mb-2"
+              className="min-h-[80px] resize-none mb-2 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
             />
 
             <div className="flex justify-end">
@@ -206,7 +206,7 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-medium">{comment.author.name}</span>
+                    <span className="font-medium text-black">{comment.author.name}</span>
                     <span className="text-xs text-gray-500 ml-2">{formatDate(comment.createdAt)}</span>
                   </div>
 
@@ -217,10 +217,10 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
                         <span className="sr-only">Mais opções</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className='bg-white border-0'>
                       {comment.isMine ? (
                         <>
-                          <DropdownMenuItem onClick={() => startEditing(comment)}>
+                          <DropdownMenuItem onClick={() => startEditing(comment)} className="text-gray-800">
                             <Pencil className="h-4 w-4 mr-2" />
                             <span>Editar comentário</span>
                           </DropdownMenuItem>
@@ -244,7 +244,7 @@ export function CommentSection({ postId, onNewComment, onCommentRemoved }: Comme
                     <Textarea
                       value={editContent}
                       onChange={(e) => setEditContent(e.target.value)}
-                      className="min-h-[80px] resize-none mb-2"
+                      className="min-h-[80px] resize-none mb-2 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                     />
                     <div className="flex justify-end gap-2">
                       <Button variant="outline" size="sm" onClick={cancelEditing} disabled={submitting}>

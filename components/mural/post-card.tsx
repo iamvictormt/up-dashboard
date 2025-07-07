@@ -86,7 +86,6 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
         toast({
           title: 'Like adicionado! ❤️',
           description: 'Você acabou de curtir este conteúdo.',
-
           duration: 2000,
         });
       }
@@ -159,7 +158,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-medium">{post.author.name}</span>
+                <span className="font-medium text-black">{post.author.name}</span>
                 {post.author.badge && (
                   <Badge variant="outline" className="text-xs py-0 h-5">
                     {post.author.badge}
@@ -189,15 +188,15 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="xs" className="h-8 w-8">
                 <MoreHorizontal className="h-5 w-5" />
                 <span className="sr-only">Mais opções</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="bg-white border-0">
               {post.isMine ? (
                 <>
-                  <DropdownMenuItem onClick={() => setShowEditModal(true)}>
+                  <DropdownMenuItem onClick={() => setShowEditModal(true)} className="text-gray-800">
                     <LucideIcons.Pencil className="h-4 w-4 mr-2" />
                     <span>Editar post</span>
                   </DropdownMenuItem>
@@ -205,12 +204,13 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
                     <LucideIcons.Trash2 className="h-4 w-4 mr-2" />
                     <span>Excluir post</span>
                   </DropdownMenuItem>
-                </>
-              ) : (
                 <DropdownMenuItem onClick={() => setShowReportModal(true)} className="text-red-600">
                   <Flag className="h-4 w-4 mr-2" />
                   <span>Reportar post</span>
                 </DropdownMenuItem>
+                </>
+              ) : (
+                <></>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -220,7 +220,7 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
         <div className="mt-4">
           {post.title && <h3 className="text-lg font-semibold mb-2">{post.title}</h3>}
           <div className="prose prose-sm max-w-none">
-            <p className='text-black'>{post.content}</p>
+            <p className="text-black">{post.content}</p>
           </div>
 
           {post.attachedImage && (

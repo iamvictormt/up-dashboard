@@ -95,25 +95,25 @@ export function ReportModal({ isOpen, onClose, targetId, targetType }: ReportMod
 
             <div className="space-y-4">
               <div className="space-y-3">
-                <h4 className="font-medium">Motivo da denúncia</h4>
+                <h4 className="font-medium text-gray-700">Motivo da denúncia</h4>
                 <RadioGroup value={reason} onValueChange={setReason}>
                   {REPORT_REASONS.map((item) => (
                     <div key={item.id} className="flex items-center space-x-2">
-                      <RadioGroupItem value={item.id} id={item.id} />
-                      <Label htmlFor={item.id}>{item.label}</Label>
+                      <RadioGroupItem value={item.id} id={item.id}/>
+                      <Label htmlFor={item.id} className='text-gray-700'>{item.label}</Label>
                     </div>
                   ))}
                 </RadioGroup>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Detalhes adicionais (opcional)</Label>
+                <Label htmlFor="description" className="text-[#511A2B]">Detalhes adicionais (opcional)</Label>
                 <Textarea
                   id="description"
                   placeholder="Descreva o problema com mais detalhes..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-[100px]"
+                  className="min-h-[120px] bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                 />
               </div>
 

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { X, ImageIcon } from 'lucide-react';
+import { X, ImageIcon, Quote, Hash } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { uploadImage } from '@/utils/image-upload';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -145,24 +145,39 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Título (opcional)</Label>
-            <Input id="title" placeholder="Título do post" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Label className="text-[#511A2B]" htmlFor="title">
+              Título (opcional)
+            </Label>
+            <div className="relative group">
+              <Input
+                id="title"
+                placeholder="Título do post"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+              <Quote className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 group-focus-within:text-primary transition-colors text-gray-400" />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">Conteúdo</Label>
+            <Label className="text-[#511A2B]" htmlFor="content">
+              Conteúdo
+            </Label>
             <Textarea
               id="content"
               placeholder="O que você está pensando?"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="min-h-[120px]"
+              className="min-h-[120px] bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hashtags">Hashtags</Label>
-            <div className="flex">
+            <Label className="text-[#511A2B]" htmlFor="hashtags">
+              Hashtags
+            </Label>
+            <div className="relative group">
               <Input
                 ref={hashtagInputRef}
                 id="hashtags"
@@ -171,31 +186,23 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
                 onChange={(e) => setHashtagInput(e.target.value)}
                 onKeyDown={handleHashtagInputKeyDown}
                 onBlur={handleHashtagInputBlur}
-                className="flex-1"
+                className="flex-1 w-full pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
               />
+              <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 group-focus-within:text-primary transition-colors text-gray-400" />
             </div>
 
             {hashtags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {hashtags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="pl-2 pr-1 py-1 flex items-center gap-1">
+                  <Badge key={tag} variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-700 pl-2 pr-1 py-1 flex items-center gap-1">
                     #{tag}
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => removeHashtag(tag)}
-                    >
+                    <Button variant="ghost" size="xs" onClick={() => removeHashtag(tag)}>
                       <X className="h-3 w-3" />
                       <span className="sr-only">Remover hashtag</span>
                     </Button>
                   </Badge>
                 ))}
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  className='p-4'
-                  onClick={focusHashtagInput}
-                >
+                <Button variant="ghost" size="xs" className="p-4" onClick={focusHashtagInput}>
                   + Adicionar mais
                 </Button>
               </div>
@@ -203,7 +210,9 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image">Imagem</Label>
+            <Label className="text-[#511A2B]" htmlFor="image">
+              Imagem
+            </Label>
             {imagePreview ? (
               <div className="relative group">
                 <img src={imagePreview || '/placeholder.svg'} alt="Preview" className="w-full h-auto rounded-md" />

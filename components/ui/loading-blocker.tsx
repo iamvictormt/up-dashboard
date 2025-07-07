@@ -290,7 +290,7 @@ export function showGlobalBlocker() {
     const showAd = shouldShowAd();
     let adContainer: HTMLElement | null = null;
 
-    if (showAd && !window.location.pathname.startsWith('/auth')) {
+    if (false) {
       // Explicação dos anúncios
       const adExplanation = document.createElement('p');
       adExplanation.style.cssText = `
