@@ -204,13 +204,12 @@ export function PostCard({ post, onPostUpdated, onPostDeleted, likeIdChange }: P
                     <LucideIcons.Trash2 className="h-4 w-4 mr-2" />
                     <span>Excluir post</span>
                   </DropdownMenuItem>
+                </>
+              ) : (
                 <DropdownMenuItem onClick={() => setShowReportModal(true)} className="text-red-600">
                   <Flag className="h-4 w-4 mr-2" />
                   <span>Reportar post</span>
                 </DropdownMenuItem>
-                </>
-              ) : (
-                <></>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
