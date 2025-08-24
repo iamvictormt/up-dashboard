@@ -60,9 +60,18 @@ const formatAvailableDaysFull = (days: { dayOfWeek: string }[]) => {
 
 // Função para formatar endereço completo
 const formatFullAddress = (address: Professional['address']) => {
+  if (!address) return '';
+
   const { street, number, complement, district, city, state, zipCode } = address;
 
-  const addressParts = [`${street}, ${number}`, complement, district, city, state, zipCode].filter(Boolean);
+  const addressParts = [
+    street && number ? `${street}, ${number}` : street || number,
+    complement || undefined,
+    district || undefined,
+    city || undefined,
+    state || undefined,
+    zipCode || undefined,
+  ].filter(part => part); 
 
   return addressParts.join(', ');
 };
@@ -185,14 +194,14 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           </div>
 
           {/* Redes Sociais */}
-          {(socialMedia.linkedin || socialMedia.instagram || socialMedia.whatsapp) && (
+          {(socialMedia?.linkedin || socialMedia?.instagram || socialMedia?.whatsapp) && (
             <>
               <Separator className="bg-[#511A2B]/10" />
               <div>
                 <h3 className="text-lg font-semibold text-[#511A2B] mb-4">Redes Sociais</h3>
 
                 <div className="flex flex-wrap gap-3">
-                  {socialMedia.linkedin && (
+                  {socialMedia?.linkedin && (
                     <Button
                       onClick={() => window.open(socialMedia.linkedin, '_blank')}
                     >
@@ -201,7 +210,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     </Button>
                   )}
 
-                  {socialMedia.instagram && (
+                  {socialMedia?.instagram && (
                     <Button
                       variant="primary"
                       onClick={() => window.open(socialMedia.instagram, '_blank')}
@@ -211,7 +220,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     </Button>
                   )}
 
-                  {socialMedia.whatsapp && (
+                  {socialMedia?.whatsapp && (
                     <Button
                       variant="primary"
                       onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}

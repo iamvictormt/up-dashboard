@@ -121,7 +121,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
 
           {/* Social Media */}
           <div className="flex space-x-2 mb-4">
-            {socialMedia.linkedin && (
+            {socialMedia?.linkedin && (
               <Button
                 variant="ghost"
                 size="lg"
@@ -132,7 +132,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                 <span className="sr-only">LinkedIn</span>
               </Button>
             )}
-            {socialMedia.instagram && (
+            {socialMedia?.instagram && (
               <Button
                 variant="ghost"
                 size="lg"
@@ -143,7 +143,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                 <span className="sr-only">Instagram</span>
               </Button>
             )}
-            {socialMedia.whatsapp && (
+            {socialMedia?.whatsapp && (
               <Button
                 variant="ghost"
                 size="lg"
