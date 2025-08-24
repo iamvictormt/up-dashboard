@@ -31,26 +31,21 @@ export function AuthContainer({
 }: AuthContainerProps) {
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Branding */}
       <motion.div
         className="hidden lg:flex lg:w-1/2 relative overflow-hidden"
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        {/* Background Pattern */}
         <div className="fixed inset-0 -z-10 bg-[#46142b]">
           <div className="absolute top-2/4 left-1/5 w-96 h-96 rounded-full bg-[#f5b13d]/10 blur-3xl" />
           <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#f5b13d]/10 blur-3xl" />
         </div>
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-center px-12 text-white w-full">{leftSideContent}</div>
       </motion.div>
 
-      {/* Right Side - Form */}
       <div className="flex-1 flex flex-col bg-[#320f1f]/50 backdrop-blur-sm">
-        {/* Header */}
         <motion.header
           className="p-6 flex justify-between items-center"
           initial={{ y: -20, opacity: 0 }}
@@ -72,14 +67,14 @@ export function AuthContainer({
           </div>
         </motion.header>
 
-        {/* Main Content */}
-
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="w-full max-w-lg">
             {title !== 'Crie sua conta' && (
               <>
-                <div className="relative w-32 h-32 justify-self-center mb-4">
-                  <Image src={appImages.logoAbelha.src} alt="UP Club Logo" fill className="object-contain" priority />
+                <div className="flex justify-center mb-4">
+                  <div className="relative w-32 h-32">
+                    <Image src={appImages.logoAbelha.src} alt="UP Club Logo" fill className="object-contain" priority />
+                  </div>
                 </div>
                 <motion.div
                   className="text-center mb-8"

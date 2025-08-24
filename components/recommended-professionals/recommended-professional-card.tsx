@@ -40,6 +40,84 @@ interface ProfessionalCardProps {
   professional: Professional;
 }
 
+const formatWhatsAppNumber = (phoneNumber: string): string => {
+  if (!phoneNumber) return '';
+  
+  const cleanNumber = phoneNumber.replace(/\D/g, '');
+  
+  if (!cleanNumber.startsWith('55')) {
+    return `55${cleanNumber}`;
+  }
+  
+  return cleanNumber;
+};
+
+const SocialMediaIconsCard = ({ socialMedia, phone }: { 
+  socialMedia: Professional['socialMedia']; 
+  phone: string;
+}) => {
+  const formattedWhatsApp = formatWhatsAppNumber(socialMedia?.whatsapp || '');
+
+  return (
+    <div className="flex items-center space-x-1">
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`rounded-full w-8 h-8 p-0 ${
+          formattedWhatsApp 
+            ? 'hover:bg-green-100 hover:text-green-600 text-[#511A2B]/70' 
+            : 'text-gray-300 cursor-default'
+        }`}
+        onClick={formattedWhatsApp ? () => window.open(`https://wa.me/${formattedWhatsApp}`, '_blank') : undefined}
+        disabled={!formattedWhatsApp}
+      >
+        <MessageCircle className="w-4 h-4" />
+        <span className="sr-only">WhatsApp</span>
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`rounded-full w-8 h-8 p-0 ${
+          socialMedia?.linkedin 
+            ? 'hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70' 
+            : 'text-gray-300 cursor-default'
+        }`}
+        onClick={socialMedia?.linkedin ? () => window.open(socialMedia.linkedin, '_blank') : undefined}
+        disabled={!socialMedia?.linkedin}
+      >
+        <Linkedin className="w-4 h-4" />
+        <span className="sr-only">LinkedIn</span>
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`rounded-full w-8 h-8 p-0 ${
+          socialMedia?.instagram 
+            ? 'hover:bg-pink-100 hover:text-pink-600 text-[#511A2B]/70' 
+            : 'text-gray-300 cursor-default'
+        }`}
+        onClick={socialMedia?.instagram ? () => window.open(socialMedia.instagram, '_blank') : undefined}
+        disabled={!socialMedia?.instagram}
+      >
+        <Instagram className="w-4 h-4" />
+        <span className="sr-only">Instagram</span>
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        className="rounded-full w-8 h-8 p-0 md:hidden hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70"
+        onClick={() => window.open(`tel:${phone}`, '_blank')}
+      >
+        <Phone className="w-4 h-4" />
+        <span className="sr-only">Telefone</span>
+      </Button>
+    </div>
+  );
+};
+
 const formatAvailableDays = (days: { dayOfWeek: string }[]) => {
   if (!days || days.length === 0) return 'Não disponível';
 
@@ -95,7 +173,11 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             </div>
           </div>
 
-          {description && <p className="text-sm text-[#511A2B]/80 mb-4 line-clamp-2 h-[2.5rem] md:h-[3rem] overflow-hidden">{description}</p>}
+          <div className="mb-4 h-[3rem]">
+            <p className="text-sm text-[#511A2B]/80 line-clamp-3 overflow-hidden">
+              {description || 'Descrição não disponível no momento.'}
+            </p>
+          </div>
 
           <div className="space-y-3 mb-4">
             <div className="flex items-center justify-between">
@@ -114,64 +196,27 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                   <Clock className="w-4 h-4 text-[#511A2B]/60" />
                   <span className="text-sm text-[#511A2B]/70">Disponibilidade</span>
                 </div>
-                <span className="text-sm text-[#511A2B] font-medium">{formatAvailableDays(availableDays)}</span>
+                <span className="text-sm text-[#511A2B] font-medium">
+                  {formatAvailableDays(availableDays)}
+                </span>
               </div>
             )}
           </div>
 
-          {/* Social Media */}
-          <div className="flex space-x-2 mb-4">
-            {socialMedia?.linkedin && (
-              <Button
-                variant="ghost"
-                size="lg"
-                className="rounded-full w-8 h-8 p-0"
-                onClick={() => window.open(socialMedia.linkedin, '_blank')}
-              >
-                <Linkedin className="w-4 h-4" />
-                <span className="sr-only">LinkedIn</span>
-              </Button>
-            )}
-            {socialMedia?.instagram && (
-              <Button
-                variant="ghost"
-                size="lg"
-                className="rounded-full w-8 h-8 p-0"
-                onClick={() => window.open(socialMedia.instagram, '_blank')}
-              >
-                <Instagram className="w-4 h-4" />
-                <span className="sr-only">Instagram</span>
-              </Button>
-            )}
-            {socialMedia?.whatsapp && (
-              <Button
-                variant="ghost"
-                size="lg"
-                className="rounded-full w-8 h-8 p-0"
-                onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span className="sr-only">WhatsApp</span>
-              </Button>
-            )}
-            <Button
-              variant="ghost"
-              size="lg"
-              className="rounded-full w-8 h-8 p-0 md:hidden flex"
-              onClick={() => window.open(`tel:${phone}`, '_blank')}
-            >
-              <Phone className="w-4 h-4" />
-              <span className="sr-only">Telefone</span>
-            </Button>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-[#511A2B]/70 font-medium">Contato:</span>
+            </div>
+            <SocialMediaIconsCard socialMedia={socialMedia} phone={phone} />
           </div>
 
           <div className="flex">
             <Button
-              className="flex-1 rounded-xl"
+              className="flex-1 rounded-xl bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
               onClick={() => setIsModalOpen(true)}
             >
               <User2 className="w-4 h-4 mr-2" />
-              Ver perfil
+              Ver perfil completo
             </Button>
           </div>
         </CardContent>
