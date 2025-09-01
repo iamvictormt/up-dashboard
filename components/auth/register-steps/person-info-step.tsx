@@ -71,7 +71,7 @@ export function PersonalInfoStep({
       );
     } else if (userType === 'partner-suppliers') {
       const data = formData.partnerSupplier;
-      return data.tradeName && data.companyName && data.document && data.stateRegistration && data.contact;
+      return data.tradeName && data.companyName && data.document && data.contact;
     }
     return false;
   };
@@ -358,7 +358,6 @@ export function PersonalInfoStep({
                     value={formData.partnerSupplier.stateRegistration}
                     onChange={(e) => handleInputChange('partnerSupplier', 'stateRegistration', e.target.value)}
                     placeholder="110.042.490.114"
-                    required
                   />
                   <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>

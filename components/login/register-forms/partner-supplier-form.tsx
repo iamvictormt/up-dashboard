@@ -131,7 +131,6 @@ export function PartnerSupplierForm({
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                   placeholder="Ex: 110.042.490.114"
-                  required
                   maxLength={16}
                   disabled={registerSuccess}
                 />

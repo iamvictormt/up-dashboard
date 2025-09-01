@@ -79,10 +79,6 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
       changedFields.document = formData.document;
     }
 
-    if (formData.stateRegistration !== supplier.stateRegistration) {
-      changedFields.stateRegistration = formData.stateRegistration;
-    }
-
     if (formData.contact !== supplier.contact) {
       changedFields.contact = formData.contact;
     }
