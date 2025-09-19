@@ -140,7 +140,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               value={productData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               placeholder="Ex: Consultoria em TI"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.name ? "border-red-500" : ""
               }`}
             />
@@ -158,7 +158,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Descreva seu produto ou serviço..."
               rows={4}
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.description ? "border-red-500" : ""
               }`}
             />
@@ -178,7 +178,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               value={productData.price || ""}
               onChange={(e) => handleInputChange("price", Number.parseFloat(e.target.value) || 0)}
               placeholder="0,00"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.price ? "border-red-500" : ""
               }`}
             />
@@ -196,12 +196,11 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               value={productData.link}
               onChange={(e) => handleInputChange("link", e.target.value)}
               placeholder="https://exemplo.com/produto"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.link ? "border-red-500" : ""
               }`}
             />
             {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
-            <p className="text-sm text-gray-500 mt-1">Link para mais informações ou compra do produto</p>
           </div>
 
           {/* Switches */}
@@ -215,7 +214,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               <Switch
                 checked={productData.featured}
                 onCheckedChange={(checked) => handleInputChange("featured", checked)}
-                className="data-[state=checked]:bg-[#511A2B]"
+                className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>
 
@@ -228,7 +227,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               <Switch
                 checked={productData.promotion}
                 onCheckedChange={(checked) => handleInputChange("promotion", checked)}
-                className="data-[state=checked]:bg-red-500"
+                className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>
           </div>
