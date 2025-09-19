@@ -74,10 +74,10 @@ export function RecommendedProfessionalsContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="primary" className="rounded-xl">
+            {/* <Button variant="primary" className="rounded-xl">
               <Filter className="w-4 h-4 mr-2" />
               Filtros
-            </Button>
+            </Button> */}
           </div>
         </div>
 

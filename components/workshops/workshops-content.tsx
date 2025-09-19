@@ -91,13 +91,13 @@ export function WorkshopsContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button
+            {/* <Button
               size="lg"
               className="bg-[#511A2B] hover:bg-[#511A2B]/90 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px] text-white rounded-xl px-6"
             >
               <Filter className="w-4 h-4 mr-2" />
               Filtrar
-            </Button>
+            </Button> */}
           </div>
         </div>
 

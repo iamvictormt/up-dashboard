@@ -35,7 +35,23 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   // Layout normal para outras páginas
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFEDC1]">
+    <div className="min-h-screen flex flex-col bg-[#FFEDC1] relative overflow-hidden">
+      {[...Array(10)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-10"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            backgroundImage: "url('/logo-abelha.png')",
+            backgroundSize: '100px auto',
+            backgroundRepeat: 'no-repeat',
+            width: '100px',
+            height: '100px',
+          }}
+        />
+      ))}
+
       <div className="flex flex-1">
         {/* <div className="fixed inset-0 z-0">
         <div

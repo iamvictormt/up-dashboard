@@ -78,7 +78,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
               <Store className="w-8 h-8 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold mb-1 truncate pr-16">{name}</h3>
+              <h3 className="text-lg font-bold mb-1 truncate pr-16 text-white">{name}</h3>
               <div className="flex items-center space-x-2 text-white/80 text-sm">
                 <MapPin className="w-4 h-4 flex-shrink-0" />
                 <span className="truncate">
@@ -192,12 +192,12 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             >
               <ExternalLink className="w-4 h-4" />
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl"
             >
               <Heart className="w-4 h-4" />
-            </Button>
+            </Button> */}
           </div>
         </div>
       </CardContent>

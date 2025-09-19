@@ -86,7 +86,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0">
-        <div className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-4 md:p-6 z-10">
+        <div className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-4 md:p-6 z-10 md:h-20">
           <DialogHeader className="space-y-4">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Perfil do Profissional</DialogTitle>
@@ -118,8 +118,8 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                 <Badge
                   className={`${
                     isActive
-                      ? 'bg-green-100 text-green-700 border-green-200'
-                      : 'bg-gray-100 text-gray-600 border-gray-200'
+                      ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
+                      : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
                   } rounded-lg px-3 py-1 mx-auto md:mx-0`}
                 >
                   {isActive ? 'Profissional Ativo' : 'Profissional Inativo'}

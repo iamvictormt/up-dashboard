@@ -159,10 +159,10 @@ export function EventsContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl">
+            {/* <Button variant="outline" className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl">
               <Filter className="w-4 h-4 mr-2" />
               Filtrar
-            </Button>
+            </Button> */}
           </div>
         </div>
 

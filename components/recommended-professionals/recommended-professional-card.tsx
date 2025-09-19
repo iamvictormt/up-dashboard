@@ -163,8 +163,8 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                 <Badge
                   className={`${
                     isActive
-                      ? 'bg-green-100 text-green-700 border-green-200'
-                      : 'bg-gray-100 text-gray-600 border-gray-200'
+                      ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
+                      : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
                   } rounded-lg`}
                 >
                   {isActive ? 'Ativo' : 'Inativo'}
