@@ -8,6 +8,8 @@ import { Search, Filter, Users, UserCheck, MapPin, Briefcase } from 'lucide-reac
 import { fetchRecommendedProfessionals } from '@/lib/recommended-professional-api';
 import { toast } from 'sonner';
 import { RecommendedProfessionalData } from '@/types';
+import Image from 'next/image';
+import { appImages } from '@/constants/appImages';
 
 export function RecommendedProfessionalsContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -60,7 +62,10 @@ export function RecommendedProfessionalsContent() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Profissionais recomendados</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
+              Profissionais recomendados
+              <Image src={appImages.logoAbelha.src} alt="UP Club Logo" className="object-contain w-12 h-12 " priority />
+            </h1>
             <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais qualificados</p>
           </div>
 
