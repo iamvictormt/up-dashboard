@@ -24,8 +24,7 @@ export function CommunityList() {
     <div className="bg-white rounded-xl shadow-sm p-4">
       <div className="p-3">
         <div className="flex items-center gap-2">
-          <LucideIcons.Handshake className="h-4 w-4 text-[#6c2144]" />
-          <h3 className="font-semibold text-sm text-gray-900">Comunidades</h3>
+          <h3 className="font-semibold text-sm text-[#511A2B]">Comunidades</h3>
         </div>
       </div>
       <ScrollArea className="max-h-[calc(80vh-180px)] p-3">

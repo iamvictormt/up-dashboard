@@ -37,8 +37,8 @@ export function TrendingTopics() {
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 p-4">
       <div className="p-3">
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-4 w-4 text-[#6c2144]" />
-          <h3 className="font-semibold text-sm text-gray-900">Tópicos em alta</h3>
+          <h3 className="font-semibold text-sm text-[#511A2B]">Tópicos em alta</h3>
+          <TrendingUp className="h-4 w-4 text-[#511A2B]" />
         </div>
       </div>
 
