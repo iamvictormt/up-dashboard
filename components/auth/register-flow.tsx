@@ -7,7 +7,7 @@ import { UserTypeStep } from './register-steps/user-type-step';
 import { PersonalInfoStep } from './register-steps/person-info-step';
 import { AddressStep } from './register-steps/address-setp';
 import { CredentialsStep } from './register-steps/credentials-step';
-import { saveUser } from '@/lib/user-api';
+import { saveUser, uploadImageCloudinary } from '@/lib/user-api';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 
@@ -128,13 +128,17 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    let cloudinaryImageURL = '';
 
     try {
+      if (formData.photo) cloudinaryImageURL = await uploadImageCloudinary(formData.photo) || '';
+      if (!cloudinaryImageURL) return;
+
       const payload: any = {
         user: {
           email: formData.email,
           password: formData.password,
-          profileImage: formData.photo,
+          profileImage: cloudinaryImageURL,
           address: formData.address,
         },
       };

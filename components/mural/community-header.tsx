@@ -36,7 +36,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
           </div>
 
           <div>
-            <h1 className="text-xl font-bold">{community.name}</h1>
+            <h1 className="text-xl font-bold text-[#511A2B]">{community.name}</h1>
             <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
               <div className="flex items-center gap-1">
                 <LucideIcons.Rss className="h-3.5 w-3.5" />

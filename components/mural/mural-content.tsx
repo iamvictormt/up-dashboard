@@ -12,6 +12,8 @@ import { MuralUpdateProvider } from '@/contexts/mural-update-context';
 import { MobileCommunitiesFAB } from './mobile-communities-fab';
 import { Toaster } from '../ui/toaster';
 import { MyPostsStats } from './my-post-stats';
+import Image from 'next/image';
+import { appImages } from '@/constants/appImages';
 
 export function MuralContent() {
   const isMobile = useMobile();
@@ -28,7 +30,16 @@ export function MuralContent() {
           <div className=" mb-8 space-y-4 md:space-y-0">
             <div className="">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Mural da comunidade</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
+                  Mural da comunidade
+                  <Image
+                    src={appImages.logoAbelha.src}
+                    alt="UP Club Logo"
+                    className="object-contain w-12 h-12 "
+                    priority
+                  />
+                </h1>
+
                 <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
               </div>
             </div>

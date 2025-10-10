@@ -25,7 +25,7 @@ export default function StoreInfoSection({ storeData }) {
                 <MapPin className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">Localização</h3>
+                <h3 className="text-xl font-bold text-white">Localização</h3>
                 <p className="text-white/90 text-sm">Onde nos encontrar</p>
               </div>
             </div>
@@ -80,7 +80,7 @@ export default function StoreInfoSection({ storeData }) {
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">Horário de Funcionamento</h3>
+                <h3 className="text-xl font-bold text-white">Horário de Funcionamento</h3>
                 <p className="text-white/90 text-sm">Quando estamos abertos</p>
               </div>
             </div>
@@ -135,7 +135,6 @@ export default function StoreInfoSection({ storeData }) {
               <p className={`text-sm mt-1 ${storeHours.isOpen ? 'text-green-600' : 'text-red-600'}`}>
                 {storeHours.isOpen && storeHours.closingTime && `Fecha às ${storeHours.closingTime}`}
                 {!storeHours.isOpen && storeHours.nextOpenTime && `Abre às ${storeHours.nextOpenTime}`}
-                {!storeHours.isOpen && !storeHours.nextOpenTime && 'Fechado hoje'}
               </p>
             </div>
           </CardContent>

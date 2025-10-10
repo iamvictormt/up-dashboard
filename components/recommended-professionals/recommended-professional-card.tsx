@@ -42,30 +42,20 @@ interface ProfessionalCardProps {
 
 const formatWhatsAppNumber = (phoneNumber: string): string => {
   if (!phoneNumber) return '';
-  
   const cleanNumber = phoneNumber.replace(/\D/g, '');
-  
-  if (!cleanNumber.startsWith('55')) {
-    return `55${cleanNumber}`;
-  }
-  
-  return cleanNumber;
+  return cleanNumber.startsWith('55') ? cleanNumber : `55${cleanNumber}`;
 };
 
-const SocialMediaIconsCard = ({ socialMedia, phone }: { 
-  socialMedia: Professional['socialMedia']; 
-  phone: string;
-}) => {
+const SocialMediaIconsCard = ({ socialMedia, phone }: { socialMedia: Professional['socialMedia']; phone: string }) => {
   const formattedWhatsApp = formatWhatsAppNumber(socialMedia?.whatsapp || '');
-
   return (
     <div className="flex items-center space-x-1">
       <Button
         variant="ghost"
         size="sm"
         className={`rounded-full w-8 h-8 p-0 ${
-          formattedWhatsApp 
-            ? 'hover:bg-green-100 hover:text-green-600 text-[#511A2B]/70' 
+          formattedWhatsApp
+            ? 'hover:bg-green-100 hover:text-green-600 text-[#511A2B]/70'
             : 'text-gray-300 cursor-default'
         }`}
         onClick={formattedWhatsApp ? () => window.open(`https://wa.me/${formattedWhatsApp}`, '_blank') : undefined}
@@ -79,8 +69,8 @@ const SocialMediaIconsCard = ({ socialMedia, phone }: {
         variant="ghost"
         size="sm"
         className={`rounded-full w-8 h-8 p-0 ${
-          socialMedia?.linkedin 
-            ? 'hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70' 
+          socialMedia?.linkedin
+            ? 'hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70'
             : 'text-gray-300 cursor-default'
         }`}
         onClick={socialMedia?.linkedin ? () => window.open(socialMedia.linkedin, '_blank') : undefined}
@@ -94,8 +84,8 @@ const SocialMediaIconsCard = ({ socialMedia, phone }: {
         variant="ghost"
         size="sm"
         className={`rounded-full w-8 h-8 p-0 ${
-          socialMedia?.instagram 
-            ? 'hover:bg-pink-100 hover:text-pink-600 text-[#511A2B]/70' 
+          socialMedia?.instagram
+            ? 'hover:bg-pink-100 hover:text-pink-600 text-[#511A2B]/70'
             : 'text-gray-300 cursor-default'
         }`}
         onClick={socialMedia?.instagram ? () => window.open(socialMedia.instagram, '_blank') : undefined}
@@ -119,8 +109,7 @@ const SocialMediaIconsCard = ({ socialMedia, phone }: {
 };
 
 const formatAvailableDays = (days: { dayOfWeek: string }[]) => {
-  if (!days || days.length === 0) return 'Não disponível';
-
+  if (!days || days.length === 0) return 'Não informada';
   const dayMap: Record<string, string> = {
     MONDAY: 'Seg',
     TUESDAY: 'Ter',
@@ -130,42 +119,34 @@ const formatAvailableDays = (days: { dayOfWeek: string }[]) => {
     SATURDAY: 'Sáb',
     SUNDAY: 'Dom',
   };
-
   return days.map((day) => dayMap[day.dayOfWeek] || day.dayOfWeek).join(', ');
 };
 
 export function ProfessionalCard({ professional }: ProfessionalCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { name, profession, description, profileImage, isActive, address, availableDays, socialMedia, phone } =
     professional;
 
   return (
     <>
-      <Card className="bg-white/80 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl hover:border-[#511A2B]/30 transition-all duration-300 shadow-sm hover:shadow-md">
-        <CardContent className="p-6">
-          <div className="flex items-start space-x-4 mb-4">
+      <Card className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl hover:border-[#511A2B]/30 transition-all duration-300 shadow-sm hover:shadow-md">
+        <CardContent className="p-4 md:p-6">
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-3 md:space-y-0 md:space-x-4 mb-4">
             <Avatar className="w-16 h-16 rounded-xl">
-              <AvatarImage src={profileImage || '/placeholder.svg'} />
-              <AvatarFallback className="rounded-xl bg-[#511A2B] text-white text-lg">
-                {name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join('')}
-              </AvatarFallback>
+              <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
 
-            <div className="flex-1">
-              <h3 className="font-semibold text-[#511A2B] text-lg">{name}</h3>
-              <p className="text-[#FEC460] text-sm font-medium">{profession}</p>
+            <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
+              <h3 className="font-semibold text-[#511A2B] text-lg md:text-xl capitalize">{name.toLowerCase()}</h3>
+              <p className="text-[#FEC460] text-sm md:text-base font-medium capitalize">{profession.toLowerCase()}</p>
 
-              <div className="flex items-center space-x-2 mt-2">
+              <div className="flex items-center space-x-2 mt-1 md:mt-2">
                 <Badge
                   className={`${
                     isActive
-                      ? 'bg-green-100 text-green-700 border-green-200'
-                      : 'bg-gray-100 text-gray-600 border-gray-200'
-                  } rounded-lg`}
+                      ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
+                      : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
+                  } rounded-lg text-xs md:text-sm`}
                 >
                   {isActive ? 'Ativo' : 'Inativo'}
                 </Badge>
@@ -173,46 +154,47 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
             </div>
           </div>
 
-          <div className="mb-4 h-[3rem]">
-            <p className="text-sm text-[#511A2B]/80 line-clamp-3 overflow-hidden">
-              {description || 'Descrição não disponível no momento.'}
+          <div className="mb-4">
+            <p className="text-sm md:text-base text-[#511A2B]/80 line-clamp-2 md:line-clamp-3">
+              {description || 'Sem descrição disponível.'}
             </p>
           </div>
 
-          <div className="space-y-3 mb-4">
+          <div className="space-y-2 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <MapPin className="w-4 h-4 text-[#511A2B]/60" />
                 <span className="text-sm text-[#511A2B]/70">Localização</span>
               </div>
-              <span className="text-sm text-[#511A2B] font-medium">
+              <span className="text-sm md:text-base text-[#511A2B] font-medium">
                 {address.district}, {address.city}
               </span>
             </div>
 
-            {availableDays && availableDays.length > 0 && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#511A2B]/60" />
-                  <span className="text-sm text-[#511A2B]/70">Disponibilidade</span>
-                </div>
-                <span className="text-sm text-[#511A2B] font-medium">
-                  {formatAvailableDays(availableDays)}
-                </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-[#511A2B]/60" />
+                <span className="text-sm text-[#511A2B]/70">Disponibilidade</span>
               </div>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-[#511A2B]/70 font-medium">Contato:</span>
+              <span className="text-sm md:text-base text-[#511A2B] font-medium">
+                {formatAvailableDays(availableDays)}
+              </span>
             </div>
-            <SocialMediaIconsCard socialMedia={socialMedia} phone={phone} />
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-[#511A2B]/60" />
+                <span className="text-sm text-[#511A2B]/70">Contato</span>
+              </div>
+              <span className="text-sm md:text-base text-[#511A2B] font-medium">
+                <SocialMediaIconsCard socialMedia={socialMedia} phone={phone} />
+              </span>
+            </div>
           </div>
 
           <div className="flex">
             <Button
-              className="flex-1 rounded-xl bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
+              className="flex-1 rounded-xl bg-[#511A2B] hover:bg-[#511A2B]/90 text-white text-sm md:text-base py-2"
               onClick={() => setIsModalOpen(true)}
             >
               <User2 className="w-4 h-4 mr-2" />

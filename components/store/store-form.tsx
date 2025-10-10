@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useEffect, useState } from 'react';
-import { X, Save, Store, MapPin, Clock, Copy } from 'lucide-react';
+import { X, Save, Store, MapPin, Clock, Copy, Building, WholeWord, Map, Hash, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -277,7 +277,7 @@ function OpeningHoursInput({
                       <select
                         value={daySchedule.openTime}
                         onChange={(e) => updateSchedule(dayKey, 'openTime', e.target.value)}
-                        className="px-3 py-1 border border-[#511A2B]/20 rounded-lg text-sm focus:border-[#511A2B]/40 focus:outline-none min-w-[80px] bg-white"
+                        className="px-3 py-1 border border-[#511A2B]/20 rounded-lg text-sm focus:border-[#511A2B]/40 focus:outline-none min-w-[80px] bg-white/80 border-[#511A2B]/20 text-[#511A2B]"
                       >
                         {timeOptions.map((time) => (
                           <option key={`${day}-open-${time}`} value={time}>
@@ -292,7 +292,7 @@ function OpeningHoursInput({
                       <select
                         value={daySchedule.closeTime}
                         onChange={(e) => updateSchedule(dayKey, 'closeTime', e.target.value)}
-                        className="px-3 py-1 border border-[#511A2B]/20 rounded-lg text-sm focus:border-[#511A2B]/40 focus:outline-none min-w-[80px] bg-white"
+                        className="px-3 py-1 border border-[#511A2B]/20 rounded-lg text-sm focus:border-[#511A2B]/40 focus:outline-none min-w-[80px] bg-white/80 border-[#511A2B]/20 text-[#511A2B]"
                       >
                         {timeOptions.map((time) => (
                           <option key={`${day}-close-${time}`} value={time}>
@@ -526,15 +526,16 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   <Label htmlFor="name" className="text-[#511A2B] font-medium">
                     Nome da Loja *
                   </Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    placeholder="Ex: Super Soluções"
-                    className={`pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                      errors.name ? 'border-red-500' : ''
-                    }`}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      placeholder="Ex: Super Soluções"
+                      className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                    />
+                    <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
                   {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                 </div>
 
@@ -547,7 +548,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     placeholder="Descreva sua loja, produtos e serviços..."
-                    className={`${errors.description ? 'border-red-500' : ''}`}
+                    className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                     rows={3}
                   />
                   {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -557,17 +558,20 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   <Label htmlFor="website" className="text-[#511A2B] font-medium">
                     Website
                   </Label>
-                  <Input
-                    id="website"
-                    value={formData.website}
-                    onChange={(e) => handleInputChange('website', e.target.value)}
-                    placeholder="https://meusite.com.br"
-                    className={` ${errors.website ? 'border-red-500' : ''}`}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="website"
+                      value={formData.website}
+                      onChange={(e) => handleInputChange('website', e.target.value)}
+                      placeholder="https://meusite.com.br"
+                      className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                    />
+                    <WholeWord className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
                   {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
                 </div>
 
-                <div className='z-[1]'>
+                <div className="z-[1]">
                   <Label htmlFor="openingHours" className="text-[#511A2B] font-medium">
                     Horário de Funcionamento *
                   </Label>
@@ -596,17 +600,20 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="zipCode" className="text-[#511A2B] font-medium">
                       CEP *
                     </Label>
-                    <Input
-                      id="zipCode"
-                      value={formData.address.zipCode}
-                      onChange={(e) => {
-                        const masked = applyZipCodeMask(e.target.value);
-                        handleInputChange('address.zipCode', masked);
-                      }}
-                      placeholder="00000-000"
-                      maxLength={9}
-                      className={`${errors['address.zipCode'] ? 'border-red-500' : ''}`}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="zipCode"
+                        value={formData.address.zipCode}
+                        onChange={(e) => {
+                          const masked = applyZipCodeMask(e.target.value);
+                          handleInputChange('address.zipCode', masked);
+                        }}
+                        placeholder="00000-000"
+                        maxLength={9}
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                      />
+                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.zipCode'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.zipCode']}</p>
                     )}
@@ -616,14 +623,17 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="city" className="text-[#511A2B] font-medium">
                       Cidade *
                     </Label>
-                    <Input
-                      id="city"
-                      value={formData.address.city}
-                      onChange={(e) => handleInputChange('address.city', e.target.value)}
-                      placeholder="São Paulo"
-                      className={` ${errors['address.city'] ? 'border-red-500' : ''}`}
-                      disabled
-                    />
+                    <div className="relative">
+                      <Input
+                        id="city"
+                        value={formData.address.city}
+                        onChange={(e) => handleInputChange('address.city', e.target.value)}
+                        placeholder="São Paulo"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                        disabled
+                      />
+                      <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.city'] && <p className="text-red-500 text-sm mt-1">{errors['address.city']}</p>}
                   </div>
 
@@ -631,14 +641,17 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="state" className="text-[#511A2B] font-medium">
                       Estado *
                     </Label>
-                    <Input
-                      id="state"
-                      value={formData.address.state}
-                      onChange={(e) => handleInputChange('address.state', e.target.value)}
-                      placeholder="SP"
-                      className={`${errors['address.state'] ? 'border-red-500' : ''}`}
-                      disabled
-                    />
+                    <div className="relative">
+                      <Input
+                        id="state"
+                        value={formData.address.state}
+                        onChange={(e) => handleInputChange('address.state', e.target.value)}
+                        placeholder="SP"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                        disabled
+                      />
+                      <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.state'] && <p className="text-red-500 text-sm mt-1">{errors['address.state']}</p>}
                   </div>
                 </div>
@@ -648,14 +661,17 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="street" className="text-[#511A2B] font-medium">
                       Rua *
                     </Label>
-                    <Input
-                      id="street"
-                      value={formData.address.street}
-                      onChange={(e) => handleInputChange('address.street', e.target.value)}
-                      placeholder="Av. Principal"
-                      className={`${errors['address.street'] ? 'border-red-500' : ''}`}
-                      disabled
-                    />
+                    <div className="relative">
+                      <Input
+                        id="street"
+                        value={formData.address.street}
+                        onChange={(e) => handleInputChange('address.street', e.target.value)}
+                        placeholder="Av. Principal"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                        disabled
+                      />
+                      <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.street'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.street']}</p>
                     )}
@@ -665,13 +681,16 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="number" className="text-[#511A2B] font-medium">
                       Número *
                     </Label>
-                    <Input
-                      id="number"
-                      value={formData.address.number}
-                      onChange={(e) => handleInputChange('address.number', e.target.value)}
-                      placeholder="100"
-                      className={`${errors['address.number'] ? 'border-red-500' : ''}`}
-                    />
+                    <div className="relative">
+                      <Input
+                        id="number"
+                        value={formData.address.number}
+                        onChange={(e) => handleInputChange('address.number', e.target.value)}
+                        placeholder="100"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                      />
+                      <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.number'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.number']}</p>
                     )}
@@ -681,14 +700,17 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     <Label htmlFor="district" className="text-[#511A2B] font-medium">
                       Bairro *
                     </Label>
-                    <Input
-                      id="district"
-                      value={formData.address.district}
-                      onChange={(e) => handleInputChange('address.district', e.target.value)}
-                      placeholder="Centro"
-                      className={`${errors['address.district'] ? 'border-red-500' : ''}`}
-                      disabled
-                    />
+                    <div className="relative">
+                      <Input
+                        id="district"
+                        value={formData.address.district}
+                        onChange={(e) => handleInputChange('address.district', e.target.value)}
+                        placeholder="Centro"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                        disabled
+                      />
+                      <Map className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
                     {errors['address.district'] && (
                       <p className="text-red-500 text-sm mt-1">{errors['address.district']}</p>
                     )}
@@ -699,13 +721,16 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   <Label htmlFor="complement" className="text-[#511A2B] font-medium">
                     Complemento
                   </Label>
-                  <Input
-                    id="complement"
-                    value={formData.address.complement}
-                    onChange={(e) => handleInputChange('address.complement', e.target.value)}
-                    placeholder="Ex: Sala 101, Andar 2, etc."
-                    className=""
-                  />
+                  <div className="relative">
+                    <Input
+                      id="complement"
+                      value={formData.address.complement}
+                      onChange={(e) => handleInputChange('address.complement', e.target.value)}
+                      placeholder="Ex: Sala 101, Andar 2, etc."
+                      className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                    />
+                    <Plus className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
                 </div>
               </CardContent>
             </Card>

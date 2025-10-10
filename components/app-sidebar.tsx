@@ -37,6 +37,7 @@ type SidebarItem = {
     indicator?: 'purple' | 'red' | 'blue' | 'green';
   }[];
   roles?: string[];
+  disabled?: boolean | (() => boolean);
 };
 
 interface AppSidebarProps {
@@ -119,6 +120,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: GraduationCap,
       url: '/workshops',
       roles: ['professional'],
+      disabled: true,
     },
     {
       title: 'Eventos',
@@ -137,6 +139,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Crown,
       url: '/benefits',
       roles: ['professional'],
+      disabled: true,
     },
   ];
 
@@ -167,20 +170,26 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
   const renderMenuItem = (item: SidebarItem) => {
     const isActive = item.url === pathname;
     const isItemExpanded = expandedItems[item.title];
+    const isDisabled = typeof item.disabled === 'function' ? item.disabled() : item.disabled;
 
-    // Classes comuns para ambos os tipos de item
-    const baseClasses = `w-full flex items-center transition-all h-12 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 ${
-      isExpanded ? 'justify-between px-4' : 'justify-center'
-    }`;
+    const baseClasses = `
+    w-full flex items-center transition-all h-12 rounded-lg
+    ${isExpanded ? 'justify-between px-4' : 'justify-center'}
+    ${
+      isDisabled
+        ? 'opacity-40 cursor-not-allowed pointer-events-none'
+        : 'text-gray-300 hover:text-white hover:bg-white/10'
+    }
+  `;
 
     if (item.isExpandable) {
       return (
         <div key={item.title} className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
           <button
-            data-item={item.title}
-            onClick={() => toggleExpandItem(item.title)}
-            onMouseEnter={() => handleMouseEnter(item.title)}
-            onMouseLeave={handleMouseLeave}
+            disabled={isDisabled}
+            onClick={() => !isDisabled && toggleExpandItem(item.title)}
+            onMouseEnter={() => !isDisabled && handleMouseEnter(item.title)}
+            onMouseLeave={() => !isDisabled && handleMouseLeave()}
             className={baseClasses}
           >
             <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
@@ -191,46 +200,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
               <ChevronRight className={`w-4 h-4 transition-transform ${isItemExpanded ? 'rotate-90' : ''}`} />
             )}
           </button>
-
-          {/* Submenu expandido quando sidebar está aberta */}
-          {isExpanded && isItemExpanded && item.subItems && (
-            <div className="ml-6 mt-1 space-y-1">
-              {item.subItems.map((subItem) => {
-                const isSubActive = subItem.url === pathname;
-                return (
-                  <Link
-                    key={subItem.title}
-                    href={subItem.url}
-                    onClick={() => onToggleMobile()}
-                    className={`
-                      flex items-center px-4 py-2 rounded-lg
-                      ${
-                        isSubActive
-                          ? 'bg-white/15 text-white shadow-lg'
-                          : 'text-gray-300 hover:text-white hover:bg-white/10'
-                      }
-                      transition-all
-                    `}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          subItem.indicator === 'purple'
-                            ? 'bg-purple-500'
-                            : subItem.indicator === 'red'
-                            ? 'bg-red-500'
-                            : subItem.indicator === 'blue'
-                            ? 'bg-blue-500'
-                            : 'bg-green-500'
-                        }`}
-                      />
-                      <span className="text-sm font-medium">{subItem.title}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
         </div>
       );
     }
@@ -238,15 +207,15 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     return (
       <div key={item.title} className={`w-full relative ${isExpanded ? 'px-3' : 'px-2'}`}>
         <Link
+          href={isDisabled ? '#' : item.url || '#'}
           data-item={item.title}
-          href={item.url || '#'}
-          onClick={() => onToggleMobile()}
-          onMouseEnter={() => handleMouseEnter(item.title)}
-          onMouseLeave={handleMouseLeave}
+          onClick={() => !isDisabled && onToggleMobile()}
+          onMouseEnter={() => !isDisabled && handleMouseEnter(item.title)}
+          onMouseLeave={() => !isDisabled && handleMouseLeave()}
           className={`
-            ${baseClasses}
-            ${isActive ? 'bg-white/15 text-white shadow-lg' : ''}
-          `}
+          ${baseClasses}
+          ${isActive && !isDisabled ? 'bg-white/15 text-white shadow-lg' : ''}
+        `}
         >
           <div className={`flex items-center ${isExpanded ? 'space-x-3' : ''}`}>
             <item.icon className="w-5 h-5" />

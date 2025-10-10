@@ -181,12 +181,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
               <Edit3 className="w-5 h-5" />
             </Button>
           ) : (
-            <Button
-              onClick={() => setShowStoreForm(true)}
-              className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
-            >
-              <Heart className="w-5 h-5" />
-            </Button>
+            ''
           )}
         </div>
 
@@ -201,14 +196,11 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   <div className="w-40 h-40 rounded-3xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-2xl flex items-center justify-center">
                     <Store className="w-20 h-20 text-white" />
                   </div>
-                  <div className="absolute -top-2 -right-2">
-                    <Badge className="bg-green-500 text-white px-3 py-1 rounded-full shadow-lg">Minha Loja</Badge>
-                  </div>
                 </div>
 
                 {/* Informações Principais */}
                 <div className="w-full lg:flex-1 text-center lg:text-left text-white break-words max-w-full">
-                  <h1 className="text-3xl md:text-5xl font-bold mb-4">{storeData.name}</h1>
+                  <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">{storeData.name}</h1>
 
                   {/* Rating */}
                   <div className="flex items-center justify-center lg:justify-start mb-6">
@@ -409,7 +401,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         <div className="relative p-6 h-full flex flex-col justify-between text-white">
                           <div>
                             <Badge className="bg-white/20 text-white border-white/30 mb-3">{event.type}</Badge>
-                            <h3 className="text-xl font-bold mb-2">{event.name}</h3>
+                            <h3 className="text-xl font-bold mb-2 text-white">{event.name}</h3>
                           </div>
                           <div className="flex items-center justify-between">
                             <div className="text-3xl font-bold text-[#FEC460]">+{event.points} pontos</div>
