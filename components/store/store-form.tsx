@@ -15,6 +15,8 @@ import { createStore, updateStore } from '@/lib/store-api';
 import { useUser } from '@/contexts/user-context';
 import { applyZipCodeMask } from '@/utils/masks';
 import { fetchAddressByZipCode } from '@/lib/address-api';
+import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface StoreFormProps {
   storeData?: {
@@ -23,6 +25,7 @@ interface StoreFormProps {
     description: string;
     website: string;
     openingHours: string;
+    logoUrl?: string;
     address: {
       state: string;
       city: string;
@@ -40,6 +43,7 @@ interface StoreFormProps {
 }
 
 interface StoreFormData {
+  logoUrl?: string;
   partnerId: string;
   name: string;
   description: string;
@@ -344,6 +348,7 @@ function OpeningHoursInput({
 export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, isEditing = false }: StoreFormProps) {
   const { user } = useUser();
   const [formData, setFormData] = useState<StoreFormData>({
+    logoUrl: storeData?.logoUrl || '',
     partnerId: user?.partnerSupplier?.id || '',
     name: storeData?.name || '',
     description: storeData?.description || '',
@@ -446,12 +451,16 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let cloudinaryImageURL = '';
 
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
+      if (formData.logoUrl) cloudinaryImageURL = (await uploadImageCloudinary(formData.logoUrl)) || '';
+      formData.logoUrl = cloudinaryImageURL;
+
       const response =
         isEditing && storeData?.id ? await updateStore(storeData?.id, formData) : await createStore(formData);
 
@@ -492,16 +501,13 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
   // Sempre renderizar como modal
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-4xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white p-0">
-        <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-[9999]">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B] flex items-center">
-              <Store className="w-6 h-6 mr-2" />
-              {isEditing ? 'Editar Loja' : 'Cadastrar Loja'}
-            </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-5 h-5 text-[#511A2B]" />
-            </Button>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="border-b border-gray-100 pb-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-[#511A2B] rounded-xl flex items-center justify-center">
+              <Store className="w-5 h-5 text-white" />
+            </div>
+            <DialogTitle className="text-[#511A2B]"> {isEditing ? 'Editar Loja' : 'Cadastrar Loja'}</DialogTitle>
           </div>
         </DialogHeader>
 
@@ -516,12 +522,15 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
             {/* Informações Básicas */}
             <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-[#511A2B] flex items-center">
-                  <Store className="w-5 h-5 mr-2" />
-                  Informações da Loja
-                </CardTitle>
+                <CardTitle className="text-[#511A2B] flex items-center">Informações da Loja</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <PhotoUploadSimple
+                  photo={formData.logoUrl || ``}
+                  isStore={true}
+                  onPhotoChange={(photo) => handleInputChange('logoUrl', photo)}
+                />
+
                 <div>
                   <Label htmlFor="name" className="text-[#511A2B] font-medium">
                     Nome da Loja *
@@ -589,10 +598,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
             {/* Endereço */}
             <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-[#511A2B] flex items-center">
-                  <MapPin className="w-5 h-5 mr-2" />
-                  Endereço da Loja
-                </CardTitle>
+                <CardTitle className="text-[#511A2B] flex items-center">Endereço da Loja</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

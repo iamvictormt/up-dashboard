@@ -181,7 +181,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
               )}
               <DropdownMenuItem className="text-red-600 hover:bg-red-50 cursor-pointer" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
+                <span>Sair</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

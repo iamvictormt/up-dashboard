@@ -11,9 +11,11 @@ import { toast } from 'sonner';
 interface PhotoUploadSimpleProps {
   photo: string | null;
   onPhotoChange: (photo: string | null) => void;
+  isStore?: boolean;
+  isProduct?: boolean;
 }
 
-export function PhotoUploadSimple({ photo, onPhotoChange }: PhotoUploadSimpleProps) {
+export function PhotoUploadSimple({ photo, onPhotoChange, isStore, isProduct}: PhotoUploadSimpleProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const allowedTypes = ['image/jpeg', 'image/png'];
 
@@ -62,14 +64,14 @@ export function PhotoUploadSimple({ photo, onPhotoChange }: PhotoUploadSimplePro
       >
         {!photo ? (
           <div
-            className="w-44 h-44 border-2 border-dashed border-slate-300 rounded-full cursor-pointer hover:border-primary transition-colors duration-200 flex items-center justify-center bg-transparent hover:bg-primary/50"
+            className={`w-44 h-44 border-2 border-dashed border-slate-300 ${isStore || isProduct ? `rounded-2xl` : `rounded-full`} cursor-pointer hover:border-primary transition-colors duration-200 flex items-center justify-center bg-transparent hover:bg-primary/50`}
             onClick={triggerFileInput}
           >
             <Camera className="w-6 h-6 text-slate-400 group-hover:text-primary/40" />
           </div>
         ) : (
           <div className="relative">
-            <div className="w-44 h-44 rounded-full overflow-hidden border-3 border-primary/30 shadow-md">
+            <div className={`w-44 h-44 ${isStore || isProduct ? `rounded-2xl` : `rounded-full`} overflow-hidden border-3 border-primary/30 shadow-md`}>
               <img src={photo || '/placeholder.svg'} alt="Profile" className="w-full h-full object-cover" />
             </div>
             <Button
@@ -88,8 +90,12 @@ export function PhotoUploadSimple({ photo, onPhotoChange }: PhotoUploadSimplePro
       </motion.div>
 
       <div className="text-center">
-        <p className="text-sm font-medium text-primary">Foto de perfil</p>
-        <p className="text-xs text-muted-foreground">{photo ? 'Clique no X para remover' : 'Opcional'}</p>
+        <p className={`${isStore || isProduct ? `text-[#511A2B] font-medium` : `text-sm font-medium text-primary`}`}>
+          {isStore ? `Logo da empresa` : isProduct ? `Foto do produto` : `Foto de perfil`}
+        </p>
+        <p className={`${isStore || isProduct ? `text-[#511A2B] font-medium text-xs` : `text-xs text-muted-foreground`}`}>
+          {photo ? 'Clique no X para remover' : 'Opcional'}
+        </p>
       </div>
     </div>
   );

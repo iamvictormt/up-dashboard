@@ -176,7 +176,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           {!supplierId ? (
             <Button
               onClick={() => setShowStoreForm(true)}
-              className="rounded-full bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
+              className="rounded-2xl bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Edit3 className="w-5 h-5" />
             </Button>
@@ -193,9 +193,19 @@ export function StoreContent({ supplierId }: StoreContentProps) {
               <div className="flex flex-col lg:flex-row items-center gap-12 w-full px-4">
                 {/* Logo/Ícone da Loja */}
                 <div className="relative">
-                  <div className="w-40 h-40 rounded-3xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-2xl flex items-center justify-center">
-                    <Store className="w-20 h-20 text-white" />
-                  </div>
+                  {storeData.logoUrl ? (
+                    <div className="w-44 h-44 rounded-2xl overflow-hidden border-3 border-primary/30 shadow-md">
+                      <img
+                        src={storeData.logoUrl || '/placeholder.svg'}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-40 h-40 rounded-3xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-2xl flex items-center justify-center">
+                      <Store className="w-20 h-20 text-white" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Informações Principais */}
@@ -214,7 +224,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         />
                       ))}
                     </div>
-                    <span className="ml-3 text-2xl font-bold">{storeData?.rating.toFixed(1) || 0}</span>
+                    <span className="ml-3 text-2xl font-bold">{storeData?.rating?.toFixed(1) || 0}</span>
                     {/* <span className="ml-2 text-white/80 hidden md:block">• Excelente</span> */}
                   </div>
 
@@ -244,13 +254,13 @@ export function StoreContent({ supplierId }: StoreContentProps) {
         {/* Stats Cards */}
         <div className="px-6 -mt-12 relative z-10">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Star className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-[#511A2B]">{storeData?.rating.toFixed(1) || 0}</div>
+                  <div className="text-2xl font-bold text-[#511A2B]">{storeData?.rating?.toFixed(1) || 0}</div>
                   <div className="text-sm text-[#511A2B]/70">Avaliação</div>
                 </CardContent>
               </Card>
@@ -272,16 +282,6 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   </div>
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData.events.length}</div>
                   <div className="text-sm text-[#511A2B]/70">Eventos</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <Award className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-[#511A2B]">15+</div>
-                  <div className="text-sm text-[#511A2B]/70">Anos</div>
                 </CardContent>
               </Card>
             </div>
@@ -324,7 +324,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                     <div className="relative">
                       <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                         <Image
-                          src="/placeholder.svg?height=300&width=300"
+                          src={product.photoUrl || '/placeholder.svg?height=300&width=300'}
                           alt={product.name}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-300"
@@ -361,7 +361,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         <div className="text-2xl font-bold text-[#511A2B]">
                           R$ {product.price.toFixed(2).replace('.', ',')}
                         </div>
-                        <Button variant="primary" onClick={() => window.open(product.link, '_blank')}>
+                        <Button variant="primary" onClick={() => window.open(product.link, '_blank')} disabled={!product.link}>
                           <ExternalLink className="w-4 h-4 mr-1" />
                           Ver
                         </Button>

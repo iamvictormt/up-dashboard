@@ -4,6 +4,7 @@ import { ProductData } from './product';
 
 export interface StoreData {
   id?: string;
+  logoUrl?: string;
   name: string;
   description: string;
   website: string;

@@ -13,15 +13,19 @@ import { Switch } from '@/components/ui/switch';
 import { createProduct } from '@/lib/product-api';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { formatCurrency } from '@/lib/utils';
+import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface ProductFormModalProps {
   storeId: string;
   onProductCreated: (productData: any) => void;
   onClose: () => void;
-    isOpen: boolean
+  isOpen: boolean;
 }
 
 interface ProductData {
+  photoUrl?: string;
   name: string;
   description: string;
   price: number;
@@ -92,6 +96,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let cloudinaryImageURL = '';
 
     if (!validateForm()) {
       return;
@@ -100,6 +105,9 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
     setIsSubmitting(true);
 
     try {
+      if (productData.photoUrl) cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
+      productData.photoUrl = cloudinaryImageURL;
+
       const newProduct = {
         ...productData,
         storeId,
@@ -118,7 +126,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
   };
 
   return (
-   <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="border-b border-gray-100 pb-4">
           <div className="flex items-center space-x-3">
@@ -130,6 +138,12 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
+          <PhotoUploadSimple
+            photo={productData.photoUrl || ``}
+            isProduct={true}
+            onPhotoChange={(photo) => handleInputChange('photoUrl', photo)}
+          />
+
           {/* Nome do Produto */}
           <div>
             <Label htmlFor="name" className="text-[#511A2B] font-medium">
@@ -138,10 +152,10 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
             <Input
               id="name"
               value={productData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Ex: Consultoria em TI"
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                errors.name ? "border-red-500" : ""
+                errors.name ? 'border-red-500' : ''
               }`}
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -155,11 +169,11 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
             <Textarea
               id="description"
               value={productData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
+              onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Descreva seu produto ou serviço..."
               rows={4}
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                errors.description ? "border-red-500" : ""
+                errors.description ? 'border-red-500' : ''
               }`}
             />
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -172,14 +186,24 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
             </Label>
             <Input
               id="price"
-              type="number"
-              step="0.01"
-              min="0"
-              value={productData.price || ""}
-              onChange={(e) => handleInputChange("price", Number.parseFloat(e.target.value) || 0)}
-              placeholder="0,00"
+              type="text"
+              inputMode="numeric"
+              value={formatCurrency(productData.price || 0)}
+              onChange={(e) => {
+                // Remove tudo que não for número
+                const raw = e.target.value.replace(/\D/g, '');
+
+                // Converte para número em reais (centavos -> reais)
+                const numberValue = parseFloat(raw) / 100;
+
+                // Limite de R$ 1.000.000,00
+                if (numberValue > 1_000_000) return;
+
+                handleInputChange('price', numberValue);
+              }}
+              placeholder="R$ 0,00"
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                errors.price ? "border-red-500" : ""
+                errors.price ? 'border-red-500' : ''
               }`}
             />
             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
@@ -194,10 +218,10 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               id="link"
               type="url"
               value={productData.link}
-              onChange={(e) => handleInputChange("link", e.target.value)}
+              onChange={(e) => handleInputChange('link', e.target.value)}
               placeholder="https://exemplo.com/produto"
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                errors.link ? "border-red-500" : ""
+                errors.link ? 'border-red-500' : ''
               }`}
             />
             {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
@@ -213,7 +237,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               </div>
               <Switch
                 checked={productData.featured}
-                onCheckedChange={(checked) => handleInputChange("featured", checked)}
+                onCheckedChange={(checked) => handleInputChange('featured', checked)}
                 className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>
@@ -226,7 +250,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
               </div>
               <Switch
                 checked={productData.promotion}
-                onCheckedChange={(checked) => handleInputChange("promotion", checked)}
+                onCheckedChange={(checked) => handleInputChange('promotion', checked)}
                 className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>

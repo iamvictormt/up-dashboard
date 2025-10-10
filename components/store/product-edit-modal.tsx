@@ -13,6 +13,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { toast } from 'sonner';
 import { ProductData } from '@/types';
 import { deleteProduct, updateProduct } from '@/lib/product-api';
+import { formatCurrency } from '@/lib/utils';
+import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface ProductEditModalProps {
   product: ProductData;
@@ -76,6 +79,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let cloudinaryImageURL = '';
 
     if (!validateForm() || !product.id) {
       return;
@@ -84,6 +88,9 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
     setIsSubmitting(true);
 
     try {
+      if (productData.photoUrl) cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
+      productData.photoUrl = cloudinaryImageURL;
+
       const response = await updateProduct(product.id, productData);
       if (response.status === 200) {
         onProductUpdated(productData);
@@ -141,6 +148,11 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <PhotoUploadSimple
+            photo={productData.photoUrl || ``}
+            isProduct={true}
+            onPhotoChange={(photo) => handleInputChange('photoUrl', photo)}
+          />
           {/* Nome do Produto */}
           <div>
             <Label htmlFor="name" className="text-[#511A2B] font-medium">
@@ -151,7 +163,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               value={productData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Ex: Consultoria em TI"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.name ? 'border-red-500' : ''
               }`}
             />
@@ -169,7 +181,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Descreva seu produto ou serviço..."
               rows={4}
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.description ? 'border-red-500' : ''
               }`}
             />
@@ -183,13 +195,23 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             </Label>
             <Input
               id="price"
-              type="number"
-              step="0.01"
-              min="0"
-              value={productData.price || ''}
-              onChange={(e) => handleInputChange('price', Number.parseFloat(e.target.value) || 0)}
-              placeholder="0,00"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              type="text"
+              inputMode="numeric"
+              value={formatCurrency(productData.price || 0)}
+              onChange={(e) => {
+                // Remove tudo que não for número
+                const raw = e.target.value.replace(/\D/g, '');
+
+                // Converte para número em reais (centavos -> reais)
+                const numberValue = parseFloat(raw) / 100;
+
+                // Limite de R$ 1.000.000,00
+                if (numberValue > 1_000_000) return;
+
+                handleInputChange('price', numberValue);
+              }}
+              placeholder="R$ 0,00"
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.price ? 'border-red-500' : ''
               }`}
             />
@@ -207,12 +229,11 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               value={productData.link}
               onChange={(e) => handleInputChange('link', e.target.value)}
               placeholder="https://exemplo.com/produto"
-              className={`mt-1 border-[#511A2B]/20 focus:border-[#511A2B]/40 rounded-xl ${
+              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.link ? 'border-red-500' : ''
               }`}
             />
             {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
-            <p className="text-sm text-gray-500 mt-1">Link para mais informações ou compra do produto</p>
           </div>
 
           {/* Switches */}
@@ -226,7 +247,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               <Switch
                 checked={productData.featured}
                 onCheckedChange={(checked) => handleInputChange('featured', checked)}
-                className="data-[state=checked]:bg-[#511A2B]"
+                className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>
 
@@ -239,7 +260,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               <Switch
                 checked={productData.promotion}
                 onCheckedChange={(checked) => handleInputChange('promotion', checked)}
-                className="data-[state=checked]:bg-red-500"
+                className="data-[state=unchecked]:bg-[#ccc] data-[state=checked]:bg-[#511A2B]/80"
               />
             </div>
           </div>

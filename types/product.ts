@@ -10,6 +10,7 @@ export interface CreateProductData {
 export interface ProductData {
   id?: string;
   name: string;
+  photoUrl?: string;
   description: string;
   price: any;
   link: string;
