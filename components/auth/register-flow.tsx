@@ -132,7 +132,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
 
     try {
       if (formData.photo) cloudinaryImageURL = await uploadImageCloudinary(formData.photo) || '';
-      if (!cloudinaryImageURL) return;
+      // if (!cloudinaryImageURL) return;
 
       const payload: any = {
         user: {
