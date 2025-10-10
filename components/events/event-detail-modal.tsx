@@ -1,11 +1,13 @@
 "use client"
 
-import { X, Calendar, MapPin, Users, Award, Clock, Star, Building, Phone, Mail } from "lucide-react"
+import { useState } from "react"
+import { X, Calendar, MapPin, Users, Award, Clock, Star, Building } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import { EventConfirmationModal } from "./event-confirmation"
 
 interface Event {
   id: string
@@ -35,10 +37,19 @@ interface Event {
 
 interface EventDetailModalProps {
   event: Event
+  professionalId?: string // Adicione este prop
   onClose: () => void
+  onEventUpdate?: () => void // Callback para atualizar a lista de eventos
 }
 
-export function EventDetailModal({ event, onClose }: EventDetailModalProps) {
+export function EventDetailModal({ 
+  event, 
+  professionalId = "", // Valor padrão
+  onClose,
+  onEventUpdate 
+}: EventDetailModalProps) {
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return {
@@ -87,165 +98,207 @@ export function EventDetailModal({ event, onClose }: EventDetailModalProps) {
     }
   }
 
+  const handleParticipateClick = () => {
+    console.log("Clique no botão participar - professionalId:", professionalId)
+    console.log("Vagas restantes:", spotsLeft)
+    
+    if (!professionalId) {
+      console.error("Professional ID não fornecido")
+      alert("ID do profissional não foi fornecido. Verifique se você está logado.")
+      return
+    }
+    
+    if (spotsLeft <= 0) {
+      console.error("Não há vagas disponíveis")
+      return
+    }
+    
+    console.log("Abrindo modal de confirmação...")
+    setShowConfirmationModal(true)
+  }
+
+  const handleConfirmationSuccess = () => {
+    // Atualiza os dados locais do evento (otimista)
+    event.filledSpots += 1
+    
+    // Chama o callback para atualizar a lista de eventos se fornecido
+    if (onEventUpdate) {
+      onEventUpdate()
+    }
+  }
+
   return (
-    <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-2xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0">
-        <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-10">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Detalhes do Evento</DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="w-5 h-5 text-[#511A2B]" />
-            </Button>
-          </div>
-        </DialogHeader>
-
-        <div className="p-6 space-y-6">
-          {/* Header do Evento */}
-          <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between space-y-4 md:space-y-0">
-              <div className="flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-3">{event.name}</h1>
-                <Badge className={`${getTypeColor(event.type)} rounded-lg text-sm px-3 py-1`}>{event.type}</Badge>
-              </div>
-              <div className="text-center md:text-right">
-                <div className="text-3xl font-bold text-[#511A2B]">{event.points}</div>
-                <div className="text-sm text-[#511A2B]/70">pontos de recompensa</div>
-              </div>
+    <>
+      <Dialog open={true} onOpenChange={onClose}>
+        <DialogContent className="w-[95vw] max-w-2xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0">
+          <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-10">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Detalhes do Evento</DialogTitle>
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="w-5 h-5 text-[#511A2B]" />
+              </Button>
             </div>
+          </DialogHeader>
 
-            <p className="text-[#511A2B]/80 leading-relaxed text-base">{event.description}</p>
-          </div>
-
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Informações da Loja */}
-          <div>
-            <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-              <Building className="w-5 h-5 mr-2" />
-              Organizador
-            </h3>
-            <div className="flex items-center space-x-4 p-4 bg-[#511A2B]/5 rounded-xl">
-              <div className="w-12 h-12 bg-[#511A2B] rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">{event.store.name.charAt(0)}</span>
-              </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-[#511A2B]">{event.store.name}</h4>
-                <div className="flex items-center mt-1">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                  <span className="text-sm text-[#511A2B]">{event.store.rating.toFixed(1)} avaliação</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Data e Horário */}
-          <div>
-            <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-              <Calendar className="w-5 h-5 mr-2" />
-              Data e Horário
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Calendar className="w-4 h-4 text-[#511A2B]/70" />
-                  <span className="text-sm text-[#511A2B]/70">Data</span>
-                </div>
-                <p className="font-semibold text-[#511A2B] capitalize">{fullDate}</p>
-              </div>
-              <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Clock className="w-4 h-4 text-[#511A2B]/70" />
-                  <span className="text-sm text-[#511A2B]/70">Horário</span>
-                </div>
-                <p className="font-semibold text-[#511A2B]">{time}</p>
-              </div>
-            </div>
-          </div>
-
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Local */}
-          <div>
-            <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-              <MapPin className="w-5 h-5 mr-2" />
-              Local do Evento
-            </h3>
-            <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-              <p className="text-[#511A2B] leading-relaxed">{formatFullAddress()}</p>
-            </div>
-          </div>
-
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Vagas */}
-          <div>
-            <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-              <Users className="w-5 h-5 mr-2" />
-              Participantes
-            </h3>
+          <div className="p-6 space-y-6">
+            {/* Header do Evento */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-[#511A2B]">
-                  {event.filledSpots} de {event.totalSpots} vagas preenchidas
-                </span>
-                <Badge
-                  className={`${
-                    spotsLeft > 0
-                      ? "bg-green-100 text-green-700 border-green-200"
-                      : "bg-red-100 text-red-700 border-red-200"
-                  } rounded-lg`}
-                >
-                  {spotsLeft > 0 ? `${spotsLeft} vagas restantes` : "Lotado"}
-                </Badge>
-              </div>
-              <Progress value={progressPercentage} className="h-3" />
-            </div>
-          </div>
-
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Recompensas */}
-          <div>
-            <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-              <Award className="w-5 h-5 mr-2" />
-              Recompensas
-            </h3>
-            <div className="p-4 bg-gradient-to-r from-[#FEC460]/20 to-[#D56235]/20 rounded-xl border border-[#FEC460]/30">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-[#FEC460] rounded-xl flex items-center justify-center">
-                  <Award className="w-6 h-6 text-[#511A2B]" />
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between space-y-4 md:space-y-0">
+                <div className="flex-1">
+                  <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-3">{event.name}</h1>
+                  <Badge className={`${getTypeColor(event.type)} rounded-lg text-sm px-3 py-1`}>{event.type}</Badge>
                 </div>
-                <div>
-                  <p className="font-semibold text-[#511A2B]">{event.points} pontos</p>
-                  <p className="text-sm text-[#511A2B]/70">Ganhe pontos ao participar do evento</p>
+                <div className="text-center md:text-right">
+                  <div className="text-3xl font-bold text-[#511A2B]">{event.points}</div>
+                  <div className="text-sm text-[#511A2B]/70">pontos de recompensa</div>
+                </div>
+              </div>
+
+              <p className="text-[#511A2B]/80 leading-relaxed text-base">{event.description}</p>
+            </div>
+
+            <Separator className="bg-[#511A2B]/10" />
+
+            {/* Informações da Loja */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
+                <Building className="w-5 h-5 mr-2" />
+                Organizador
+              </h3>
+              <div className="flex items-center space-x-4 p-4 bg-[#511A2B]/5 rounded-xl">
+                <div className="w-12 h-12 bg-[#511A2B] rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">{event.store.name.charAt(0)}</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-[#511A2B]">{event.store.name}</h4>
+                  <div className="flex items-center mt-1">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                    <span className="text-sm text-[#511A2B]">{event.store.rating.toFixed(1)} avaliação</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Botões de Ação */}
-          <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">
-            <Button
-              className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3"
-              disabled={spotsLeft === 0}
-            >
-              {spotsLeft > 0 ? (
-                <>
-                  <Users className="w-4 h-4 mr-2" />
-                  Participar do Evento
-                </>
-              ) : (
-                <>
-                  <Clock className="w-4 h-4 mr-2" />
-                  Entrar na Lista de Espera
-                </>
-              )}
-            </Button>
+            <Separator className="bg-[#511A2B]/10" />
+
+            {/* Data e Horário */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
+                <Calendar className="w-5 h-5 mr-2" />
+                Data e Horário
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 bg-[#511A2B]/5 rounded-xl">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Calendar className="w-4 h-4 text-[#511A2B]/70" />
+                    <span className="text-sm text-[#511A2B]/70">Data</span>
+                  </div>
+                  <p className="font-semibold text-[#511A2B] capitalize">{fullDate}</p>
+                </div>
+                <div className="p-4 bg-[#511A2B]/5 rounded-xl">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Clock className="w-4 h-4 text-[#511A2B]/70" />
+                    <span className="text-sm text-[#511A2B]/70">Horário</span>
+                  </div>
+                  <p className="font-semibold text-[#511A2B]">{time}</p>
+                </div>
+              </div>
+            </div>
+
+            <Separator className="bg-[#511A2B]/10" />
+
+            {/* Local */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
+                <MapPin className="w-5 h-5 mr-2" />
+                Local do Evento
+              </h3>
+              <div className="p-4 bg-[#511A2B]/5 rounded-xl">
+                <p className="text-[#511A2B] leading-relaxed">{formatFullAddress()}</p>
+              </div>
+            </div>
+
+            <Separator className="bg-[#511A2B]/10" />
+
+            {/* Vagas */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                Participantes
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[#511A2B]">
+                    {event.filledSpots} de {event.totalSpots} vagas preenchidas
+                  </span>
+                  <Badge
+                    className={`${
+                      spotsLeft > 0
+                        ? "bg-green-100 text-green-700 border-green-200"
+                        : "bg-red-100 text-red-700 border-red-200"
+                    } rounded-lg`}
+                  >
+                    {spotsLeft > 0 ? `${spotsLeft} vagas restantes` : "Lotado"}
+                  </Badge>
+                </div>
+                <Progress value={progressPercentage} className="h-3" />
+              </div>
+            </div>
+
+            <Separator className="bg-[#511A2B]/10" />
+
+            {/* Recompensas */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
+                <Award className="w-5 h-5 mr-2" />
+                Recompensas
+              </h3>
+              <div className="p-4 bg-gradient-to-r from-[#FEC460]/20 to-[#D56235]/20 rounded-xl border border-[#FEC460]/30">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-[#FEC460] rounded-xl flex items-center justify-center">
+                    <Award className="w-6 h-6 text-[#511A2B]" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#511A2B]">{event.points} pontos</p>
+                    <p className="text-sm text-[#511A2B]/70">Ganhe pontos ao participar do evento</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Botões de Ação */}
+            <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">         
+              <Button
+                className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={spotsLeft === 0 || !professionalId}
+                onClick={handleParticipateClick}
+              >
+                {spotsLeft > 0 ? (
+                  <>
+                    <Users className="w-4 h-4 mr-2" />
+                    Participar do Evento
+                  </>
+                ) : (
+                  <>
+                    <Clock className="w-4 h-4 mr-2" />
+                    Entrar na Lista de Espera
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Confirmação */}
+      {showConfirmationModal && (
+        <EventConfirmationModal
+          event={event}
+          professionalId={professionalId}
+          onClose={() => setShowConfirmationModal(false)}
+          onSuccess={handleConfirmationSuccess}
+        />
+      )}
+    </>
   )
 }
