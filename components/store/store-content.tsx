@@ -215,7 +215,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                       ))}
                     </div>
                     <span className="ml-3 text-2xl font-bold">{storeData?.rating.toFixed(1) || 0}</span>
-                    <span className="ml-2 text-white/80 hidden md:block">• Excelente</span>
+                    {/* <span className="ml-2 text-white/80 hidden md:block">• Excelente</span> */}
                   </div>
 
                   <p className="text-lg text-white/90 leading-relaxed mb-8 w-full break-words">

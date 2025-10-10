@@ -29,7 +29,7 @@ export function middleware(request: NextRequest) {
       '/payment-confirmation',
     ],
     professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help', '/benefits'],
-    loveDecoration: ['/mural', '/recommended-professionals', '/help'],
+    loveDecoration: ['/mural', '/recommended-professionals', '/suppliers-store', '/help'],
   };
 
   const isStatic =

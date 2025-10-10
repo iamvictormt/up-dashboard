@@ -113,7 +113,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       title: 'Fornecedores parceiros',
       icon: Store,
       url: '/suppliers-store',
-      roles: ['professional'],
+      roles: ['professional', 'loveDecoration'],
     },
     // {
     //   title: 'Workshops',
