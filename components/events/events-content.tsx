@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import { EventCard } from './event-card';
 import { EventDetailModal } from './event-detail-modal';
+import { fetchEvents } from '@/lib/event-api';
+import { useUser } from '@/contexts/user-context';
 
 interface Event {
   id: string;
@@ -34,98 +36,32 @@ interface Event {
   };
 }
 
-const mockEvents: Event[] = [
-  {
-    id: '1ca62497-f22f-4aa0-8d56-3fa724bf3217',
-    name: 'Workshop de TypeScript',
-    description: 'Evento para aprender TypeScript avançado com foco em desenvolvimento web moderno',
-    date: '2025-06-10T14:00:00.000Z',
-    type: 'Workshop',
-    points: 50,
-    totalSpots: 30,
-    filledSpots: 12,
-    storeId: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
-    address: {
-      state: 'SP',
-      city: 'São Paulo',
-      district: 'Centro',
-      street: 'Rua da Tecnologia',
-      complement: 'Sala 5',
-      number: '123',
-      zipCode: '01000-000',
-    },
-    store: {
-      id: 'd8821412-3cfc-4e1b-987b-b0760fe6240d',
-      name: 'Super Soluções',
-      rating: 4.2,
-    },
-  },
-  {
-    id: '2ba51396-e11e-3bb9-7c45-2ea613ae2f06',
-    name: 'Conferência de Tecnologia 2025',
-    description: 'O maior evento de tecnologia do ano com palestrantes renomados',
-    date: '2025-09-15T09:00:00.000Z',
-    type: 'Conferência',
-    points: 100,
-    totalSpots: 500,
-    filledSpots: 342,
-    storeId: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
-    address: {
-      state: 'SP',
-      city: 'São Paulo',
-      district: 'Vila Olímpia',
-      street: 'Av. das Nações Unidas',
-      complement: 'Centro de Convenções',
-      number: '12901',
-      zipCode: '04578-000',
-    },
-    store: {
-      id: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6',
-      name: 'TechnoMax',
-      rating: 4.8,
-    },
-  },
-  {
-    id: '3ca40285-d00d-2aa8-6b34-1da502ad1e95',
-    name: 'Meetup de Desenvolvedores',
-    description: 'Encontro mensal da comunidade de desenvolvedores locais',
-    date: '2025-07-20T19:00:00.000Z',
-    type: 'Meetup',
-    points: 25,
-    totalSpots: 80,
-    filledSpots: 65,
-    storeId: 'q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6',
-    address: {
-      state: 'RJ',
-      city: 'Rio de Janeiro',
-      district: 'Botafogo',
-      street: 'Praia de Botafogo',
-      complement: 'Coworking Tech',
-      number: '300',
-      zipCode: '22250-040',
-    },
-    store: {
-      id: 'q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6',
-      name: 'EcoVerde',
-      rating: 4.5,
-    },
-  },
-];
-
 export function EventsContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const { user } = useUser();
+
+ const professionalId = user?.professional?.id;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setEvents(mockEvents);
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    loadEvents();
   }, []);
+
+  const loadEvents = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetchEvents();
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error loading events:', error);
+      setEvents([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredEvents = events.filter(
     (event) =>
@@ -137,6 +73,17 @@ export function EventsContent() {
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
+  };
+
+  const handleParticipateClick = (event: Event) => {
+    setSelectedEvent(event);
+    setShowConfirmationModal(true);
+  };
+
+
+  const handleEventUpdate = () => {
+    // Recarrega os eventos após uma participação
+    loadEvents();
   };
 
   return (
@@ -184,7 +131,7 @@ export function EventsContent() {
               </div>
               <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
                 <div className="text-2xl font-bold text-[#FEC460]">
-                  {Math.round(events.reduce((acc, e) => acc + e.points, 0) / events.length)}
+                  {events.length > 0 ? Math.round(events.reduce((acc, e) => acc + e.points, 0) / events.length) : 0}
                 </div>
                 <div className="text-sm text-[#511A2B]/70">Pontos Médios</div>
               </div>
@@ -203,7 +150,7 @@ export function EventsContent() {
           /* Events Grid */
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} onEventClick={handleEventClick} />
+              <EventCard key={event.id} event={event} onEventClick={handleEventClick}  onParticipateClick={handleParticipateClick}/>
             ))}
           </div>
         )}
@@ -217,7 +164,14 @@ export function EventsContent() {
       </div>
 
       {/* Modal de Detalhes do Evento */}
-      {selectedEvent && <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
+      {selectedEvent && (
+        <EventDetailModal
+          event={selectedEvent}
+          professionalId={professionalId}
+          onClose={() => setSelectedEvent(null)}
+          onEventUpdate={handleEventUpdate}
+        />
+      )}
     </div>
   );
 }

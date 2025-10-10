@@ -115,13 +115,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional'],
     },
-    {
-      title: 'Workshops',
-      icon: GraduationCap,
-      url: '/workshops',
-      roles: ['professional'],
-      disabled: true,
-    },
+    // {
+    //   title: 'Workshops',
+    //   icon: GraduationCap,
+    //   url: '/workshops',
+    //   roles: ['professional'],
+    //   disabled: true,
+    // },
     {
       title: 'Eventos',
       icon: Calendar,
