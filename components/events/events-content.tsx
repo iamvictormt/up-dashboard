@@ -41,6 +41,7 @@ export function EventsContent() {
   const [events, setEvents] = useState<Event[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const { user } = useUser();
 
  const professionalId = user?.professional?.id;
@@ -73,6 +74,12 @@ export function EventsContent() {
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
   };
+
+  const handleParticipateClick = (event: Event) => {
+    setSelectedEvent(event);
+    setShowConfirmationModal(true);
+  };
+
 
   const handleEventUpdate = () => {
     // Recarrega os eventos após uma participação
@@ -143,7 +150,7 @@ export function EventsContent() {
           /* Events Grid */
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} onEventClick={handleEventClick} />
+              <EventCard key={event.id} event={event} onEventClick={handleEventClick}  onParticipateClick={handleParticipateClick}/>
             ))}
           </div>
         )}

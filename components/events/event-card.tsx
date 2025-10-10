@@ -35,9 +35,10 @@ interface Event {
 interface EventCardProps {
   event: Event
   onEventClick: (event: Event) => void
+  onParticipateClick: (event: Event) => void
 }
 
-export function EventCard({ event, onEventClick }: EventCardProps) {
+export function EventCard({ event, onEventClick, onParticipateClick }: EventCardProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return {
@@ -152,10 +153,11 @@ export function EventCard({ event, onEventClick }: EventCardProps) {
         {/* Action Buttons */}
         <div className="flex space-x-2">
           <Button
-            className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl"
+            className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={spotsLeft === 0}
+            onClick={() => spotsLeft > 0 && onParticipateClick(event)}
           >
-            {spotsLeft > 0 ? "Participar" : "Lista de Espera"}
+            {spotsLeft > 0 ? "Participar" : "Falar com suporte"}
           </Button>
           <Button
             variant="outline"

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X, Users, Calendar, MapPin, Award, Loader2 } from "lucide-react"
+import { X, Users, Calendar, MapPin, Award, Loader2, AlertCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { registerInEvent } from "@/lib/event-api"
@@ -46,6 +46,7 @@ export function EventConfirmationModal({
   onSuccess 
 }: EventConfirmationModalProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -73,12 +74,19 @@ export function EventConfirmationModal({
   const handleConfirmParticipation = async () => {
     try {
       setIsLoading(true)
-      await registerInEvent(event.id, {professionalId})
+      setError(null)
+      const response = await registerInEvent(event.id, {professionalId})
       onSuccess()
       onClose()
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao confirmar participação:", error)
-      // Aqui você pode adicionar uma notificação de erro
+      
+      // Verifica se é erro de inscrição duplicada
+      if (error.response?.status === 400 || error.response?.status === 409) {
+        setError("Você já está inscrito neste evento.")
+      } else {
+        setError("Erro ao confirmar participação. Tente novamente.")
+      }
     } finally {
       setIsLoading(false)
     }
@@ -109,6 +117,16 @@ export function EventConfirmationModal({
 
           {/* Detalhes Resumidos */}
           <div className="space-y-4">
+            {/* Mensagem de Erro */}
+            {error && (
+              <div className="flex items-center space-x-3 p-3 bg-red-50 border border-red-200 rounded-xl">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                <p className="text-sm text-red-700 font-medium">
+                  {error}
+                </p>
+              </div>
+            )}
+
             <div className="flex items-center space-x-3 p-3 bg-[#511A2B]/5 rounded-xl">
               <Calendar className="w-5 h-5 text-[#511A2B]/70" />
               <div>
