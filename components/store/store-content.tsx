@@ -29,6 +29,7 @@ import { StoreForm } from './store-form';
 import { NoStoreView } from './no-store-view';
 import { ProductFormModal } from './product-form';
 import StoreInfoSection from './store-info-section';
+import { formatCurrency } from '@/lib/utils';
 
 const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData | null> => {
   const response = supplierId ? await fetchStoreById(supplierId) : await fetchMyStore();
@@ -358,12 +359,14 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                       <p className="text-sm text-[#511A2B]/70 mb-4 line-clamp-2">{product.description}</p>
 
                       <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-[#511A2B]">
-                          R$ {product.price.toFixed(2).replace('.', ',')}
-                        </div>
-                        <Button variant="primary" onClick={() => window.open(product.link, '_blank')} disabled={!product.link}>
+                        <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
+                        <Button
+                          variant="primary"
+                          onClick={() => window.open(product.link, '_blank')}
+                          disabled={!product.link}
+                        >
                           <ExternalLink className="w-4 h-4 mr-1" />
-                          Ver
+                          Ver Produto
                         </Button>
                       </div>
                     </CardContent>
