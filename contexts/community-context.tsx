@@ -35,7 +35,7 @@ export function CommunityProvider({ children }: { children: ReactNode }) {
 
       // Select the first community by default
       if (data.length > 0 && !selectedCommunity) {
-        setSelectedCommunity(data[0]);
+        setSelectedCommunity(data[1]);
       }
     } catch (err) {
       setError('Failed to load communities');
