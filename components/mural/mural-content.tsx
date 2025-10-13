@@ -25,23 +25,21 @@ export function MuralContent() {
       <div className="p-6 md:p-8 w-full">
         <MobileCommunitiesFAB />
 
-        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
           {/* Header */}
-          <div className=" mb-8 space-y-4 md:space-y-0">
-            <div className="">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
-                  Mural da comunidade
-                  <Image
-                    src={appImages.logoAbelha.src}
-                    alt="UP Club Logo"
-                    className="object-contain w-12 h-12 "
-                    priority
-                  />
-                </h1>
+          <div className="justify-between mb-8 space-y-4 md:space-y-0">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
+                Mural da comunidade
+                <Image
+                  src={appImages.logoAbelha.src}
+                  alt="UP Club Logo"
+                  className="object-contain w-12 h-12 "
+                  priority
+                />
+              </h1>
 
-                <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
-              </div>
+              <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
             </div>
             {/* Mobile Community Menu */}
             <div className="mx-auto py-6">

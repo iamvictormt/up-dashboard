@@ -6,6 +6,8 @@ import { Search } from 'lucide-react';
 import { SupplierCard } from './supplier-card';
 import { fetchStores } from '@/lib/store-api';
 import { StoreData } from '@/types';
+import Image from 'next/image';
+import { appImages } from '@/constants/appImages';
 
 export function SuppliersContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +59,9 @@ export function SuppliersContent() {
         {/* Header com busca */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Fornecedores parceiros</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">
+              Fornecedores parceiros
+            </h1>
             <p className="text-[#511A2B]/70">Descubra lojas parceiras com produtos e eventos exclusivos</p>
           </div>
 
