@@ -1,8 +1,7 @@
 'use client';
 
-import { LogOut, User, Settings, Menu, X, ImageIcon, Coins } from 'lucide-react';
+import { LogOut, User, Menu, X, ImageIcon, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,9 +29,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   const handleLogout = () => {
     logout();
@@ -41,66 +38,54 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const getUserName = () => {
     if (!user) return 'Usuário';
-
-    if (user.professional) {
-      return user.professional.name;
-    } else if (user.partnerSupplier) {
-      return user.partnerSupplier.tradeName;
-    } else if (user.loveDecoration) {
-      return user.loveDecoration.name;
-    }
-
+    if (user.professional) return user.professional.name;
+    if (user.partnerSupplier) return user.partnerSupplier.tradeName;
+    if (user.loveDecoration) return user.loveDecoration.name;
     return user.email.split('@')[0];
   };
 
-  const getProfileImage = () => {
-    return user?.profileImage || '/placeholder.svg';
-  };
+  const getProfileImage = () => user?.profileImage || '/placeholder.svg';
 
   const getUserType = () => {
-    if (user?.professional) {
-      return `${user.professional.profession.name}`;
-    } else if (user?.partnerSupplier) {
-      return 'Fornecedor Parceiro';
-    } else if (user?.loveDecoration) {
-      return 'Eu amo decoração';
-    }
+    if (user?.professional) return `${user.professional.profession.name}`;
+    if (user?.partnerSupplier) return 'Fornecedor Parceiro';
+    if (user?.loveDecoration) return 'Eu amo decoração';
     return 'Usuário';
   };
 
-  // Classes dinâmicas para o header baseadas no estado da sidebar
-  const headerClasses = `fixed top-0 z-40 h-[10vh] flex items-center justify-between bg-background transition-all duration-300 w-full left-0 px-4 md:px-6 ${
-    isSidebarExpanded ? 'md:left-72 md:w-[calc(100%-18rem)]' : 'md:left-24 md:w-[calc(100%-6rem)]'
-  }`;
+  // padding menor no mobile, mais espaçado no desktop
+  const headerClasses = `
+    fixed top-0 z-40 flex items-center justify-between
+    bg-background transition-all duration-300 w-full left-0
+    px-5 py-3 sm:px-6 sm:py-4 md:px-8 md:py-5
+    h-[72px] sm:h-[80px] md:h-[10vh]
+    ${isSidebarExpanded ? 'md:left-72 md:w-[calc(100%-18rem)]' : 'md:left-24 md:w-[calc(100%-6rem)]'}
+    shadow-sm border-b border-white/5
+  `;
 
-  if (isLoading) {
-    return <></>;
-  }
+  if (isLoading) return null;
 
+  // --------------------
+  // HEADER SEM USUÁRIO
+  // --------------------
   if (!user) {
     return (
       <>
         <header className={headerClasses}>
-          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
-            size="lg"
-            className="md:hidden text-white hover:bg-white/10 rounded-xl mr-2"
+            size="icon"
+            className="md:hidden text-white hover:bg-white/10 rounded-xl"
             onClick={toggleMobileMenu}
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
 
-          <div className="flex items-center space-x-4">
-            <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
-          </div>
+          <h1 className="text-lg font-semibold text-white">UP Connection</h1>
 
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <div className="text-white/70 text-sm">Acesso restrito</div>
-          </div>
+          <span className="text-xs text-white/70">Acesso restrito</span>
         </header>
 
-        {/* Mobile Sidebar - apenas visível em mobile */}
         <div className="md:hidden">
           <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
         </div>
@@ -108,96 +93,92 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
     );
   }
 
+  // --------------------
+  // HEADER COM USUÁRIO
+  // --------------------
   return (
     <>
       <header className={headerClasses}>
-        {/* Mobile Menu Button */}
+        {/* BOTÃO MOBILE MENU */}
         <Button
           variant="ghost"
-          size="lg"
-          className="md:hidden rounded-xl text-gray-300 hover:text-white hover:bg-white/10 p-8 md:p-6"
+          size="icon"
+          className="md:hidden text-gray-200 hover:text-white hover:bg-white/10 rounded-xl"
           onClick={toggleMobileMenu}
         >
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
 
-        <div className="flex items-center space-x-4">
-          <div className="flex flex-col">
-            <h1 className="text-lg md:text-xl font-semibold text-white">UP Connection</h1>
-            <p className="text-xs text-white/70 hidden md:block">{getUserType()}</p>
-          </div>
+        {/* LOGO / NOME */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+          <h1 className="text-lg sm:text-xl font-semibold text-white leading-tight">UP Connection</h1>
+          <p className="text-[12px] sm:text-sm text-white/70 hidden sm:block">{getUserType()}</p>
         </div>
 
-        <div className="flex items-center space-x-2 md:space-x-4">
+        {/* ÍCONES E PERFIL */}
+        <div className="flex items-center gap-2 sm:gap-4">
           <NotificationsDropdown />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center text-gray-300 hover:text-white hover:bg-white/10 rounded-xl p-8 md:p-6"
+                className="flex items-center justify-center gap-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl px-3 sm:px-5 py-2 sm:py-3"
               >
-                <span className="hidden sm:inline text-md font-bold md:mr-2">Olá, {getUserName().split(' ')[0]}</span>
+                <span className="hidden sm:inline text-sm font-semibold">Olá, {getUserName().split(' ')[0]}</span>
                 <img
-                  src={getProfileImage() || '/placeholder.svg'}
-                  alt="profileImage"
-                  className="w-10 h-10 object-cover rounded-full"
+                  src={getProfileImage()}
+                  alt="profile"
+                  className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-full border border-white/20"
                 />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent className="w-56 bg-white border-[#511A2B]/20" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-xs font-medium text-[#511A2B]">{getUserName()}</p>
-                  <p className="text-xs text-[#511A2B]/70">{user.email}</p>
+                  <p className="text-sm font-medium text-[#511A2B] truncate">{getUserName()}</p>
+                  <p className="text-xs text-[#511A2B]/70 truncate">{user.email}</p>
                   <p className="text-xs text-[#511A2B]/50">{getUserType()}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-[#511A2B]/10" />
-              <DropdownMenuItem
-                className="text-[#511A2B]"
-                onClick={() => setIsProfileModalOpen(true)}
-              >
+
+              <DropdownMenuItem onClick={() => setIsProfileModalOpen(true)} className="text-[#511A2B]">
                 <User className="mr-2 h-4 w-4" />
-                <span>Alterar Perfil</span>
+                Alterar Perfil
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-[#511A2B]"
-                onClick={() => setIsImageModalOpen(true)}
-              >
+
+              <DropdownMenuItem onClick={() => setIsImageModalOpen(true)} className="text-[#511A2B]">
                 <ImageIcon className="mr-2 h-4 w-4" />
-                <span>Alterar imagem de perfil</span>
+                Alterar Imagem
               </DropdownMenuItem>
+
               {user.partnerSupplier && (
                 <>
-                  <DropdownMenuItem
-                    className="text-[#511A2B]"
-                    onClick={() => setIsPlanModalOpen(true)}
-                  >
+                  <DropdownMenuItem onClick={() => setIsPlanModalOpen(true)} className="text-[#511A2B]">
                     <Coins className="mr-2 h-4 w-4" />
-                    <span>Minha assinatura</span>
+                    Minha Assinatura
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-[#511A2B]/10" />
                 </>
               )}
+
               <DropdownMenuItem className="text-red-600 hover:bg-red-50 cursor-pointer" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Sair</span>
+                Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </header>
 
-      {/* Modal de Meu Plano */}
+      {/* Modais */}
       {isPlanModalOpen && <MyPlanModal isOpen={isPlanModalOpen} onClose={() => setIsPlanModalOpen(false)} />}
-
-      {/* Modal de Edição de Perfil */}
       {isProfileModalOpen && <UserEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />}
-
-      {/* Modal de Edição de Imagem */}
       {isImageModalOpen && <UserImageModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} />}
 
-      {/* Mobile Sidebar - apenas visível em mobile */}
+      {/* Sidebar Mobile */}
       <div className="md:hidden">
         <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
       </div>

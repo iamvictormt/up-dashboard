@@ -1,5 +1,5 @@
 'use client';
-import { Star, MapPin, Store, Package, Calendar, ExternalLink, Heart, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import { Star, MapPin, Store, Package, Calendar, ExternalLink, Heart, Clock, ArrowRight, Sparkles, CalendarDays } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -245,7 +245,6 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
                     {nextEvent.name}
                   </p>
                   <p className="text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
                     {new Date(nextEvent.date).toLocaleDateString('pt-BR', {
                       day: '2-digit',
                       month: 'long',
