@@ -1,27 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import {
-  X,
-  Calendar,
-  MapPin,
-  Users,
-  Award,
-  Clock,
-  Star,
-  Building,
-} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { EventConfirmationModal } from "./event-confirmation";
+import { useState } from 'react';
+import { X, Calendar, MapPin, Users, Award, Clock, Building, Sparkles, TrendingUp, Check } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { EventConfirmationModal } from './event-confirmation';
+import Image from 'next/image';
 
 interface Event {
   id: string;
@@ -46,6 +32,7 @@ interface Event {
     id: string;
     name: string;
     rating: number;
+    logoUrl?: string;
   };
 }
 
@@ -56,26 +43,21 @@ interface EventDetailModalProps {
   onEventUpdate?: () => void;
 }
 
-export function EventDetailModal({
-  event,
-  professionalId = "",
-  onClose,
-  onEventUpdate,
-}: EventDetailModalProps) {
+export function EventDetailModal({ event, professionalId = '', onClose, onEventUpdate }: EventDetailModalProps) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return {
-      fullDate: date.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
+      fullDate: date.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
       }),
-      time: date.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
+      time: date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
       }),
     };
   };
@@ -85,8 +67,7 @@ export function EventDetailModal({
   const spotsLeft = event.totalSpots - event.filledSpots;
 
   const formatFullAddress = () => {
-    const { street, number, complement, district, city, state, zipCode } =
-      event.address;
+    const { street, number, complement, district, city, state, zipCode } = event.address;
     const addressParts = [
       street && number ? `${street}, ${number}` : null,
       complement,
@@ -95,22 +76,34 @@ export function EventDetailModal({
       state,
       zipCode,
     ].filter(Boolean);
-    return addressParts.join(", ");
+    return addressParts.join(', ');
   };
 
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
-      case "conferência":
-        return "bg-purple-100 text-purple-700 border-purple-200";
-      case "meetup":
-        return "bg-blue-100 text-blue-700 border-blue-200";
-      case "hackathon":
-        return "bg-orange-100 text-orange-700 border-orange-200";
-      case "workshop":
-        return "bg-green-100 text-green-700 border-green-200";
+      case 'conferência':
+        return 'from-purple-500 to-purple-600';
+      case 'meetup':
+        return 'from-blue-500 to-blue-600';
+      case 'hackathon':
+        return 'from-orange-500 to-orange-600';
+      case 'workshop':
+        return 'from-green-500 to-green-600';
+      case 'curso':
+        return 'from-indigo-500 to-indigo-600';
+      case 'palestra':
+        return 'from-pink-500 to-pink-600';
+      case 'networking':
+        return 'from-cyan-500 to-cyan-600';
       default:
-        return "bg-[#FEC460]/20 text-[#D56235] border-[#FEC460]/30";
+        return 'from-[#D56235] to-[#FEC460]';
     }
+  };
+
+  const getInitials = (name: string) => {
+    const words = name.trim().split(' ');
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
   };
 
   const handleParticipateClick = () => {
@@ -125,10 +118,8 @@ export function EventDetailModal({
   };
 
   const handleConfirmationSuccess = () => {
-    // Atualiza os dados locais do evento (otimista)
     event.filledSpots += 1;
 
-    // Chama o callback para atualizar a lista de eventos se fornecido
     if (onEventUpdate) {
       onEventUpdate();
     }
@@ -137,192 +128,183 @@ export function EventDetailModal({
   return (
     <>
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] max-w-2xl h-[90vh] max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0">
-          <DialogHeader className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-6 z-10">
+        <DialogContent className="w-[95vw] max-w-3xl h-[90vh] max-h-[90vh] overflow-y-auto bg-gradient-to-br from-white via-[#511A2B]/[0.01] to-[#FEC460]/[0.02] p-0 rounded-3xl">
+          {/* Header with gradient background */}
+          <DialogHeader className="sticky top-0 bg-gradient-to-r from-[#511A2B] to-[#511A2B]/95 border-b border-[#511A2B]/20 p-6 z-10">
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">
+              <DialogTitle className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                 Detalhes do Evento
               </DialogTitle>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                <X className="w-5 h-5 text-[#511A2B]" />
+              <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-white/10 rounded-xl">
+                <X className="w-5 h-5 text-white" />
               </Button>
             </div>
           </DialogHeader>
 
           <div className="p-6 space-y-6">
-            {/* Header do Evento */}
-            <div className="space-y-4">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-                <div className="flex-1 space-y-3">
-                  <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] leading-tight">
-                    {event.name}
-                  </h1>
-                  <Badge
-                    className={`${getTypeColor(
-                      event.type
-                    )} rounded-full text-sm px-4 py-1.5 font-medium`}
-                  >
-                    {event.type}
-                  </Badge>
-                </div>
-                <div className="flex md:flex-col items-center md:items-end gap-2 bg-gradient-to-br from-[#FEC460]/10 to-[#D56235]/10 p-4 rounded-2xl border border-[#FEC460]/20">
-                  <Award className="w-5 h-5 text-[#D56235]" />
-                  <div className="text-center md:text-right">
-                    <div className="text-3xl md:text-4xl font-bold text-[#511A2B]">
-                      {event.points}
-                    </div>
-                    <div className="text-xs md:text-sm text-[#511A2B]/70 font-medium">
-                      pontos
+            {/* Hero Section */}
+            <div className="relative p-6 bg-gradient-to-br from-[#511A2B]/5 via-transparent to-[#FEC460]/5 rounded-2xl border border-[#511A2B]/10 overflow-hidden">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#FEC460]/20 to-transparent rounded-full blur-3xl" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#511A2B]/10 to-transparent rounded-full blur-3xl" />
+
+              <div className="relative space-y-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div className="flex-1 space-y-3">
+                    <h1 className="text-3xl md:text-4xl font-bold text-[#511A2B] leading-tight">{event.name}</h1>
+                    <Badge
+                      className={`bg-gradient-to-r ${getTypeColor(
+                        event.type
+                      )} text-white border-0 rounded-full text-sm px-4 py-1.5 font-bold shadow-lg inline-flex items-center gap-1`}
+                    >
+                      <TrendingUp className="w-3 h-3" />
+                      {event.type}
+                    </Badge>
+                  </div>
+
+                  {/* Points Card */}
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#FEC460] to-[#D56235] rounded-2xl blur-lg opacity-50" />
+                    <div className="relative flex flex-col items-center gap-2 bg-gradient-to-br from-[#FEC460] to-[#D56235] p-6 rounded-2xl shadow-xl">
+                      <Award className="w-8 h-8 text-white" />
+                      <div className="text-center">
+                        <div className="text-4xl md:text-5xl font-bold text-white">{event.points}</div>
+                        <div className="text-sm text-white/90 font-semibold uppercase tracking-wide">pontos</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <p className="text-[#511A2B]/70 leading-relaxed text-base md:text-lg">
-                {event.description}
-              </p>
+                <p className="text-[#511A2B]/70 leading-relaxed text-base md:text-lg">{event.description}</p>
+              </div>
             </div>
 
-            <Separator className="bg-[#511A2B]/10" />
-
-            {/* Informações da Loja */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-                <Building className="w-5 h-5 mr-2" />
+            {/* Organizer Card */}
+            <div className="p-5 bg-white rounded-2xl border border-[#511A2B]/10 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-bold text-[#511A2B] mb-4 flex items-center gap-2">
+                <Building className="w-5 h-5 text-[#D56235]" />
                 Organizador
               </h3>
-              <div className="flex items-center space-x-4 p-4 bg-[#511A2B]/5 rounded-xl">
-                <div className="w-12 h-12 bg-[#511A2B] rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">
-                    {event.store.name.charAt(0)}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-[#511A2B]">
-                    {event.store.name}
-                  </h4>
-                  <div className="flex items-center mt-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                    <span className="text-sm text-[#511A2B]">
-                      {event.store.rating.toFixed(1)} avaliação
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <Separator className="bg-[#511A2B]/10" />
-
-            {/* Data e Horário */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-                <Calendar className="w-5 h-5 mr-2" />
-                Data e Horário
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Calendar className="w-4 h-4 text-[#511A2B]/70" />
-                    <span className="text-sm text-[#511A2B]/70">Data</span>
-                  </div>
-                  <p className="font-semibold text-[#511A2B] capitalize">
-                    {fullDate}
-                  </p>
+              <div className="flex items-center gap-4">
+                <div className="relative w-40 h-40 rounded-2xl overflow-hidden bg-gray-100 border border-[#511A2B]/10">
+                  <Image
+                    src={event.store.logoUrl || '/placeholder.svg?height=300&width=300'}
+                    alt={event.store.name}
+                    fill
+                    sizes="80px"
+                    className="object-cover transition-transform duration-300 hover:scale-110"
+                  />
                 </div>
-                <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Clock className="w-4 h-4 text-[#511A2B]/70" />
-                    <span className="text-sm text-[#511A2B]/70">Horário</span>
-                  </div>
-                  <p className="font-semibold text-[#511A2B]">{time}</p>
+
+                <div>
+                  <h4 className="font-bold text-[#511A2B] text-lg">{event.store.name}</h4>
+                  <p className="text-sm text-[#511A2B]/60">Organizador do evento</p>
                 </div>
               </div>
             </div>
 
-            <Separator className="bg-[#511A2B]/10" />
+            {/* Date & Time Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <span className="text-sm font-semibold text-[#511A2B]/70 uppercase tracking-wide">Data</span>
+                </div>
+                <p className="font-bold text-[#511A2B] text-lg capitalize">{fullDate}</p>
+              </div>
 
-            {/* Local */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-                <MapPin className="w-5 h-5 mr-2" />
-                Local do Evento
-              </h3>
-              <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-                <p className="text-[#511A2B] leading-relaxed">
-                  {formatFullAddress()}
-                </p>
+              <div className="p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <span className="text-sm font-semibold text-[#511A2B]/70 uppercase tracking-wide">Horário</span>
+                </div>
+                <p className="font-bold text-[#511A2B] text-lg">{time}</p>
               </div>
             </div>
 
-            <Separator className="bg-[#511A2B]/10" />
+            {/* Location */}
+            <div className="p-5 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border border-red-100">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-red-500" />
+                </div>
+                <h3 className="text-lg font-bold text-[#511A2B]">Local do Evento</h3>
+              </div>
+              <p className="text-[#511A2B] leading-relaxed font-medium">{formatFullAddress()}</p>
+            </div>
 
-            {/* Vagas */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                Participantes
-              </h3>
+            {/* Participants Progress */}
+            <div className="p-5 bg-gradient-to-br from-[#511A2B]/5 to-transparent rounded-2xl border border-[#511A2B]/10">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-[#511A2B] shadow-sm flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[#511A2B]">Participantes</h3>
+              </div>
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#511A2B]">
-                    {event.filledSpots} de {event.totalSpots} vagas preenchidas
-                  </span>
+                  <div>
+                    <span className="text-2xl font-bold text-[#511A2B]">{event.filledSpots}</span>
+                    <span className="text-[#511A2B]/60 font-medium"> de {event.totalSpots} vagas</span>
+                  </div>
                   <Badge
                     className={`${
                       spotsLeft > 0
-                        ? "bg-green-100 text-green-700 border-green-200"
-                        : "bg-red-100 text-red-700 border-red-200"
-                    } rounded-lg`}
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                        : 'bg-gradient-to-r from-red-500 to-rose-500'
+                    } text-white border-0 rounded-full px-4 py-2 text-sm font-bold shadow-md`}
                   >
-                    {spotsLeft > 0 ? `${spotsLeft} vagas restantes` : "Lotado"}
+                    {spotsLeft > 0 ? `${spotsLeft} vagas restantes` : 'Lotado'}
                   </Badge>
                 </div>
-                <Progress value={progressPercentage} className="h-3" />
+                <Progress value={progressPercentage} className="h-3 bg-[#511A2B]/10" />
               </div>
             </div>
 
-            <Separator className="bg-[#511A2B]/10" />
+            {/* Rewards Section */}
+            <div className="relative p-6 bg-gradient-to-br from-[#FEC460]/10 via-[#FEC460]/5 to-transparent rounded-2xl border border-[#FEC460]/30 overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-[#FEC460]/30 to-transparent rounded-full blur-2xl" />
 
-            {/* Recompensas */}
-            <div>
-              <h3 className="text-lg font-semibold text-[#511A2B] mb-4 flex items-center">
-                <Award className="w-5 h-5 mr-2" />
-                Recompensas
-              </h3>
-              <div className="p-4 bg-gradient-to-r from-[#FEC460]/20 to-[#D56235]/20 rounded-xl border border-[#FEC460]/30">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-[#FEC460] rounded-xl flex items-center justify-center">
-                    <Award className="w-6 h-6 text-[#511A2B]" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FEC460] to-[#D56235] shadow-md flex items-center justify-center">
+                    <Award className="w-5 h-5 text-white" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-[#511A2B]">
-                      {event.points} pontos
-                    </p>
-                    <p className="text-sm text-[#511A2B]/70">
-                      Ganhe pontos ao participar do evento
-                    </p>
+                  <h3 className="text-lg font-bold text-[#511A2B]">Recompensas</h3>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 bg-white/50 rounded-xl">
+                  <div className="flex-1">
+                    <p className="font-bold text-[#511A2B] text-xl">{event.points} pontos</p>
+                    <p className="text-sm text-[#511A2B]/70 font-medium">Ganhe pontos ao participar do evento</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Botões de Ação */}
-            <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">
+            {/* Action Button */}
+            <div className="pt-4">
               <Button
-                className="flex-1 bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 text-white rounded-xl py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={spotsLeft === 0 || !professionalId}
                 onClick={handleParticipateClick}
               >
                 {spotsLeft > 0 ? (
-                  <>
-                    <Users className="w-4 h-4 mr-2" />
+                  <div className="flex items-center gap-2">
                     Participar do Evento
-                  </>
+                    <Check className="w-5 h-5" />
+                  </div>
                 ) : (
-                  <>
-                    <Clock className="w-4 h-4 mr-2" />
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-5 h-5" />
                     Falar com suporte para tentar uma vaga
-                  </>
+                  </div>
                 )}
               </Button>
             </div>
@@ -330,7 +312,6 @@ export function EventDetailModal({
         </DialogContent>
       </Dialog>
 
-      {/* Modal de Confirmação */}
       {showConfirmationModal && (
         <EventConfirmationModal
           event={event}

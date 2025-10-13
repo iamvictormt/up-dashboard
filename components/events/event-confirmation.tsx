@@ -100,9 +100,6 @@ export function EventConfirmationModal({
             <DialogTitle className="text-lg font-bold text-[#511A2B]">
               Confirmar Participação
             </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={onClose} disabled={isLoading}>
-              <X className="w-4 h-4 text-[#511A2B]" />
-            </Button>
           </div>
         </DialogHeader>
 
@@ -130,7 +127,7 @@ export function EventConfirmationModal({
             <div className="flex items-center space-x-3 p-3 bg-[#511A2B]/5 rounded-xl">
               <Calendar className="w-5 h-5 text-[#511A2B]/70" />
               <div>
-                <p className="font-medium text-[#511A2B] text-sm">
+                <p className="font-medium text-[#511A2B] text-sm capitalize">
                   {formatDate(event.date)}
                 </p>
                 <p className="text-xs text-[#511A2B]/70">
@@ -198,7 +195,6 @@ export function EventConfirmationModal({
                 </>
               ) : (
                 <>
-                  <Users className="w-4 h-4 mr-2" />
                   Confirmar
                 </>
               )}

@@ -105,7 +105,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
     setIsSubmitting(true);
 
     try {
-      if (productData.photoUrl) cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
+      if (productData.photoUrl && !productData.photoUrl.includes(`https://res.cloudinary.com`)) cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
       productData.photoUrl = cloudinaryImageURL;
 
       const newProduct = {

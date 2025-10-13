@@ -54,20 +54,20 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   const [showStoreForm, setShowStoreForm] = useState(false);
 
   useEffect(() => {
-    const loadStoreData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchStoreData(supplierId);
-        setStoreData(data);
-      } catch (error) {
-        console.error('Erro ao carregar dados da loja:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadStoreData();
   }, []);
+
+  const loadStoreData = async () => {
+    try {
+      setIsLoading(true);
+      const data = await fetchStoreData(supplierId);
+      setStoreData(data);
+    } catch (error) {
+      console.error('Erro ao carregar dados da loja:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleStoreCreated = (newStoreData: StoreData) => {
     setStoreData(newStoreData);
@@ -84,51 +84,15 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   const handleEventCreated = async (eventData: any) => {
     if (!storeData) return;
 
-    const newEvent = {
-      name: eventData.name,
-      description: eventData.description,
-      date: eventData.date,
-      type: eventData.type,
-      points: eventData.points,
-      totalSpots: eventData.totalSpots,
-      filledSpots: 0,
-      participantsCount: 0,
-      address: eventData.address,
-      storeId: storeData.id,
-    };
-
     setShowEventForm(false);
-    setStoreData((prev) =>
-      prev
-        ? {
-            ...prev,
-            events: [...prev.events, newEvent],
-          }
-        : null
-    );
+    loadStoreData();
   };
 
   const handleProductCreated = async (productData: any) => {
     if (!storeData) return;
 
-    const newProduct = {
-      name: productData.name,
-      description: productData.description,
-      price: productData.price,
-      link: productData.link,
-      featured: productData.featured,
-      promotion: productData.promotion,
-    };
-
     setShowProductForm(false);
-    setStoreData((prev) =>
-      prev
-        ? {
-            ...prev,
-            products: [...prev.products, newProduct],
-          }
-        : null
-    );
+    loadStoreData();
   };
 
   const removeProduct = (index: number) => {
@@ -356,7 +320,9 @@ export function StoreContent({ supplierId }: StoreContentProps) {
 
                     <CardContent className="p-6">
                       <h3 className="font-bold text-[#511A2B] mb-2 text-lg">{product.name}</h3>
-                      <p className="text-sm text-[#511A2B]/70 mb-4 line-clamp-2">{product.description}</p>
+                      <p className="text-sm text-[#511A2B]/70 mb-4 overflow-visible whitespace-normal break-words line-clamp-1 truncate">
+                        {product.description}
+                      </p>
 
                       <div className="flex items-center justify-between">
                         <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
@@ -465,9 +431,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           <ProductEditModal
             product={storeData.products[editingProduct]}
             onProductUpdated={(updatedProduct) => {
-              const newProducts = [...storeData.products];
-              newProducts[editingProduct] = updatedProduct;
-              setStoreData((prev) => ({ ...prev, products: newProducts }));
+              loadStoreData();
               setEditingProduct(null);
             }}
             onDelete={() => {
@@ -484,9 +448,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
             event={storeData.events[editingEvent]}
             storeAddress={storeData.address}
             onEventUpdated={(updatedEvent) => {
-              const newEvents = [...storeData.events];
-              newEvents[editingEvent] = updatedEvent;
-              setStoreData((prev) => ({ ...prev, events: newEvents }));
+              loadStoreData();
               setEditingEvent(null);
             }}
             onDelete={() => {

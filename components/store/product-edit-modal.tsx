@@ -88,8 +88,10 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
     setIsSubmitting(true);
 
     try {
-      if (productData.photoUrl) cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
-      productData.photoUrl = cloudinaryImageURL;
+      if (productData.photoUrl && !productData.photoUrl.includes(`https://res.cloudinary.com`)) {
+        cloudinaryImageURL = (await uploadImageCloudinary(productData.photoUrl)) || '';
+        productData.photoUrl = cloudinaryImageURL;
+      }
 
       const response = await updateProduct(product.id, productData);
       if (response.status === 200) {

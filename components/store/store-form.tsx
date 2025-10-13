@@ -459,7 +459,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
     try {
       console.log('Submitting store data:', formData);
-      if (formData.logoUrl) cloudinaryImageURL = await uploadImageCloudinary(formData.logoUrl) || '';
+      if (formData.logoUrl && !formData.logoUrl.includes(`https://res.cloudinary.com`)) cloudinaryImageURL = await uploadImageCloudinary(formData.logoUrl) || '';
       formData.logoUrl = cloudinaryImageURL;
       console.log('cloudinaryImageURL:', cloudinaryImageURL);
 
