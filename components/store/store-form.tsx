@@ -458,8 +458,10 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     setIsSubmitting(true);
 
     try {
-      if (formData.logoUrl) cloudinaryImageURL = (await uploadImageCloudinary(formData.logoUrl)) || '';
+      console.log('Submitting store data:', formData);
+      if (formData.logoUrl) cloudinaryImageURL = await uploadImageCloudinary(formData.logoUrl) || '';
       formData.logoUrl = cloudinaryImageURL;
+      console.log('cloudinaryImageURL:', cloudinaryImageURL);
 
       const response =
         isEditing && storeData?.id ? await updateStore(storeData?.id, formData) : await createStore(formData);
@@ -528,7 +530,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 <PhotoUploadSimple
                   photo={formData.logoUrl || ``}
                   isStore={true}
-                  onPhotoChange={(photo) => handleInputChange('logoUrl', photo)}
+                  onPhotoChange={(photo) => handleInputChange('logoUrl', photo ?? '')}
                 />
 
                 <div>

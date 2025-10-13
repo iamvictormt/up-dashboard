@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Clock, Linkedin, Instagram, Phone, MapPin, MessageCircle, User2 } from 'lucide-react';
+import { Linkedin, Instagram, Phone, MapPin, MessageCircle, User2, Calendar } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ProfessionalProfileModal } from '@/components/recommended-professionals/recommended-professional-profile-modal';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ProfessionalProfileModal } from './recommended-professional-profile-modal';
 
 interface Professional {
   id: string;
@@ -15,7 +15,6 @@ interface Professional {
   description: string;
   phone: string;
   email: string;
-  profileImage: string;
   address: {
     state: string;
     city: string;
@@ -46,68 +45,6 @@ const formatWhatsAppNumber = (phoneNumber: string): string => {
   return cleanNumber.startsWith('55') ? cleanNumber : `55${cleanNumber}`;
 };
 
-const SocialMediaIconsCard = ({ socialMedia, phone }: { socialMedia: Professional['socialMedia']; phone: string }) => {
-  const formattedWhatsApp = formatWhatsAppNumber(socialMedia?.whatsapp || '');
-  return (
-    <div className="flex items-center space-x-1">
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`rounded-full w-8 h-8 p-0 ${
-          formattedWhatsApp
-            ? 'hover:bg-green-100 hover:text-green-600 text-[#511A2B]/70'
-            : 'text-gray-300 cursor-default'
-        }`}
-        onClick={formattedWhatsApp ? () => window.open(`https://wa.me/${formattedWhatsApp}`, '_blank') : undefined}
-        disabled={!formattedWhatsApp}
-      >
-        <MessageCircle className="w-4 h-4" />
-        <span className="sr-only">WhatsApp</span>
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`rounded-full w-8 h-8 p-0 ${
-          socialMedia?.linkedin
-            ? 'hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70'
-            : 'text-gray-300 cursor-default'
-        }`}
-        onClick={socialMedia?.linkedin ? () => window.open(socialMedia.linkedin, '_blank') : undefined}
-        disabled={!socialMedia?.linkedin}
-      >
-        <Linkedin className="w-4 h-4" />
-        <span className="sr-only">LinkedIn</span>
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="sm"
-        className={`rounded-full w-8 h-8 p-0 ${
-          socialMedia?.instagram
-            ? 'hover:bg-pink-100 hover:text-pink-600 text-[#511A2B]/70'
-            : 'text-gray-300 cursor-default'
-        }`}
-        onClick={socialMedia?.instagram ? () => window.open(socialMedia.instagram, '_blank') : undefined}
-        disabled={!socialMedia?.instagram}
-      >
-        <Instagram className="w-4 h-4" />
-        <span className="sr-only">Instagram</span>
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="sm"
-        className="rounded-full w-8 h-8 p-0 md:hidden hover:bg-blue-100 hover:text-blue-600 text-[#511A2B]/70"
-        onClick={() => window.open(`tel:${phone}`, '_blank')}
-      >
-        <Phone className="w-4 h-4" />
-        <span className="sr-only">Telefone</span>
-      </Button>
-    </div>
-  );
-};
-
 const formatAvailableDays = (days: { dayOfWeek: string }[]) => {
   if (!days || days.length === 0) return 'Não informada';
   const dayMap: Record<string, string> = {
@@ -122,88 +59,159 @@ const formatAvailableDays = (days: { dayOfWeek: string }[]) => {
   return days.map((day) => dayMap[day.dayOfWeek] || day.dayOfWeek).join(', ');
 };
 
+const getInitials = (name: string): string => {
+  const words = name.trim().split(' ');
+  if (words.length === 1) {
+    return words[0].substring(0, 2).toUpperCase();
+  }
+  return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+};
+
 export function ProfessionalCard({ professional }: ProfessionalCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { name, profession, description, profileImage, isActive, address, availableDays, socialMedia, phone } =
-    professional;
+  const { name, profession, description, isActive, address, availableDays, socialMedia, phone } = professional;
+
+  const formattedWhatsApp = formatWhatsAppNumber(socialMedia?.whatsapp || '');
 
   return (
     <>
-      <Card className="bg-white/90 backdrop-blur-sm border-[#511A2B]/10 rounded-2xl hover:border-[#511A2B]/30 transition-all duration-300 shadow-sm hover:shadow-md">
-        <CardContent className="p-4 md:p-6">
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-3 md:space-y-0 md:space-x-4 mb-4">
-            <Avatar className="w-16 h-16 rounded-xl">
-              <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
-            </Avatar>
+      <Card className="group relative bg-white border-[#511A2B]/10 rounded-3xl hover:border-[#511A2B]/30 transition-all duration-500 shadow-sm hover:shadow-xl overflow-hidden">
+        {/* Decorative gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#511A2B]/5 via-transparent to-[#FEC460]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="font-semibold text-[#511A2B] text-lg md:text-xl capitalize">{name.toLowerCase()}</h3>
-              <p className="text-[#FEC460] text-sm md:text-base font-medium capitalize">{profession.toLowerCase()}</p>
+        {/* Status indicator bar */}
+        <div
+          className={`absolute top-0 left-0 right-0 h-1 ${
+            isActive ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gray-300'
+          }`}
+        />
 
-              <div className="flex items-center space-x-2 mt-1 md:mt-2">
-                <Badge
-                  className={`${
-                    isActive
-                      ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
-                      : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
-                  } rounded-lg text-xs md:text-sm`}
-                >
-                  {isActive ? 'Ativo' : 'Inativo'}
+        <CardContent className="relative p-6">
+          {/* Header with Avatar and Info */}
+          <div className="flex items-start gap-4 mb-5">
+            {/* Avatar with decorative ring */}
+            <div className="relative">
+              <div
+                className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+                  isActive ? 'from-[#511A2B] to-[#FEC460]' : 'from-gray-300 to-gray-400'
+                } opacity-20 blur-md`}
+              />
+              <Avatar className="relative w-20 h-20 rounded-2xl border-2 border-white shadow-lg">
+                <AvatarFallback className="bg-gradient-to-br from-[#511A2B] to-[#511A2B]/80 text-white text-xl font-bold rounded-2xl">
+                  {getInitials(name)}
+                </AvatarFallback>
+              </Avatar>
+              {/* Active indicator dot */}
+              {isActive && (
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg">
+                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75" />
+                </div>
+              )}
+            </div>
+
+            {/* Name and Profession */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-[#511A2B] text-xl mb-1 capitalize truncate">{name.toLowerCase()}</h3>
+              <div className="flex items-center gap-2 mb-2">
+                <Badge className="bg-gradient-to-r from-[#FEC460] to-[#FEC460]/80 text-[#511A2B] border-0 font-semibold px-3 py-1 rounded-full text-xs capitalize shadow-sm">
+                  {profession.toLowerCase()}
                 </Badge>
               </div>
-            </div>
-          </div>
 
-          <div className="mb-4">
-            <p className="text-sm md:text-base text-[#511A2B]/80 line-clamp-2 md:line-clamp-3">
-              {description || 'Sem descrição disponível.'}
-            </p>
-          </div>
-
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-[#511A2B]/60" />
-                <span className="text-sm text-[#511A2B]/70">Localização</span>
+              {/* Social Media Icons */}
+              <div className="flex items-center gap-1">
+                {formattedWhatsApp && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-9 h-9 p-0 rounded-xl hover:bg-green-50 hover:text-green-600 text-[#511A2B]/60 transition-all duration-300"
+                    onClick={() => window.open(`https://wa.me/${formattedWhatsApp}`, '_blank')}
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </Button>
+                )}
+                {socialMedia?.linkedin && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-9 h-9 p-0 rounded-xl hover:bg-blue-50 hover:text-blue-600 text-[#511A2B]/60 transition-all duration-300"
+                    onClick={() => window.open(socialMedia.linkedin, '_blank')}
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </Button>
+                )}
+                {socialMedia?.instagram && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-9 h-9 p-0 rounded-xl hover:bg-pink-50 hover:text-pink-600 text-[#511A2B]/60 transition-all duration-300"
+                    onClick={() => window.open(`https://www.instagram.com/${socialMedia.instagram}`, '_blank')}
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </Button>
+                )}
+                {phone && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-9 h-9 p-0 rounded-xl hover:bg-[#511A2B]/10 hover:text-[#511A2B] text-[#511A2B]/60 transition-all duration-300"
+                    onClick={() => window.open(`tel:${phone}`, '_blank')}
+                  >
+                    <Phone className="w-4 h-4" />
+                  </Button>
+                )}
               </div>
-              <span className="text-sm md:text-base text-[#511A2B] font-medium">
-                {address.district}, {address.city}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-[#511A2B]/60" />
-                <span className="text-sm text-[#511A2B]/70">Disponibilidade</span>
-              </div>
-              <span className="text-sm md:text-base text-[#511A2B] font-medium">
-                {formatAvailableDays(availableDays)}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4 text-[#511A2B]/60" />
-                <span className="text-sm text-[#511A2B]/70">Contato</span>
-              </div>
-              <span className="text-sm md:text-base text-[#511A2B] font-medium">
-                <SocialMediaIconsCard socialMedia={socialMedia} phone={phone} />
-              </span>
             </div>
           </div>
 
-          <div className="flex">
-            <Button
-              className="flex-1 rounded-xl bg-[#511A2B] hover:bg-[#511A2B]/90 text-white text-sm md:text-base py-2"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <User2 className="w-4 h-4 mr-2" />
-              Ver perfil completo
-            </Button>
+          {/* Description */}
+          {
+            <div className="mb-5">
+              <p className="text-sm text-[#511A2B]/70 line-clamp-1 leading-relaxed">
+                {description || 'Sem descrição disponível.'}
+              </p>
+            </div>
+          }
+
+          {/* Info Cards */}
+          <div className="space-y-2 mb-5">
+            {/* Location */}
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-[#511A2B]/5 to-transparent group-hover:from-[#511A2B]/10 transition-colors duration-300">
+              <div className="w-10 h-10 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-5 h-5 text-[#511A2B]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-[#511A2B]/60 font-medium mb-0.5">Localização</p>
+                <p className="text-sm text-[#511A2B] font-semibold truncate capitalize">
+                  {address.district.toLowerCase()}, {address.city.toLowerCase()}
+                </p>
+              </div>
+            </div>
+
+            {/* Availability */}
+            <div className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-[#FEC460]/10 to-transparent group-hover:from-[#FEC460]/20 transition-colors duration-300">
+              <div className="w-10 h-10 rounded-lg bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                <Calendar className="w-5 h-5 text-[#FEC460]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-[#511A2B]/60 font-medium mb-0.5">Disponibilidade</p>
+                <p className="text-sm text-[#511A2B] font-semibold truncate">{formatAvailableDays(availableDays)}</p>
+              </div>
+            </div>
           </div>
+
+          {/* Action Button */}
+          <Button
+            className="w-full rounded-xl bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 text-white font-semibold py-6 shadow-lg hover:shadow-xl transition-all duration-300 group/btn"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <User2 className="w-5 h-5 mr-2 group-hover/btn:scale-110 transition-transform duration-300" />
+            Ver perfil completo
+          </Button>
         </CardContent>
       </Card>
 
+      {/* Modal placeholder - you'll need to import and use your actual modal component */}
       <ProfessionalProfileModal
         professional={professional}
         isOpen={isModalOpen}

@@ -1,11 +1,10 @@
 'use client';
 
-import { Linkedin, Instagram, Phone, MapPin, Calendar, X, MessageCircle } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Linkedin, Instagram, Phone, MapPin, Calendar, X, MessageCircle, Mail, Sparkles } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
 
 interface Professional {
   id: string;
@@ -14,7 +13,6 @@ interface Professional {
   description: string;
   phone: string;
   email: string;
-  profileImage: string;
   address: {
     state: string;
     city: string;
@@ -52,7 +50,7 @@ const formatAvailableDaysFull = (days: { dayOfWeek: string }[]) => {
     SATURDAY: 'Sábado',
     SUNDAY: 'Domingo',
   };
-  return days.map(day => dayMap[day.dayOfWeek] || day.dayOfWeek);
+  return days.map((day) => dayMap[day.dayOfWeek] || day.dayOfWeek);
 };
 
 const formatFullAddress = (address: Professional['address']) => {
@@ -63,99 +61,124 @@ const formatFullAddress = (address: Professional['address']) => {
     .join(', ');
 };
 
+const getInitials = (name: string) => {
+  const names = name.trim().split(' ');
+  if (names.length === 1) return names[0].charAt(0).toUpperCase();
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
 export function ProfessionalProfileModal({ professional, isOpen, onClose }: ProfessionalProfileModalProps) {
-  const { name, profession, description, profileImage, isActive, phone, email, address, availableDays, socialMedia } = professional;
+  const { name, profession, description, isActive, phone, email, address, availableDays, socialMedia } = professional;
   const availableDaysList = formatAvailableDaysFull(availableDays);
   const fullAddress = formatFullAddress(address);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-[#511A2B]/20 p-0 rounded-2xl">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#511A2B]/10 p-4 md:p-6 z-10 flex justify-between items-center">
-          <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B]">Perfil do Profissional</DialogTitle>
-          <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="w-5 h-5 text-[#511A2B]" />
+      <DialogContent className="w-[95vw] max-w-5xl max-h-[100vh] overflow-hidden bg-gradient-to-br from-white via-[#511A2B]/[0.02] to-white p-0 rounded-3xl shadow-2xl">
+        <DialogTitle className='hidden'></DialogTitle>
+
+        <div className="relative bg-gradient-to-br from-[#511A2B] via-[#6B2438] to-[#511A2B] p-8 overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FEC460]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FEC460]/5 rounded-full blur-2xl" />
+
+          <Button
+            variant="ghost"
+            size="default"
+            onClick={onClose}
+            className="absolute top-4 right-4 z-20 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-all duration-300"
+          >
+            <X className="w-5 h-5" />
           </Button>
-        </div>
 
-        <div className="p-4 md:p-6 space-y-6">
-          {/* Perfil Header */}
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
-            <Avatar className="w-20 h-20 md:w-24 md:h-24 rounded-2xl">
-              <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 text-center md:text-left">
-              <h2 className="text-xl md:text-2xl font-bold text-[#511A2B] mb-1 capitalize">{name.toLowerCase()}</h2>
-              <p className="text-[#FEC460] text-lg font-semibold mb-2 capitalize">{profession.toLowerCase()}</p>
-
-              <Badge
-                className={`${
-                  isActive
-                    ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
-                    : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200'
-                } rounded-lg px-4 py-1`}
-              >
-                {isActive ? 'Profissional Ativo' : 'Profissional Inativo'}
-              </Badge>
-
-              {description && (
-                <p className="text-[#511A2B]/80 leading-relaxed text-sm md:text-base mt-3">{description}</p>
+          <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FEC460] to-[#FDB940] rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+              <Avatar className="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl border-4 border-white/20 shadow-2xl">
+                <AvatarFallback className="bg-gradient-to-br from-[#FEC460] to-[#FDB940] text-[#511A2B] text-4xl font-bold rounded-3xl">
+                  {getInitials(name)}
+                </AvatarFallback>
+              </Avatar>
+              {isActive && (
+                <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  Ativo
+                </div>
               )}
             </div>
+
+            <div className="flex-1 text-center md:text-left space-y-3">
+              <h2 className="text-3xl md:text-4xl font-bold text-white capitalize leading-tight">
+                {name.toLowerCase()}
+              </h2>
+              <div className="inline-flex items-center gap-2 bg-[#FEC460]/20 backdrop-blur-sm px-4 py-2 rounded-full border border-[#FEC460]/30">
+                <div className="w-2 h-2 bg-[#FEC460] rounded-full animate-pulse" />
+                <p className="text-[#FEC460] text-lg font-semibold capitalize">{profession.toLowerCase()}</p>
+              </div>
+              {description && <p className="text-white/90 leading-relaxed text-base max-w-2xl">{description}</p>}
+            </div>
           </div>
+        </div>
 
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Contato */}
+        <div className="overflow-y-auto max-h-[calc(90vh-280px)] p-6 md:p-8 space-y-6">
+          {/* Contact Section */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-[#511A2B] flex items-center mb-2">
-              <Phone className="w-5 h-5 mr-2" />
-              Contato
+            <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
+                <Phone className="w-4 h-4 text-white" />
+              </div>
+              Informações de Contato
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center space-x-3 p-3 bg-[#511A2B]/5 rounded-xl">
-                <div>
-                  <p className="text-sm text-[#511A2B]/70">Telefone</p>
-                  <p className="font-medium text-[#511A2B]">{phone}</p>
+              <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-5 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
+                <div className="absolute top-3 right-3 w-10 h-10 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Phone className="w-5 h-5 text-[#511A2B]" />
                 </div>
+                <p className="text-sm text-[#511A2B]/60 font-medium mb-1">Telefone</p>
+                <p className="text-lg font-bold text-[#511A2B]">{phone}</p>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-[#511A2B]/5 rounded-xl">
-                <div>
-                  <p className="text-sm text-[#511A2B]/70">E-mail</p>
-                  <p className="font-medium text-[#511A2B] break-all">{email || 'Não informado'}</p>
+              <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-5 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
+                <div className="absolute top-3 right-3 w-10 h-10 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Mail className="w-5 h-5 text-[#511A2B]" />
                 </div>
+                <p className="text-sm text-[#511A2B]/60 font-medium mb-1">E-mail</p>
+                <p className="text-lg font-bold text-[#511A2B] break-all">{email || 'Não informado'}</p>
               </div>
             </div>
           </div>
 
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Localização */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#511A2B] flex items-center mb-2">
-              <MapPin className="w-5 h-5 mr-2" />
+          {/* Location Section */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
+                <MapPin className="w-4 h-4 text-white" />
+              </div>
               Localização
             </h3>
-            <div className="p-4 bg-[#511A2B]/5 rounded-xl">
-              <p className="text-[#511A2B] text-sm md:text-base">{fullAddress}</p>
+            <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-6 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
+              <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <MapPin className="w-6 h-6 text-[#511A2B]" />
+              </div>
+              <p className="text-[#511A2B] leading-relaxed pr-16">{fullAddress}</p>
             </div>
           </div>
 
-          <Separator className="bg-[#511A2B]/10" />
-
-          {/* Disponibilidade */}
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-[#511A2B] flex items-center mb-2">
-              <Calendar className="w-5 h-5 mr-2" />
+          {/* Availability Section */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
+                <Calendar className="w-4 h-4 text-white" />
+              </div>
               Disponibilidade
             </h3>
-            <div className="p-3 bg-[#511A2B]/5 rounded-xl">
-              <p className="text-sm text-[#511A2B]/70 mb-2">Dias Disponíveis</p>
+            <div className="bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-6 rounded-2xl border border-[#511A2B]/10">
+              <p className="text-sm text-[#511A2B]/60 font-medium mb-3">Dias Disponíveis</p>
               <div className="flex flex-wrap gap-2">
                 {availableDaysList.map((day, idx) => (
-                  <Badge key={idx} variant="outline" className="border-[#511A2B]/30 text-[#511A2B] text-xs">
+                  <Badge
+                    key={idx}
+                    className="bg-gradient-to-r from-[#511A2B] to-[#6B2438] text-white border-0 px-4 py-2 text-sm font-medium hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  >
                     {day}
                   </Badge>
                 ))}
@@ -163,41 +186,47 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             </div>
           </div>
 
-
-          {/* Redes Sociais */}
+          {/* Social Media Section */}
           {(socialMedia?.linkedin || socialMedia?.instagram || socialMedia?.whatsapp) && (
-            <>
-              <Separator className="bg-[#511A2B]/10" />
-              <div>
-                <h3 className="text-lg font-semibold text-[#511A2B] mb-4">Redes Sociais</h3>
-
-                <div className="flex flex-wrap gap-3">
-                  {socialMedia?.linkedin && (
-                    <Button onClick={() => window.open(socialMedia.linkedin, '_blank')}>
-                      <Linkedin className="w-4 h-4 mr-2" />
-                      LinkedIn
-                    </Button>
-                  )}
-
-                  {socialMedia?.instagram && (
-                    <Button variant="primary" onClick={() => window.open(socialMedia.instagram, '_blank')}>
-                      <Instagram className="w-4 h-4 mr-2" />
-                      Instagram
-                    </Button>
-                  )}
-
-                  {socialMedia?.whatsapp && (
-                    <Button
-                      variant="primary"
-                      onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      WhatsApp
-                    </Button>
-                  )}
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
+                  <MessageCircle className="w-4 h-4 text-white" />
                 </div>
+                Redes Sociais
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {socialMedia?.linkedin && (
+                  <Button
+                    onClick={() => window.open(socialMedia.linkedin, '_blank')}
+                    className="bg-gradient-to-r from-[#0077B5] to-[#006399] text-white border-0 hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-6 rounded-xl"
+                  >
+                    <Linkedin className="w-5 h-5 mr-2" />
+                    LinkedIn
+                  </Button>
+                )}
+
+                {socialMedia?.instagram && (
+                  <Button
+                    onClick={() => window.open(`https://www.instagram.com/${socialMedia.instagram}`, '_blank')}
+                    className="bg-gradient-to-r from-[#E4405F] via-[#C13584] to-[#833AB4] text-white border-0 hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-6 rounded-xl"
+                  >
+                    <Instagram className="w-5 h-5 mr-2" />
+                    Instagram
+                  </Button>
+                )}
+
+                {socialMedia?.whatsapp && (
+                  <Button
+                    onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
+                    className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white border-0 hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-6 rounded-xl"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    WhatsApp
+                  </Button>
+                )}
               </div>
-            </>
+            </div>
           )}
         </div>
       </DialogContent>

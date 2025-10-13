@@ -87,7 +87,7 @@ export function RecommendedProfessionalsContent() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           {!isLoading && (
             <>
               <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
@@ -110,13 +110,6 @@ export function RecommendedProfessionalsContent() {
                   <div className="text-2xl font-bold text-[#FEC460]">{totalProfessions}</div>
                 </div>
                 <div className="text-sm text-[#511A2B]/70">Profissões</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="flex items-center space-x-2 mb-2">
-                  <MapPin className="w-5 h-5 text-[#D56235]" />
-                  <div className="text-2xl font-bold text-[#D56235]">{totalCities}</div>
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Cidades</div>
               </div>
             </>
           )}
