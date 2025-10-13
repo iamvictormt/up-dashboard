@@ -214,7 +214,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">{storeData.name}</h1>
 
                   {/* Rating */}
-                  <div className="flex items-center justify-center lg:justify-start mb-6">
+                  {/* <div className="flex items-center justify-center lg:justify-start mb-6">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -226,8 +226,8 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                       ))}
                     </div>
                     <span className="ml-3 text-2xl font-bold">{storeData?.rating?.toFixed(1) || 0}</span>
-                    {/* <span className="ml-2 text-white/80 hidden md:block">• Excelente</span> */}
-                  </div>
+                    <span className="ml-2 text-white/80 hidden md:block">• Excelente</span>
+                  </div> */}
 
                   <p className="text-lg text-white/90 leading-relaxed mb-8 w-full break-words">
                     {storeData.description}
@@ -255,8 +255,8 @@ export function StoreContent({ supplierId }: StoreContentProps) {
         {/* Stats Cards */}
         <div className="px-6 -mt-12 relative z-10">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              {/* <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Star className="w-6 h-6 text-white" />
@@ -264,25 +264,25 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData?.rating?.toFixed(1) || 0}</div>
                   <div className="text-sm text-[#511A2B]/70">Avaliação</div>
                 </CardContent>
-              </Card>
+              </Card> */}
 
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#FEC460] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-[#46142b] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Package className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData.products.length}</div>
-                  <div className="text-sm text-[#511A2B]/70">Produtos</div>
+                  <div className="text-sm text-[#511A2B]/70">Produtos disponíveis</div>
                 </CardContent>
               </Card>
 
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#D56235] to-[#511A2B] rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Calendar className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData.events.length}</div>
-                  <div className="text-sm text-[#511A2B]/70">Eventos</div>
+                  <div className="text-sm text-[#511A2B]/70">Eventos disponíveis</div>
                 </CardContent>
               </Card>
             </div>
