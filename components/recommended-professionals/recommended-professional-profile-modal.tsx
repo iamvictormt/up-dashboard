@@ -1,10 +1,11 @@
 'use client';
 
-import { Linkedin, Instagram, Phone, MapPin, Calendar, X, MessageCircle, Mail, Sparkles } from 'lucide-react';
+import { Linkedin, Instagram, Phone, MapPin, Calendar, X, MessageCircle, Mail, Sparkles, Facebook } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { AiOutlineWhatsApp } from 'react-icons/ai';
 
 interface Professional {
   id: string;
@@ -94,14 +95,15 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-[#FEC460] to-[#FDB940] rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-              <Avatar className="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl border-4 border-white/20 shadow-2xl">
+              <Avatar className="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl shadow-2xl">
                 <AvatarFallback className="bg-gradient-to-br from-[#FEC460] to-[#FDB940] text-[#511A2B] text-4xl font-bold rounded-3xl">
                   {getInitials(name)}
                 </AvatarFallback>
               </Avatar>
               {isActive && (
-                <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
+                <div className="absolute -bottom-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
+                                    <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75" />
+
                   Ativo
                 </div>
               )}
@@ -112,7 +114,6 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                 {name.toLowerCase()}
               </h2>
               <div className="inline-flex items-center gap-2 bg-[#FEC460]/20 backdrop-blur-sm px-4 py-2 rounded-full border border-[#FEC460]/30">
-                <div className="w-2 h-2 bg-[#FEC460] rounded-full animate-pulse" />
                 <p className="text-[#FEC460] text-lg font-semibold capitalize">{profession.toLowerCase()}</p>
               </div>
               {description && <p className="text-white/90 leading-relaxed text-base max-w-2xl">{description}</p>}
@@ -191,7 +192,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4 text-white" />
+                  <Facebook className="w-4 h-4 text-white" />
                 </div>
                 Redes Sociais
               </h3>
@@ -221,7 +222,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}
                     className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white border-0 hover:shadow-xl hover:scale-105 transition-all duration-300 px-6 py-6 rounded-xl"
                   >
-                    <MessageCircle className="w-5 h-5 mr-2" />
+                    <AiOutlineWhatsApp className="w-5 h-5 mr-2" />
                     WhatsApp
                   </Button>
                 )}

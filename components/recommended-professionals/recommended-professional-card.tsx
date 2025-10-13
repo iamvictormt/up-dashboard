@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ProfessionalProfileModal } from './recommended-professional-profile-modal';
+import { AiOutlineWhatsApp } from 'react-icons/ai';
 
 interface Professional {
   id: string;
@@ -79,13 +80,6 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
         {/* Decorative gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#511A2B]/5 via-transparent to-[#FEC460]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        {/* Status indicator bar */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1 ${
-            isActive ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gray-300'
-          }`}
-        />
-
         <CardContent className="relative p-6">
           {/* Header with Avatar and Info */}
           <div className="flex items-start gap-4 mb-5">
@@ -127,7 +121,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
                     className="w-9 h-9 p-0 rounded-xl hover:bg-green-50 hover:text-green-600 text-[#511A2B]/60 transition-all duration-300"
                     onClick={() => window.open(`https://wa.me/${formattedWhatsApp}`, '_blank')}
                   >
-                    <MessageCircle className="w-4 h-4" />
+                    <AiOutlineWhatsApp className="w-4 h-4" />
                   </Button>
                 )}
                 {socialMedia?.linkedin && (

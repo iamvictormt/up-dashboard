@@ -6,8 +6,6 @@ import { Search } from 'lucide-react';
 import { SupplierCard } from './supplier-card';
 import { fetchStores } from '@/lib/store-api';
 import { StoreData } from '@/types';
-import Image from 'next/image';
-import { appImages } from '@/constants/appImages';
 
 export function SuppliersContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,9 +57,7 @@ export function SuppliersContent() {
         {/* Header com busca */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">
-              Fornecedores parceiros
-            </h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Fornecedores parceiros</h1>
             <p className="text-[#511A2B]/70">Descubra lojas parceiras com produtos e eventos exclusivos</p>
           </div>
 
@@ -104,25 +100,23 @@ export function SuppliersContent() {
             )}
 
             {/* Paginação */}
-            {hasMore && suppliers.length > 0 && (
-              <div className="flex justify-center items-center mt-8 gap-4">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={page === 1}
-                  className="px-4 py-2 bg-[#511A2B]/10 rounded-lg hover:bg-[#511A2B]/20 disabled:opacity-50"
-                >
-                  Anterior
-                </button>
-                <span className="text-[#511A2B] font-medium">Página {page}</span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={!hasMore}
-                  className="px-4 py-2 bg-[#511A2B]/10 rounded-lg hover:bg-[#511A2B]/20 disabled:opacity-50"
-                >
-                  Próxima
-                </button>
-              </div>
-            )}
+            <div className="flex justify-center items-center mt-8 gap-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={page === 1}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Anterior
+              </button>
+              <span className="text-[#511A2B] font-medium">Página {page}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={!hasMore}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Próxima
+              </button>
+            </div>
           </>
         )}
       </div>

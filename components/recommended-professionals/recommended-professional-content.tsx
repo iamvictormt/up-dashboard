@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProfessionalCard } from '@/components/recommended-professionals/recommended-professional-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Users, UserCheck, MapPin, Briefcase } from 'lucide-react';
+import { Search, Users } from 'lucide-react';
 import { fetchRecommendedProfessionals } from '@/lib/recommended-professional-api';
 import { toast } from 'sonner';
 import { RecommendedProfessionalData } from '@/types';
@@ -15,46 +15,48 @@ export function RecommendedProfessionalsContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [professionals, setProfessionals] = useState<RecommendedProfessionalData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredProfessionals, setFilteredProfessionals] = useState<RecommendedProfessionalData[]>([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(6);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadProfessionals = async (query = '', pageNumber = 1) => {
+    try {
+      setIsLoading(true);
+      const response = await fetchRecommendedProfessionals(query, pageNumber, limit);
+      if (response.status === 200) {
+        setProfessionals(response.data);
+        setHasMore(response.data.length === limit);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro de indisponibilidade, contate o administrador.');
+      setProfessionals([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function loadRecommendedProfessionals() {
-      try {
-        setIsLoading(true);
-        const response = await fetchRecommendedProfessionals();
-        if (response.status === 200) {
-          setProfessionals(response.data);
-        }
-      } catch (err) {
-        console.error(err);
-        toast.error('Erro de indisponibilidade, contate o administrador.');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadRecommendedProfessionals();
+    loadProfessionals();
   }, []);
 
-  // Filtrar profissionais baseado na busca
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredProfessionals(professionals);
-    } else {
-      const filtered = professionals.filter(
-        (professional) =>
-          professional.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          professional.profession.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          professional.address.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          professional.address.district.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredProfessionals(filtered);
-    }
-  }, [searchQuery, professionals]);
+  const handleSearchClick = () => {
+    setPage(1);
+    loadProfessionals(searchQuery, 1);
+  };
 
-  const activeProfessionals = professionals.filter((p) => p.isActive);
-  const totalProfessions = [...new Set(professionals.map((p) => p.profession))].length;
-  const totalCities = [...new Set(professionals.map((p) => p.address.city))].length;
+  const handleNextPage = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    loadProfessionals(searchQuery, nextPage);
+  };
+
+  const handlePrevPage = () => {
+    if (page === 1) return;
+    const prevPage = page - 1;
+    setPage(prevPage);
+    loadProfessionals(searchQuery, prevPage);
+  };
 
   return (
     <div className="p-6 md:p-8 w-full">
@@ -64,91 +66,69 @@ export function RecommendedProfessionalsContent() {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
               Profissionais recomendados
-              <Image src={appImages.logoAbelha.src} alt="UP Club Logo" className="object-contain w-12 h-12 " priority />
             </h1>
             <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais qualificados</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#511A2B]/50 w-4 h-4" />
+          {/* Search Input */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+            <div className="relative w-full sm:w-96">
               <Input
-                placeholder="Buscar profissionais..."
-                className="pl-10 w-full sm:w-64 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                placeholder="Buscar por nome ou profissão..."
+                className="pl-4 pr-12 w-full h-12 sm:h-14 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
               />
+              <button
+                onClick={handleSearchClick}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 rounded-lg text-[#511A2B]/70 hover:text-[#511A2B] hover:bg-[#511A2B]/10 transition"
+              >
+                <Search className="w-5 h-5" />
+              </button>
             </div>
-            {/* <Button variant="primary" className="rounded-xl">
-              <Filter className="w-4 h-4 mr-2" />
-              Filtros
-            </Button> */}
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          {!isLoading && (
-            <>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Users className="w-5 h-5 text-[#511A2B]" />
-                  <div className="text-2xl font-bold text-[#511A2B]">{professionals.length}</div>
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Total de Profissionais</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="flex items-center space-x-2 mb-2">
-                  <UserCheck className="w-5 h-5 text-green-600" />
-                  <div className="text-2xl font-bold text-green-600">{activeProfessionals.length}</div>
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Ativos</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Briefcase className="w-5 h-5 text-[#FEC460]" />
-                  <div className="text-2xl font-bold text-[#FEC460]">{totalProfessions}</div>
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Profissões</div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Loading State */}
+        {/* Loading / Grid */}
         {isLoading ? (
-          <></>
+          <div className="text-center py-12 text-[#511A2B]/70">Carregando profissionais...</div>
         ) : (
           <>
-            {/* Results Info */}
-            {searchQuery && (
-              <div className="mb-6">
-                <p className="text-[#511A2B]/70">
-                  {filteredProfessionals.length > 0
-                    ? `${filteredProfessionals.length} profissional(is) encontrado(s) para "${searchQuery}"`
-                    : `Nenhum profissional encontrado para "${searchQuery}"`}
-                </p>
-              </div>
-            )}
-
-            {/* Professionals Grid */}
-            {filteredProfessionals.length > 0 ? (
+            {professionals.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                {filteredProfessionals.map((professional) => (
+                {professionals.map((professional) => (
                   <ProfessionalCard key={professional.id} professional={professional} />
                 ))}
               </div>
             ) : (
-              !isLoading && (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <Users className="h-16 w-16 text-[#511A2B]/30 mb-4" />
-                  <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum profissional encontrado</p>
-                  <p className="text-[#511A2B]/70 text-sm text-center">
-                    Tente ajustar sua busca ou remover os filtros aplicados
-                  </p>
-                </div>
-              )
+              <div className="flex flex-col items-center justify-center py-12">
+                <Users className="h-16 w-16 text-[#511A2B]/30 mb-4" />
+                <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum profissional encontrado</p>
+                <p className="text-[#511A2B]/70 text-sm text-center">
+                  Tente ajustar sua busca ou remover os filtros aplicados
+                </p>
+              </div>
             )}
+
+            {/* Paginação */}
+            <div className="flex justify-center items-center mt-8 gap-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={page === 1}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Anterior
+              </button>
+              <span className="text-[#511A2B] font-medium">Página {page}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={!hasMore}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Próxima
+              </button>
+            </div>
           </>
         )}
       </div>
