@@ -1,72 +1,72 @@
-"use client"
-import { Star, MapPin, Store, Package, Calendar, ExternalLink, Heart, Clock, ArrowRight, Sparkles } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
-import { formatCurrency } from "@/lib/utils"
+'use client';
+import { Star, MapPin, Store, Package, Calendar, ExternalLink, Heart, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { formatCurrency } from '@/lib/utils';
 
 interface Supplier {
-  id: string
-  name: string
-  logoUrl?: string | null
-  description: string
-  website: string
-  rating: number
-  openingHours: string
+  id: string;
+  name: string;
+  logoUrl?: string | null;
+  description: string;
+  website: string;
+  rating: number;
+  openingHours: string;
   address: {
-    state: string
-    city: string
-    district: string
-    street: string
-    complement: string | null
-    number: string
-    zipCode: string
-  }
+    state: string;
+    city: string;
+    district: string;
+    street: string;
+    complement: string | null;
+    number: string;
+    zipCode: string;
+  };
   products: Array<{
-    id?: string
-    name: string
-    description: string
-    price: number
-    link: string
-    featured: boolean
-    promotion: boolean
-    photoUrl?: string | null
-  }>
+    id?: string;
+    name: string;
+    description: string;
+    price: number;
+    link: string;
+    featured: boolean;
+    promotion: boolean;
+    photoUrl?: string | null;
+  }>;
   events: Array<{
-    id?: string
-    name: string
-    description: string
-    date: string
-    type: string
-    points: number
-    totalSpots: number
-    filledSpots: number
+    id?: string;
+    name: string;
+    description: string;
+    date: string;
+    type: string;
+    points: number;
+    totalSpots: number;
+    filledSpots: number;
     address: {
-      state: string
-      city: string
-      district: string
-      street: string
-      complement: string | null
-      number: string
-      zipCode: string
-    }
-  }>
+      state: string;
+      city: string;
+      district: string;
+      street: string;
+      complement: string | null;
+      number: string;
+      zipCode: string;
+    };
+  }>;
 }
 
 interface SupplierCardProps {
-  supplier: Supplier
+  supplier: Supplier;
 }
 
 export function SupplierCard({ supplier }: SupplierCardProps) {
-  const { id, name, description, website, rating, openingHours, address, products, events, logoUrl } = supplier
+  const { id, name, description, website, rating, openingHours, address, products, events, logoUrl } = supplier;
 
-  const featuredProducts = products.filter((product) => product.featured)
-  const promotionProducts = products.filter((product) => product.promotion)
-  const nextEvent = events.length > 0 ? events[0] : null
+  const featuredProducts = products.filter((product) => product.featured);
+  const promotionProducts = products.filter((product) => product.promotion);
+  const nextEvent = events.length > 0 ? events[0] : null;
 
   // Parse opening hours to show first day
-  const firstOpeningHour = openingHours.split("|")[0]?.trim() || openingHours
+  const firstOpeningHour = openingHours.split('|')[0]?.trim() || openingHours;
 
   return (
     <Card className="group bg-[#511A2B] border-border/40 hover:border-primary/20 hover:shadow-2xl transition-all duration-500 overflow-hidden h-full flex flex-col relative rounded-2xl">
@@ -80,8 +80,8 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             <div
               className="absolute inset-0"
               style={{
-                backgroundImage: "radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)",
-                backgroundSize: "32px 32px",
+                backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)',
+                backgroundSize: '32px 32px',
               }}
             />
           </div>
@@ -91,7 +91,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             <div className="relative">
               {logoUrl ? (
                 <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-background shadow-2xl ring-4 ring-primary/10 group-hover:ring-primary/20 transition-all duration-500 group-hover:scale-105">
-                  <img src={logoUrl || "/placeholder.svg"} alt={name} className="w-full h-full object-cover" />
+                  <img src={logoUrl || '/placeholder.svg'} alt={name} className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-primary/20 to-accent/20 border-2 border-background shadow-2xl ring-4 ring-primary/10 group-hover:ring-primary/20 flex items-center justify-center transition-all duration-500 group-hover:scale-105">
@@ -128,7 +128,9 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         {/* Content Section */}
         <div className="px-6 py-6 flex-1 flex flex-col gap-6 bg-[#511A2B] hover:bg-[#511A2B]/90">
           {/* Description */}
-          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 text-center">{description}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 text-center">
+            {description || 'Sem descrição disponível.'}
+          </p>
 
           {/* Quick Info Pills */}
           <div className="flex flex-wrap gap-2 justify-center">
@@ -146,9 +148,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
           {products.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  Produtos
-                </h4>
+                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">Produtos</h4>
                 {(featuredProducts.length > 0 || promotionProducts.length > 0) && (
                   <div className="flex gap-1.5">
                     {featuredProducts.length > 0 && (
@@ -167,7 +167,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
 
               {/* Product Grid */}
               <div className="grid grid-cols-2 gap-3">
-                {products.slice(0, 4).map((product, index) => (
+                {products.slice(0, 2).map((product, index) => (
                   <div
                     key={product.id || index}
                     className="relative group/product bg-muted/30 hover:bg-muted/50 rounded-xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
@@ -176,7 +176,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
                     {product.photoUrl ? (
                       <div className="aspect-square w-full overflow-hidden bg-muted">
                         <img
-                          src={product.photoUrl || "/placeholder.svg"}
+                          src={product.photoUrl || '/placeholder.svg'}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover/product:scale-110 transition-transform duration-500"
                         />
@@ -215,8 +215,10 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
                 ))}
               </div>
 
-              {products.length > 4 && (
-                <p className="text-xs text-center text-muted-foreground">+{products.length - 4} produtos adicionais</p>
+              {products.length > 2 ? (
+                <p className="text-xs text-center text-muted-foreground">+{products.length - 2} produtos adicionais</p>
+              ) : (
+                <p className="text-xs text-center text-muted-foreground">Nenhum produto adicional</p>
               )}
             </div>
           )}
@@ -244,11 +246,11 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
                   </p>
                   <p className="text-xs text-emerald-700 dark:text-emerald-300 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
-                    {new Date(nextEvent.date).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "long",
-                      hour: "2-digit",
-                      minute: "2-digit",
+                    {new Date(nextEvent.date).toLocaleDateString('pt-BR', {
+                      day: '2-digit',
+                      month: 'long',
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })}
                   </p>
                 </div>
@@ -297,5 +299,5 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
