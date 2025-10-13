@@ -25,22 +25,23 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
   const Icon = getIconByName(community.icon);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="bg-white rounded-xl shadow-sm p-4 sm:p-5 mb-6">
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-6">
+        {/* Ícone e informações da comunidade */}
+        <div className="flex flex-1 min-w-0 items-center gap-3 sm:gap-4">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ backgroundColor: `${community.color}20`, color: community.color }}
           >
-            <Icon className="h-6 w-6" />
+            <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
           </div>
 
-          <div>
-            <h1 className="text-xl font-bold text-[#511A2B]">{community.name}</h1>
-            <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold text-[#511A2B] truncate">{community.name}</h1>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mt-1">
               <div className="flex items-center gap-1">
                 <LucideIcons.Rss className="h-3.5 w-3.5" />
-                <span className='text-muted'>
+                <span className="truncate">
                   {`${community.postsCount ?? 0} publicaç${(community.postsCount ?? 0) === 1 ? 'ão' : 'ões'}`}
                 </span>
               </div>
@@ -48,13 +49,13 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
               {isMobile ? (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="lg" className="h-6 w-6 rounded-full">
+                    <Button variant="ghost" size="sm" className="h-6 w-6 rounded-full">
                       <Info className="h-3.5 w-3.5" />
                       <span className="sr-only">Informações da comunidade</span>
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-64">
-                    <p>{community.description || 'Sem descrição'}</p>
+                  <PopoverContent className="w-64 max-w-xs">
+                    <p className="text-sm">{community.description || 'Sem descrição'}</p>
                   </PopoverContent>
                 </Popover>
               ) : (
@@ -67,7 +68,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{community.description || 'Sem descrição'}</p>
+                      <p className="text-sm">{community.description || 'Sem descrição'}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -76,10 +77,11 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
           </div>
         </div>
 
-        {community.id !== "" && (
+        {/* Botão criar post */}
+        {community.id !== '' && (
           <Button
             onClick={onCreatePost}
-            className="gap-2"
+            className="gap-2 w-full sm:w-auto justify-center sm:justify-start"
             style={{
               backgroundColor: community.color,
               color: '#fff',
@@ -87,8 +89,7 @@ export function CommunityHeader({ community, onCreatePost }: CommunityHeaderProp
             }}
           >
             <PenLine className="h-4 w-4" />
-            <span className="hidden sm:inline">Criar Post</span>
-            <span className="sm:hidden">Post</span>
+            Publicar
           </Button>
         )}
       </div>
