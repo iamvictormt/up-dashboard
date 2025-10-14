@@ -1,6 +1,6 @@
 'use client';
 
-import { Linkedin, Instagram, Phone, MapPin, Calendar, X, MessageCircle, Mail, Sparkles, Facebook } from 'lucide-react';
+import { Linkedin, Instagram, Phone, MapPin, Calendar, X, Mail, Facebook } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,9 +28,7 @@ interface Professional {
     instagram?: string;
     whatsapp: string;
   };
-  availableDays: {
-    dayOfWeek: string;
-  }[];
+  availableDays: { dayOfWeek: string }[];
   isActive: boolean;
 }
 
@@ -75,14 +73,11 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-5xl max-h-[100vh] overflow-hidden bg-gradient-to-br from-white via-[#511A2B]/[0.02] to-white p-0 rounded-3xl shadow-2xl">
-        <DialogTitle className='hidden'></DialogTitle>
-
-        <div className="relative bg-gradient-to-br from-[#511A2B] via-[#6B2438] to-[#511A2B] p-8 overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#FEC460]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FEC460]/5 rounded-full blur-2xl" />
-
+      <DialogContent className="w-[95vw] max-w-5xl max-h-[95dvh] overflow-y-auto bg-gradient-to-br from-white via-[#511A2B]/[0.02] to-white p-0 rounded-3xl shadow-2xl">
+        {/* Header */}
+        <DialogTitle className="hidden"></DialogTitle>
+        <div className="relative bg-gradient-to-br from-[#511A2B] via-[#6B2438] to-[#511A2B] p-6 md:p-8 overflow-visible">
+          {/* Botão de fechar */}
           <Button
             variant="ghost"
             size="default"
@@ -93,8 +88,8 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           </Button>
 
           <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6">
+            {/* Avatar */}
             <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#FEC460] to-[#FDB940] rounded-3xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
               <Avatar className="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl shadow-2xl">
                 <AvatarFallback className="bg-gradient-to-br from-[#FEC460] to-[#FDB940] text-[#511A2B] text-4xl font-bold rounded-3xl">
                   {getInitials(name)}
@@ -102,13 +97,13 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
               </Avatar>
               {isActive && (
                 <div className="absolute -bottom-2 -right-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1">
-                                    <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75" />
-
+                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-75" />
                   Ativo
                 </div>
               )}
             </div>
 
+            {/* Informações */}
             <div className="flex-1 text-center md:text-left space-y-3">
               <h2 className="text-3xl md:text-4xl font-bold text-white capitalize leading-tight">
                 {name.toLowerCase()}
@@ -121,8 +116,9 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
           </div>
         </div>
 
-        <div className="overflow-y-auto max-h-[calc(90vh-280px)] p-6 md:p-8 space-y-6">
-          {/* Contact Section */}
+        {/* Conteúdo principal */}
+        <div className="overflow-y-auto p-6 md:p-8 space-y-6" style={{ maxHeight: '80dvh' }}>
+          {/* Contato */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
@@ -132,23 +128,17 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-5 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
-                <div className="absolute top-3 right-3 w-10 h-10 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="w-5 h-5 text-[#511A2B]" />
-                </div>
                 <p className="text-sm text-[#511A2B]/60 font-medium mb-1">Telefone</p>
                 <p className="text-lg font-bold text-[#511A2B]">{phone}</p>
               </div>
               <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-5 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
-                <div className="absolute top-3 right-3 w-10 h-10 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Mail className="w-5 h-5 text-[#511A2B]" />
-                </div>
                 <p className="text-sm text-[#511A2B]/60 font-medium mb-1">E-mail</p>
                 <p className="text-lg font-bold text-[#511A2B] break-all">{email || 'Não informado'}</p>
               </div>
             </div>
           </div>
 
-          {/* Location Section */}
+          {/* Localização */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
@@ -157,14 +147,11 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
               Localização
             </h3>
             <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-6 rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
-              <div className="absolute top-4 right-4 w-12 h-12 bg-gradient-to-br from-[#511A2B]/5 to-[#511A2B]/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <MapPin className="w-6 h-6 text-[#511A2B]" />
-              </div>
-              <p className="text-[#511A2B] leading-relaxed pr-16">{fullAddress}</p>
+              <p className="text-[#511A2B] leading-relaxed">{fullAddress}</p>
             </div>
           </div>
 
-          {/* Availability Section */}
+          {/* Disponibilidade */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-[#511A2B] to-[#6B2438] rounded-lg flex items-center justify-center">
@@ -187,7 +174,7 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
             </div>
           </div>
 
-          {/* Social Media Section */}
+          {/* Redes Sociais */}
           {(socialMedia?.linkedin || socialMedia?.instagram || socialMedia?.whatsapp) && (
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-[#511A2B] flex items-center gap-2">
@@ -206,7 +193,6 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     LinkedIn
                   </Button>
                 )}
-
                 {socialMedia?.instagram && (
                   <Button
                     onClick={() => window.open(`https://www.instagram.com/${socialMedia.instagram}`, '_blank')}
@@ -216,7 +202,6 @@ export function ProfessionalProfileModal({ professional, isOpen, onClose }: Prof
                     Instagram
                   </Button>
                 )}
-
                 {socialMedia?.whatsapp && (
                   <Button
                     onClick={() => window.open(`https://wa.me/${socialMedia.whatsapp.replace(/\D/g, '')}`, '_blank')}

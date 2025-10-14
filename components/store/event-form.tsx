@@ -10,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { createEvent } from '@/lib/event-api';
 import { toast } from 'sonner';
 
 interface EventFormProps {
@@ -127,35 +126,35 @@ export function EventForm({ storeId, storeAddress, onEventCreated, onClose }: Ev
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    // if (!validateForm()) return;
 
-    setIsSubmitting(true);
+    // setIsSubmitting(true);
 
-    try {
-      const dateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString();
+    // try {
+    //   const dateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString();
 
-      const eventData = {
-        name: formData.name,
-        description: formData.description,
-        date: dateTime,
-        type: formData.type,
-        points: formData.points,
-        totalSpots: formData.totalSpots,
-        storeId: storeId,
-        address: formData.address,
-      };
+    //   const eventData = {
+    //     name: formData.name,
+    //     description: formData.description,
+    //     date: dateTime,
+    //     type: formData.type,
+    //     points: formData.points,
+    //     totalSpots: formData.totalSpots,
+    //     storeId: storeId,
+    //     address: formData.address,
+    //   };
 
-      const response = await createEvent(eventData);
-      if (response.status === 201) {
-        onEventCreated(eventData);
-        toast.success('Evento cadastrado com sucesso.');
-      }
-    } catch (error) {
-      console.error('Erro ao criar evento:', error);
-      setErrors({ general: 'Erro ao criar evento. Tente novamente.' });
-    } finally {
-      setIsSubmitting(false);
-    }
+    //   const response = await createEvent(eventData);
+    //   if (response.status === 201) {
+    //     onEventCreated(eventData);
+    //     toast.success('Evento cadastrado com sucesso.');
+    //   }
+    // } catch (error) {
+    //   console.error('Erro ao criar evento:', error);
+    //   setErrors({ general: 'Erro ao criar evento. Tente novamente.' });
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   const eventTypes = ['Workshop', 'Conferência', 'Meetup', 'Hackathon', 'Seminário', 'Curso', 'Palestra'];
