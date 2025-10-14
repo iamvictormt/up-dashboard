@@ -324,7 +324,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         {product.description}
                       </p>
 
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                         <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
                         <Button
                           variant="primary"
