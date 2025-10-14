@@ -238,3 +238,20 @@ html:has(aside.w-72) .sidebar-curve {
     gap: 1rem;
   }
 }
+
+/* ===== Scrollbar invisível  ===== */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none; /* remove completamente */
+}
+
+/* IE/Legacy */
+* {
+  -ms-overflow-style: none;
+}
