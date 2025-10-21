@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, Crown, Zap, Rocket, Users, TrendingUp, Star, Shield, ArrowRight, Gift, Flame } from 'lucide-react';
+import { Check, Crown, Users, TrendingUp, Star, Shield, ArrowRight, Gift, Flame, Gem, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmbeddedCheckoutDialog, useEmbeddedCheckout } from '@/components/stripe/embedded-checkout-dialog';
 import { formatCurrency } from '@/utils/currency';
@@ -27,6 +27,7 @@ interface Plan {
   idealFor: string;
   badge?: string;
   stripePriceId: string;
+  mostComplete?: boolean;
 }
 
 const plans: Plan[] = [
@@ -36,35 +37,9 @@ const plans: Plan[] = [
     price: 1000,
     description: 'Especialmente para Lojistas fora da cidade de São Paulo',
     idealFor: 'Lojistas de fora da capital',
-    icon: <Rocket className="w-6 h-6" />,
+    icon: <Gem className="w-6 h-6" />,
     gradient: 'from-[#511A2B] to-[#6d1f3f]',
     stripePriceId: 'price_silver_monthly',
-    features: [
-      { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
-      { name: 'Anúncios em destaque.', included: true },
-      {
-        name: 'Links clicáveis e personalizáveis (WhatsApp, site ou produto específico) definidos pelo lojista.',
-        included: true,
-      },
-      {
-        name: 'Visibilidade para dois públicos: Profissionais de decoração e Consumidores da comunidade Eu Amo Decoração.',
-        included: true,
-      },
-      { name: 'Mural da Comunidade: publique novidades, lançamentos e promoções da loja.', included: true },
-      { name: 'Suporte dedicado por WhatsApp e e-mail com atendimento rápido e personalizado.', included: true },
-    ],
-  },
-  {
-    id: 'gold',
-    name: 'GOLD',
-    price: 2000,
-    description: 'Para profissionais que querem crescer',
-    idealFor: 'Lojistas em crescimento',
-    badge: 'MAIS POPULAR',
-    icon: <Zap className="w-6 h-6" />,
-    gradient: 'from-[#FEC460] to-[#f59e0b]',
-    stripePriceId: 'price_gold_monthly',
-    popular: true,
     features: [
       { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
       { name: 'Anúncios em destaque.', included: true },
@@ -90,6 +65,7 @@ const plans: Plan[] = [
     icon: <Crown className="w-6 h-6" />,
     gradient: 'from-[#D56235] to-[#dc2626]',
     stripePriceId: 'price_premium_monthly',
+    mostComplete: true,
     features: [
       {
         name: '1 evento presencial por mês, organizado em parceria com a UP Connection (open house, talk, café, workshop ou ativação).',
@@ -102,6 +78,32 @@ const plans: Plan[] = [
       },
       { name: 'Destaque na HOME PAGE por ser categoria Premium.', included: true },
       { name: 'Acesso antecipado a novas funcionalidades da plataforma.', included: true },
+      { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
+      { name: 'Anúncios em destaque.', included: true },
+      {
+        name: 'Links clicáveis e personalizáveis (WhatsApp, site ou produto específico) definidos pelo lojista.',
+        included: true,
+      },
+      {
+        name: 'Visibilidade para dois públicos: Profissionais de decoração e Consumidores da comunidade Eu Amo Decoração.',
+        included: true,
+      },
+      { name: 'Mural da Comunidade: publique novidades, lançamentos e promoções da loja.', included: true },
+      { name: 'Suporte dedicado por WhatsApp e e-mail com atendimento rápido e personalizado.', included: true },
+    ],
+  },
+  {
+    id: 'gold',
+    name: 'GOLD',
+    price: 2000,
+    description: 'Para profissionais que querem crescer',
+    idealFor: 'Lojistas em crescimento',
+    badge: 'MAIS POPULAR',
+    icon: <Trophy className="w-6 h-6" />,
+    gradient: 'from-[#FEC460] to-[#f59e0b]',
+    stripePriceId: 'price_gold_monthly',
+    popular: true,
+    features: [
       { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
       { name: 'Anúncios em destaque.', included: true },
       {
@@ -171,11 +173,15 @@ export function PlansContent() {
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-5 py-3 shadow-md">
-                  <Check className="w-5 h-5 text-green-600" />
+                  <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                    <Check className="w-3 h-3 text-white stroke-[3]" />
+                  </div>
                   <span className="font-semibold text-[#511A2B]">Sem taxa de adesão</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-5 py-3 shadow-md">
-                  <Check className="w-5 h-5 text-green-600" />
+                  <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                    <Check className="w-3 h-3 text-white stroke-[3]" />
+                  </div>
                   <span className="font-semibold text-[#511A2B]">Sem comissão</span>
                 </div>
               </div>
@@ -205,7 +211,6 @@ export function PlansContent() {
           </div>
 
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#511A2B] via-[#6d1f3f] to-[#511A2B] p-8 shadow-2xl">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FEC460] to-[#f59e0b] flex items-center justify-center shadow-xl">
@@ -253,6 +258,8 @@ export function PlansContent() {
                     'relative bg-white rounded-3xl p-8 shadow-xl transition-all duration-500 hover:shadow-2xl border-2',
                     plan.popular
                       ? 'border-[#FEC460] hover:border-[#FEC460] hover:-translate-y-4 hover:rotate-1'
+                      : plan.mostComplete
+                      ? 'border-[#dc2626] hover:border-[#dc2626] hover:-translate-y-4 hover:rotate-1'
                       : 'border-[#511A2B]/10 hover:border-[#511A2B]/30 hover:-translate-y-3'
                   )}
                   style={{
@@ -268,8 +275,7 @@ export function PlansContent() {
                     >
                       {plan.icon}
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm font-bold text-[#511A2B]/60 mb-1">A partir de</div>
+                    <div className="text-right mt-2">
                       <div className="text-4xl font-black text-[#511A2B]">{formatCurrency(plan.price)}</div>
                       <div className="text-sm font-semibold text-[#511A2B]/60">/mês</div>
                     </div>
@@ -285,6 +291,8 @@ export function PlansContent() {
                       'rounded-2xl p-4 mb-6 border-2',
                       plan.popular
                         ? 'bg-gradient-to-br from-[#FEC460]/10 to-[#FEC460]/5 border-[#FEC460]/30'
+                        : plan.mostComplete
+                        ? 'bg-gradient-to-br from-[#D56235]/10 to-[#dc2626]/5 border-[#dc2626]/30'
                         : 'bg-gradient-to-br from-[#511A2B]/5 to-transparent border-[#511A2B]/10'
                     )}
                   >
@@ -308,6 +316,8 @@ export function PlansContent() {
                       'w-full h-14 rounded-2xl font-black text-base transition-all duration-300 shadow-lg hover:shadow-xl group/button relative overflow-hidden',
                       plan.popular
                         ? 'bg-gradient-to-r from-[#FEC460] to-[#f59e0b] hover:from-[#f59e0b] hover:to-[#FEC460] text-white'
+                        : plan.mostComplete
+                        ? 'bg-gradient-to-r from-[#D56235] to-[#dc2626] hover:from-[#dc2626] hover:to-[#D56235]'
                         : 'bg-gradient-to-r from-[#511A2B] to-[#6d1f3f] hover:from-[#6d1f3f] hover:to-[#511A2B] text-white'
                     )}
                     onClick={() => handleSelectPlan(plan)}
