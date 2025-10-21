@@ -154,7 +154,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 Alterar Imagem
               </DropdownMenuItem>
 
-              {user.partnerSupplier && (
+              {user.partnerSupplier && user.partnerSupplier.subscription && (
                 <>
                   <DropdownMenuItem onClick={() => setIsPlanModalOpen(true)} className="text-[#511A2B]">
                     <Coins className="mr-2 h-4 w-4" />
@@ -174,7 +174,13 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
       </header>
 
       {/* Modais */}
-      {isPlanModalOpen && <MyPlanModal isOpen={isPlanModalOpen} onClose={() => setIsPlanModalOpen(false)} />}
+      {isPlanModalOpen && (
+        <MyPlanModal
+          plan={user.partnerSupplier?.subscription}
+          isOpen={isPlanModalOpen}
+          onClose={() => setIsPlanModalOpen(false)}
+        />
+      )}
       {isProfileModalOpen && <UserEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />}
       {isImageModalOpen && <UserImageModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} />}
 
