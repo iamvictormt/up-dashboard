@@ -2,9 +2,7 @@
 
 import type React from 'react';
 import { Button } from '@/components/ui/button';
-import { Check, Crown, Zap, Rocket, Star, Users, TrendingUp, Shield, Headphones } from 'lucide-react';
-import { useUser } from '@/contexts/user-context';
-import { useRouter } from 'next/navigation';
+import { Check, Crown, Zap, Rocket, Users, TrendingUp, Star, Shield, ArrowRight, Gift, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EmbeddedCheckoutDialog, useEmbeddedCheckout } from '@/components/stripe/embedded-checkout-dialog';
 import { formatCurrency } from '@/utils/currency';
@@ -31,70 +29,29 @@ interface Plan {
   stripePriceId: string;
 }
 
-const allFeatures = [
-  'Perfil profissional completo e verificado',
-  'Cadastro de loja com vitrine de produtos/serviços',
-  'Anúncios mensais em destaque',
-  'Destaque nas buscas',
-  'Listagem na home (ofertas, lançamentos)',
-  'Participação em eventos presenciais promovidos pela marca',
-  'Selo de verificação de confiança',
-  'Selo de profissional em destaque',
-  'Painel com estatísticas de performance',
-  'Campanhas promocionais exclusivas',
-  'Suporte por e-mail e WhatsApp',
-  'Acesso antecipado a funcionalidades novas',
-];
-
 const plans: Plan[] = [
   {
     id: 'silver',
     name: 'SILVER',
     price: 1000,
-    description: 'Para quem busca alta exposição com custo-benefício',
-    idealFor: 'Profissionais iniciantes',
+    description: 'Especialmente para Lojistas fora da cidade de São Paulo',
+    idealFor: 'Lojistas de fora da capital',
     icon: <Rocket className="w-6 h-6" />,
     gradient: 'from-[#511A2B] to-[#6d1f3f]',
-    stripePriceId: 'price_starter_monthly',
+    stripePriceId: 'price_silver_monthly',
     features: [
-      { name: allFeatures[0], included: true },
-      { name: allFeatures[1], included: true },
-      { name: '2 anúncios mensais em destaque', included: true },
-      { name: allFeatures[3], included: true },
-      { name: allFeatures[4], included: false },
-      { name: 'Eventos presenciais promovidos pela marca', included: false },
-      { name: allFeatures[6], included: true },
-      { name: allFeatures[7], included: false },
-      { name: allFeatures[8], included: true },
-      { name: allFeatures[9], included: false },
-      { name: allFeatures[10], included: true },
-      { name: allFeatures[11], included: false },
-    ],
-  },
-  {
-    id: 'premium',
-    name: 'PREMIUM',
-    price: 3000,
-    description: 'Para profissionais de elite',
-    idealFor: 'Profissionais premium',
-    popular: true,
-    badge: 'MAIS COMPLETO',
-    icon: <Crown className="w-6 h-6" />,
-    gradient: 'from-[#D56235] to-[#dc2626]',
-    stripePriceId: 'price_premium_monthly',
-    features: [
-      { name: allFeatures[0], included: true },
-      { name: allFeatures[1], included: true },
-      { name: '4 anúncios mensais em destaque', included: true },
-      { name: allFeatures[3], included: true },
-      { name: allFeatures[4], included: true },
-      { name: '1 evento mensal promovido pela sua marca', included: true },
-      { name: allFeatures[6], included: true },
-      { name: allFeatures[7], included: true },
-      { name: allFeatures[8], included: true },
-      { name: allFeatures[9], included: true },
-      { name: allFeatures[10], included: true },
-      { name: allFeatures[11], included: true },
+      { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
+      { name: 'Anúncios em destaque.', included: true },
+      {
+        name: 'Links clicáveis e personalizáveis (WhatsApp, site ou produto específico) definidos pelo lojista.',
+        included: true,
+      },
+      {
+        name: 'Visibilidade para dois públicos: Profissionais de decoração e Consumidores da comunidade Eu Amo Decoração.',
+        included: true,
+      },
+      { name: 'Mural da Comunidade: publique novidades, lançamentos e promoções da loja.', included: true },
+      { name: 'Suporte dedicado por WhatsApp e e-mail com atendimento rápido e personalizado.', included: true },
     ],
   },
   {
@@ -102,105 +59,190 @@ const plans: Plan[] = [
     name: 'GOLD',
     price: 2000,
     description: 'Para profissionais que querem crescer',
-    idealFor: 'Profissionais estabelecidos',
+    idealFor: 'Lojistas em crescimento',
     badge: 'MAIS POPULAR',
     icon: <Zap className="w-6 h-6" />,
     gradient: 'from-[#FEC460] to-[#f59e0b]',
-    stripePriceId: 'price_pro_monthly',
+    stripePriceId: 'price_gold_monthly',
+    popular: true,
     features: [
-      { name: allFeatures[0], included: true },
-      { name: allFeatures[1], included: true },
-      { name: '3 anúncios mensais em destaque', included: true },
-      { name: allFeatures[3], included: true },
-      { name: allFeatures[4], included: true },
-      { name: '1 evento a cada 45 dias promovido pela sua marca', included: true },
-      { name: allFeatures[6], included: true },
-      { name: allFeatures[7], included: false },
-      { name: allFeatures[8], included: true },
-      { name: allFeatures[9], included: true },
-      { name: allFeatures[10], included: true },
-      { name: allFeatures[11], included: false },
+      { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
+      { name: 'Anúncios em destaque.', included: true },
+      {
+        name: 'Links clicáveis e personalizáveis (WhatsApp, site ou produto específico) definidos pelo lojista.',
+        included: true,
+      },
+      {
+        name: 'Visibilidade para dois públicos: Profissionais de decoração e Consumidores da comunidade Eu Amo Decoração.',
+        included: true,
+      },
+      { name: 'Mural da Comunidade: publique novidades, lançamentos e promoções da loja.', included: true },
+      { name: 'Suporte dedicado por WhatsApp e e-mail com atendimento rápido e personalizado.', included: true },
+    ],
+  },
+  {
+    id: 'premium',
+    name: 'PREMIUM',
+    price: 5000,
+    description: 'Para profissionais de elite',
+    idealFor: 'Lojistas premium',
+    badge: 'MAIS COMPLETO',
+    icon: <Crown className="w-6 h-6" />,
+    gradient: 'from-[#D56235] to-[#dc2626]',
+    stripePriceId: 'price_premium_monthly',
+    features: [
+      {
+        name: '1 evento presencial por mês, organizado em parceria com a UP Connection (open house, talk, café, workshop ou ativação).',
+        included: true,
+      },
+      { name: 'Curadoria e convites feitos pela UP Connection (15 a 20 profissionais).', included: true },
+      {
+        name: 'Custos de realização do evento (estrutura, alimentação, brindes) são por conta do lojista.',
+        included: true,
+      },
+      { name: 'Destaque na HOME PAGE por ser categoria Premium.', included: true },
+      { name: 'Acesso antecipado a novas funcionalidades da plataforma.', included: true },
+      { name: 'Vitrine personalizada da loja dentro da plataforma.', included: true },
+      { name: 'Anúncios em destaque.', included: true },
+      {
+        name: 'Links clicáveis e personalizáveis (WhatsApp, site ou produto específico) definidos pelo lojista.',
+        included: true,
+      },
+      {
+        name: 'Visibilidade para dois públicos: Profissionais de decoração e Consumidores da comunidade Eu Amo Decoração.',
+        included: true,
+      },
+      { name: 'Mural da Comunidade: publique novidades, lançamentos e promoções da loja.', included: true },
+      { name: 'Suporte dedicado por WhatsApp e e-mail com atendimento rápido e personalizado.', included: true },
     ],
   },
 ];
 
 const stats = [
-  { number: '2.5K+', label: 'Profissionais Ativos', icon: Users },
-  { number: '15K+', label: 'Trabalhos Realizados', icon: TrendingUp },
-  { number: '4.8', label: 'Avaliação Média', icon: Star },
-  { number: '98%', label: 'Satisfação', icon: Shield },
+  { number: '100+', label: 'Profissionais Ativos', icon: Users, color: 'from-[#511A2B] to-[#6d1f3f]' },
+  { number: '15K+', label: 'Trabalhos Realizados', icon: TrendingUp, color: 'from-[#FEC460] to-[#f59e0b]' },
+  { number: '4.8', label: 'Avaliação Média', icon: Star, color: 'from-[#D56235] to-[#dc2626]' },
+  { number: '98%', label: 'Satisfação', icon: Shield, color: 'from-[#511A2B] to-[#6d1f3f]' },
 ];
 
 export function PlansContent() {
   const { isOpen, selectedPlan, openCheckout, closeCheckout } = useEmbeddedCheckout();
 
   const handleSelectPlan = (plan: Plan) => {
-    const checkoutPlan = {
+    openCheckout({
       id: plan.id,
       name: plan.name,
       price: plan.price,
-      originalPrice: plan.originalPrice,
       description: plan.description,
-    };
-
-    openCheckout(checkoutPlan);
+    });
   };
 
   return (
-    <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-32 h-32 bg-[#511A2B] rounded-full blur-3xl animate-pulse" />
-          <div className="absolute top-40 right-20 w-24 h-24 bg-[#FEC460] rounded-full blur-2xl animate-pulse delay-1000" />
-          <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-[#D56235] rounded-full blur-3xl animate-pulse delay-2000" />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#FFEDC1] via-[#FFF5E1] to-white relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#511A2B]/10 rounded-full blur-3xl animate-blob" />
+        <div className="absolute top-1/4 -right-40 w-80 h-80 bg-[#FEC460]/20 rounded-full blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-40 left-1/3 w-96 h-96 bg-[#D56235]/10 rounded-full blur-3xl animate-blob animation-delay-4000" />
+      </div>
 
-        <div className="relative z-10 container mx-auto px-4 py-16">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-[#511A2B]/20 rounded-full px-6 py-2 mb-8">
-              <Crown className="w-4 h-4 text-[#511A2B]" />
-              <span className="text-sm font-medium text-[#511A2B]">Planos para Profissionais</span>
+      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20">
+        <div className="max-w-7xl mx-auto mb-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#D56235] to-[#FEC460] text-white rounded-full px-5 py-2.5 shadow-lg">
+                <Flame className="w-4 h-4" />
+                <span className="text-sm font-bold">Oferta de Lançamento</span>
+              </div>
+
+              <h1 className="text-5xl md:text-7xl font-black leading-[1.1] text-[#511A2B]">
+                Transforme
+                <br />
+                <span className="relative inline-block">
+                  <span className="relative z-10 bg-gradient-to-r from-[#FEC460] via-[#D56235] to-[#FEC460] bg-clip-text text-transparent">
+                    Sua Loja
+                  </span>
+                  <div className="absolute -bottom-2 left-0 right-0 h-4 bg-[#FEC460]/30 -rotate-1" />
+                </span>
+              </h1>
+
+              <p className="text-xl md:text-2xl text-[#511A2B]/80 leading-relaxed font-medium">
+                Conecte-se com milhares de profissionais e consumidores. Escolha o plano perfeito para o seu negócio.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-5 py-3 shadow-md">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span className="font-semibold text-[#511A2B]">Sem taxa de adesão</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-5 py-3 shadow-md">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span className="font-semibold text-[#511A2B]">Sem comissão</span>
+                </div>
+              </div>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="text-[#511A2B]">Escolha o Plano</span>
-              <br />
-              <span className="bg-gradient-to-r from-[#FEC460] to-[#D56235] bg-clip-text text-transparent">
-                Perfeito para Você
-              </span>
-            </h1>
-
-            <p className="text-xl text-[#511A2B]/70 mb-12 max-w-3xl mx-auto">
-              Aumente sua visibilidade, receba mais clientes e faça seu negócio crescer com nossos planos profissionais
-            </p>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+            <div className="grid grid-cols-2 gap-4">
               {stats.map((stat, index) => (
                 <div
                   key={index}
-                  className="bg-white/60 backdrop-blur-sm border border-white/40 rounded-2xl p-6 text-center hover:bg-white/80 transition-all duration-300"
+                  className="group relative bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:rotate-1"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#6d1f3f] rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div
+                    className={cn(
+                      'w-12 h-12 rounded-2xl bg-gradient-to-br flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform duration-300',
+                      stat.color
+                    )}
+                  >
                     <stat.icon className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-[#511A2B] mb-1">{stat.number}</div>
-                  <div className="text-sm text-[#511A2B]/70">{stat.label}</div>
+                  <div className="text-4xl font-black text-[#511A2B] mb-1">{stat.number}</div>
+                  <div className="text-sm font-semibold text-[#511A2B]/70">{stat.label}</div>
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#FEC460]/0 to-[#FEC460]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Plans */}
-          <div className="grid lg:grid-cols-3 gap-8 md:mt-[15vh]">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#511A2B] via-[#6d1f3f] to-[#511A2B] p-8 shadow-2xl">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FEC460] to-[#f59e0b] flex items-center justify-center shadow-xl">
+                  <Gift className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white mb-1">Condição Especial de Lançamento</h3>
+                  <p className="text-white/90 font-medium">Válido apenas para os primeiros lojistas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-black text-[#511A2B] mb-4">Escolha Seu Plano</h2>
+            <p className="text-xl text-[#511A2B]/70 font-medium">Todos os planos incluem benefícios exclusivos</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
             {plans.map((plan, index) => (
-              <div key={plan.id} className={cn('relative group', plan.popular && 'lg:-mt-8 lg:mb-8 lg:scale-105')}>
-                {/* Popular Badge */}
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                    <div className="bg-gradient-to-r from-[#FEC460] to-[#f59e0b] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+              <div
+                key={plan.id}
+                className={cn('relative group', plan.popular && 'lg:-mt-6 lg:mb-6')}
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                {plan.badge && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                    <div
+                      className={cn(
+                        'px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider shadow-xl text-white border-2 border-white',
+                        plan.popular
+                          ? 'bg-gradient-to-r from-[#FEC460] to-[#f59e0b]'
+                          : 'bg-gradient-to-r from-[#D56235] to-[#dc2626]'
+                      )}
+                    >
                       {plan.badge}
                     </div>
                   </div>
@@ -208,82 +250,92 @@ export function PlansContent() {
 
                 <div
                   className={cn(
-                    'relative bg-white/80 backdrop-blur-sm border border-white/40 rounded-3xl p-8 shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 h-full',
-                    plan.popular && 'ring-2 ring-[#FEC460]/30 shadow-[#FEC460]/20'
+                    'relative bg-white rounded-3xl p-8 shadow-xl transition-all duration-500 hover:shadow-2xl border-2',
+                    plan.popular
+                      ? 'border-[#FEC460] hover:border-[#FEC460] hover:-translate-y-4 hover:rotate-1'
+                      : 'border-[#511A2B]/10 hover:border-[#511A2B]/30 hover:-translate-y-3'
                   )}
+                  style={{
+                    transformStyle: 'preserve-3d',
+                  }}
                 >
-                  {/* Plan Header */}
-                  <div className="text-center mb-8">
+                  <div className="flex items-center justify-between mb-6">
                     <div
                       className={cn(
-                        'inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br text-white mb-4 shadow-lg',
+                        'w-16 h-16 rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-500',
                         plan.gradient
                       )}
                     >
                       {plan.icon}
                     </div>
-
-                    <h3 className="text-2xl font-bold text-[#511A2B] mb-2">{plan.name}</h3>
-                    <p className="text-[#511A2B]/70 text-sm mb-4">{plan.description}</p>
-
-                    <div className="bg-gradient-to-r from-[#FFEDC1] to-[#FEC460]/20 rounded-xl py-3 px-4 mb-6">
-                      <p className="text-xs text-[#511A2B]/60 mb-1">Ideal para</p>
-                      <p className="text-sm font-semibold text-[#511A2B]">{plan.idealFor}</p>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-[#511A2B]/60 mb-1">A partir de</div>
+                      <div className="text-4xl font-black text-[#511A2B]">{formatCurrency(plan.price)}</div>
+                      <div className="text-sm font-semibold text-[#511A2B]/60">/mês</div>
                     </div>
                   </div>
 
-                  {/* Price */}
-                  <div className="text-center mb-8">
-                    <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-3xl font-bold text-[#511A2B]">{formatCurrency(plan.price)}</span>
-                      <span className="text-[#511A2B]/60 text-sm">/mês</span>
-                    </div>
+                  <div className="mb-6">
+                    <h3 className="text-3xl font-black text-[#511A2B] mb-2">{plan.name}</h3>
+                    <p className="text-[#511A2B]/70 font-medium leading-relaxed">{plan.description}</p>
                   </div>
 
-                  {/* Features */}
-                  <div className="space-y-4 mb-8">
+                  <div
+                    className={cn(
+                      'rounded-2xl p-4 mb-6 border-2',
+                      plan.popular
+                        ? 'bg-gradient-to-br from-[#FEC460]/10 to-[#FEC460]/5 border-[#FEC460]/30'
+                        : 'bg-gradient-to-br from-[#511A2B]/5 to-transparent border-[#511A2B]/10'
+                    )}
+                  >
+                    <div className="text-xs font-black text-[#511A2B]/60 uppercase tracking-wider mb-1">Ideal para</div>
+                    <div className="text-base font-bold text-[#511A2B]">{plan.idealFor}</div>
+                  </div>
+
+                  <div className="space-y-3 mb-8">
                     {plan.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start gap-3">
-                        <div
-                          className={cn(
-                            'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5',
-                            feature.included
-                              ? 'bg-gradient-to-r from-green-500 to-green-600 shadow-sm'
-                              : 'bg-[#511A2B]/20'
-                          )}
-                        >
-                          {feature.included && <Check className="w-3 h-3 text-white" />}
+                        <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                          <Check className="w-3 h-3 text-white stroke-[3]" />
                         </div>
-                        <span
-                          className={cn(
-                            'text-sm font-medium',
-                            feature.included ? 'text-[#511A2B]' : 'text-[#511A2B]/40'
-                          )}
-                        >
-                          {feature.name}
-                        </span>
+                        <span className="text-sm font-medium text-[#511A2B]/90 leading-snug">{feature.name}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* CTA Button */}
                   <Button
                     className={cn(
-                      'w-full h-14 rounded-2xl font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl',
+                      'w-full h-14 rounded-2xl font-black text-base transition-all duration-300 shadow-lg hover:shadow-xl group/button relative overflow-hidden',
                       plan.popular
                         ? 'bg-gradient-to-r from-[#FEC460] to-[#f59e0b] hover:from-[#f59e0b] hover:to-[#FEC460] text-white'
                         : 'bg-gradient-to-r from-[#511A2B] to-[#6d1f3f] hover:from-[#6d1f3f] hover:to-[#511A2B] text-white'
                     )}
                     onClick={() => handleSelectPlan(plan)}
                   >
-                    <div className="flex items-center gap-2">
-                      <span>Começar Agora</span>
-                      <Zap className="w-4 h-4" />
-                    </div>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Começar Agora
+                      <ArrowRight className="w-5 h-5 group-hover/button:translate-x-1 transition-transform duration-300" />
+                    </span>
                   </Button>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto mt-20">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white to-[#FFEDC1]/30 p-10 shadow-xl border-2 border-[#511A2B]/10">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#FEC460]/10 rounded-full blur-3xl" />
+            <div className="relative z-10 text-center">
+              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[#511A2B] to-[#6d1f3f] flex items-center justify-center mx-auto mb-6 shadow-xl">
+                <Shield className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-black text-[#511A2B] mb-4">Garantia de Satisfação</h3>
+              <p className="text-lg text-[#511A2B]/80 leading-relaxed font-medium max-w-2xl mx-auto">
+                Junte-se a centenas de lojistas que já transformaram seus negócios.
+                <br /> Estamos comprometidos com o seu sucesso.
+              </p>
+            </div>
           </div>
         </div>
       </div>
