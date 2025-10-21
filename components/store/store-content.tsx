@@ -194,7 +194,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   </div> */}
 
                   <p className="text-lg text-white/90 leading-relaxed mb-8 w-full break-words">
-                    {storeData.description}
+                    {storeData.description.charAt(0).toUpperCase() + storeData.description.slice(1).toLowerCase()}
                   </p>
 
                   {/* Botões de Ação */}

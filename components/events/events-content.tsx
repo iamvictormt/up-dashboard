@@ -113,38 +113,6 @@ export function EventsContent() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {isLoading ? (
-            <></>
-          ) : (
-            <>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#511A2B]">{events.length}</div>
-                <div className="text-sm text-[#511A2B]/70">Total Eventos</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-green-600">
-                  {events.filter((e) => e.filledSpots < e.totalSpots).length}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Com Vagas</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#FEC460]">
-                  {events.length > 0 ? Math.round(events.reduce((acc, e) => acc + e.points, 0) / events.length) : 0}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Pontos Médios</div>
-              </div>
-              <div className="bg-white/80 rounded-2xl p-4 border border-[#511A2B]/10 shadow-sm">
-                <div className="text-2xl font-bold text-[#D56235]">
-                  {events.reduce((acc, e) => acc + e.filledSpots, 0)}
-                </div>
-                <div className="text-sm text-[#511A2B]/70">Participantes</div>
-              </div>
-            </>
-          )}
-        </div>
-
         {/* Loading State */}
         {!isLoading && (
           /* Events Grid */

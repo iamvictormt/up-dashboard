@@ -188,12 +188,12 @@ export function PersonalInfoStep({
                     onValueChange={(value) => handleInputChange('professional', 'professionId', value)}
                   >
                     <SelectTrigger id="profession" className="pl-11 h-12">
-                      <SelectValue placeholder="Selecione a profissão" className='text-muted-foregroud' />
+                      <SelectValue placeholder="Selecione a profissão" className="text-muted-foregroud" />
                     </SelectTrigger>
                     <SelectContent>
                       {professions.map((profession) => (
                         <SelectItem key={profession.id} value={profession.id}>
-                          {profession.name}
+                          {profession.name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())}
                         </SelectItem>
                       ))}
                     </SelectContent>

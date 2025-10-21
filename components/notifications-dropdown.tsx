@@ -152,7 +152,7 @@ export function NotificationsDropdown() {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <p className={cn('text-sm font-medium', !notification.isRead && 'text-[#46142b]')}>
+              <p className={cn('text-sm text-gray-800 font-medium', !notification.isRead && 'text-[#46142b]')}>
                 {notification.title}
               </p>
               <p className="text-sm text-gray-600 mt-1">{notification.message}</p>

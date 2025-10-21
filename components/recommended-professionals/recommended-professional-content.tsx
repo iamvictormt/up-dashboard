@@ -65,7 +65,7 @@ export function RecommendedProfessionalsContent() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
-              Profissionais recomendados
+              Prestadores de Serviços
             </h1>
             <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais qualificados</p>
           </div>

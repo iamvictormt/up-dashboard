@@ -1,5 +1,17 @@
 'use client';
-import { Star, MapPin, Store, Package, Calendar, ExternalLink, Heart, Clock, ArrowRight, Sparkles, CalendarDays } from 'lucide-react';
+import {
+  Star,
+  MapPin,
+  Store,
+  Package,
+  Calendar,
+  ExternalLink,
+  Heart,
+  Clock,
+  ArrowRight,
+  Sparkles,
+  CalendarDays,
+} from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -129,9 +141,8 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         <div className="px-6 py-6 flex-1 flex flex-col gap-6 bg-[#511A2B] hover:bg-[#511A2B]/90">
           {/* Description */}
           <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 text-center">
-            {description || 'Sem descrição disponível.'}
+            {description.charAt(0).toUpperCase() + description.slice(1).toLowerCase() || 'Sem descrição disponível.'}
           </p>
-
           {/* Quick Info Pills */}
           <div className="flex flex-wrap gap-2 justify-center">
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-xs text-muted-foreground border border-border/50">
@@ -140,31 +151,15 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 rounded-full text-xs text-muted-foreground border border-border/50">
               <Package className="w-3.5 h-3.5" />
-              <span className="font-medium">{products.length} produtos</span>
+              <span className="font-medium">
+                {products.length} produto{products.length !== 1 ? 's' : ''}
+              </span>
             </div>
           </div>
 
           {/* Products Showcase */}
           {products.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">Produtos</h4>
-                {(featuredProducts.length > 0 || promotionProducts.length > 0) && (
-                  <div className="flex gap-1.5">
-                    {featuredProducts.length > 0 && (
-                      <Badge variant="secondary" className="rounded-full text-xs px-2 py-0.5">
-                        {featuredProducts.length} destaque
-                      </Badge>
-                    )}
-                    {promotionProducts.length > 0 && (
-                      <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 rounded-full text-xs px-2 py-0.5 border-0">
-                        {promotionProducts.length} promoção
-                      </Badge>
-                    )}
-                  </div>
-                )}
-              </div>
-
               {/* Product Grid */}
               <div className="grid grid-cols-2 gap-3">
                 {products.slice(0, 2).map((product, index) => (

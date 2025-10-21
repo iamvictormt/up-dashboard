@@ -485,8 +485,8 @@ export function LoginContent() {
                           {registerType === 'love-decorations'
                             ? 'Eu amo decoração'
                             : registerType === 'professionals'
-                            ? 'Profissional'
-                            : 'Fornecedor Parceiro'}
+                            ? 'Profissional de Decoração'
+                            : 'Lojista Parceiro'}
                         </h1>
                         <p className="text-muted-foreground">Preencha seus dados para criar sua conta</p>
                       </div>

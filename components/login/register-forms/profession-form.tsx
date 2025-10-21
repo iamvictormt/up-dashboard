@@ -127,7 +127,7 @@ export function ProfessionalForm({
                   <SelectContent>
                     {professions.map((profession: Profession) => (
                       <SelectItem key={profession.id} value={profession.id}>
-                        {profession.name}
+                        {profession.name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())}
                       </SelectItem>
                     ))}
                   </SelectContent>

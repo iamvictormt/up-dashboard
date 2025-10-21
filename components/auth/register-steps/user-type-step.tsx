@@ -24,7 +24,7 @@ export function UserTypeStep({ selectedType, onSelect }: UserTypeStepProps) {
     },
     {
       id: 'professionals' as UserType,
-      title: 'Profissional',
+      title: 'Profissionais de Decoração',
       description: 'Arquitetos, designers e profissionais da área',
       icon: User,
       color: 'from-blue-500 to-indigo-500',
@@ -34,7 +34,7 @@ export function UserTypeStep({ selectedType, onSelect }: UserTypeStepProps) {
     },
     {
       id: 'partner-suppliers' as UserType,
-      title: 'Fornecedor Parceiro',
+      title: 'Lojista Parceiro',
       description: 'Empresas, lojistas e fornecedores',
       icon: Building2,
       color: 'from-emerald-500 to-teal-500',

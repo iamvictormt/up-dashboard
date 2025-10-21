@@ -22,10 +22,10 @@ export function ProgressIndicator({ steps, currentStep, title, userType }: Progr
             <span>
               (
               {userType === 'professionals'
-                ? 'Profissional'
+                ? 'Profissionais de Decoração'
                 : userType === 'love-decorations'
                 ? 'Eu amo decoração'
-                : 'Fornecedor parceiro'}
+                : 'Lojista Parceiro'}
               )
             </span>
           )}

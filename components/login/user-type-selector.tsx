@@ -25,7 +25,7 @@ export function UserTypeSelector({ registerType, onTypeChange }: UserTypeSelecto
     },
     {
       id: "professionals" as RegisterType,
-      title: "Profissional",
+      title: "Profissionais de Decoração",
       description: "Arquitetos, designers e profissionais da área",
       icon: User,
       gradient: "from-blue-500/20 to-indigo-500/20",
@@ -35,7 +35,7 @@ export function UserTypeSelector({ registerType, onTypeChange }: UserTypeSelecto
     },
     {
       id: "partner-suppliers" as RegisterType,
-      title: "Fornecedor Parceiro",
+      title: "Lojista Parceiro",
       description: "Empresas, lojistas e fornecedores",
       icon: Building2,
       gradient: "from-emerald-500/20 to-teal-500/20",

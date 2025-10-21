@@ -48,7 +48,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const getUserType = () => {
     if (user?.professional) return `${user.professional.profession.name}`;
-    if (user?.partnerSupplier) return 'Fornecedor Parceiro';
+    if (user?.partnerSupplier) return 'Lojista Parceiro';
     if (user?.loveDecoration) return 'Eu amo decoração';
     return 'Usuário';
   };
