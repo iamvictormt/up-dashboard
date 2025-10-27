@@ -122,7 +122,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
 
             {/* Store Name */}
             <div className="space-y-2">
-              <h3 className="text-2xl font-bold text-foreground text-balance leading-tight group-hover:text-primary transition-colors">
+              <h3 className="text-1xl font-bold text-foreground text-balance leading-tight group-hover:text-primary transition-colors line-clamp-1">
                 {name}
               </h3>
 
@@ -211,9 +211,9 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
               </div>
 
               {products.length > 2 ? (
-                <p className="text-xs text-center text-muted-foreground">+{products.length - 2} produtos adicionais</p>
+                <p className="text-xs text-center text-muted-foreground">+{products.length - 2} produto{products.length - 2 !== 1 && 's'}</p>
               ) : (
-                <p className="text-xs text-center text-muted-foreground">Nenhum produto adicional</p>
+                '\u00A0' // espaço não quebrável (mantém altura do <p>)
               )}
             </div>
           )}
