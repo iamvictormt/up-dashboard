@@ -30,6 +30,7 @@ interface Plan {
   planType: string;
   price: number;
   description: string;
+  stripeCustomerId?: string;
 }
 
 interface EmbeddedCheckoutDialogProps {
@@ -105,8 +106,10 @@ export function MyPlanModal({ isOpen, onClose, plan }: EmbeddedCheckoutDialogPro
   const daysUntilBilling = Math.ceil((nextBillingDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
 
   const handleManageSubscription = async () => {
-    window.open('https://billing.stripe.com/p/login/test_bJe9AV3WCe84ga7cBk00000', '_blank');
+    window.open('https://billing.stripe.com/p/login/7sY9AT778a40cWeeud33W00', '_blank');
   };
+
+  console.log(plan);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -185,44 +188,49 @@ export function MyPlanModal({ isOpen, onClose, plan }: EmbeddedCheckoutDialogPro
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
-              <div className="flex items-center gap-2 mb-2">
-                <Shield className="w-4 h-4 text-blue-600" />
-                <span className="text-xs font-medium text-gray-600">Pagamento Seguro</span>
+          {plan.stripeCustomerId !== `-` && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="w-4 h-4 text-blue-600" />
+                  <span className="text-xs font-medium text-gray-600">Pagamento Seguro</span>
+                </div>
+                <p className="text-sm font-semibold text-gray-900">Stripe</p>
               </div>
-              <p className="text-sm font-semibold text-gray-900">Stripe</p>
-            </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
-              <div className="flex items-center gap-2 mb-2">
-                <Zap className="w-4 h-4 text-yellow-600" />
-                <span className="text-xs font-medium text-gray-600">Renovação</span>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-yellow-600" />
+                  <span className="text-xs font-medium text-gray-600">Renovação</span>
+                </div>
+                <p className="text-sm font-semibold text-gray-900">Automática</p>
               </div>
-              <p className="text-sm font-semibold text-gray-900">Automática</p>
-            </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle2 className="w-4 h-4 text-green-600" />
-                <span className="text-xs font-medium text-gray-600">Cancelamento</span>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300 hover:shadow-md hover:border-[#511A2B]/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                  <span className="text-xs font-medium text-gray-600">Cancelamento</span>
+                </div>
+                <p className="text-sm font-semibold text-gray-900">A qualquer momento</p>
               </div>
-              <p className="text-sm font-semibold text-gray-900">A qualquer momento</p>
             </div>
-          </div>
+          )}
 
           <div className="pt-4 space-y-3">
             <Button
               onClick={handleManageSubscription}
+              disabled={plan.stripeCustomerId === `-`}
               className="w-full h-14 rounded-xl font-bold text-base bg-gradient-to-r from-[#511A2B] to-[#6d1f3f] hover:from-[#6d1f3f] hover:to-[#511A2B] text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
             >
               <ExternalLink className="w-4 h-4 mr-2" />
               Gerenciar Assinatura
             </Button>
 
-            <p className="text-xs text-gray-500 text-center pt-2">
-              Pagamento seguro processado pelo Stripe. Você pode cancelar a qualquer momento sem taxas adicionais.
-            </p>
+            {plan.stripeCustomerId !== `-` && (
+              <p className="text-xs text-gray-500 text-center pt-2">
+                Pagamento seguro processado pelo Stripe. Você pode cancelar a qualquer momento sem taxas adicionais.
+              </p>
+            )}
           </div>
         </div>
       </DialogContent>
