@@ -57,14 +57,14 @@ export function SuppliersContent() {
         {/* Header com busca */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Fornecedores parceiros</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Lojistas parceiros</h1>
             <p className="text-[#511A2B]/70">Descubra lojas parceiras com produtos e eventos exclusivos</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
             <div className="relative w-full sm:w-96">
               <Input
-                placeholder="Buscar por produtos ou fornecedores..."
+                placeholder="Buscar por produtos ou lojistas..."
                 className="pl-4 pr-12 w-full h-12 sm:h-14 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -82,7 +82,7 @@ export function SuppliersContent() {
 
         {/* Loading / Grid */}
         {isLoading ? (
-          <div className="text-center py-12 text-[#511A2B]/70">Carregando fornecedores...</div>
+          <div className="text-center py-12 text-[#511A2B]/70">Carregando lojistas...</div>
         ) : (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
