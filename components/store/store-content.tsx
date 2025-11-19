@@ -320,7 +320,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
 
                     <CardContent className="p-6">
                       <h3 className="font-bold text-[#511A2B] mb-2 text-lg">{product.name}</h3>
-                      <p className="text-sm text-[#511A2B]/70 mb-4 overflow-visible whitespace-normal break-words line-clamp-1 truncate">
+                      <p className="text-sm text-[#511A2B]/70 mb-4 overflow-hidden whitespace-normal break-words line-clamp-3">
                         {product.description}
                       </p>
 
