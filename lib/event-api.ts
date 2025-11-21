@@ -14,6 +14,10 @@ export async function deleteEvent(eventId: string): Promise<AxiosResponse> {
   return await api.delete(`events/${eventId}`);
 }
 
+export async function fetchMyEvents(): Promise<AxiosResponse> {
+  return await api.get('events/me');
+}
+
 export async function registerInEvent(eventId: string, data: {professionalId: string}): Promise<AxiosResponse> {
   return await api.post(`events/${eventId}/registrations`, data);
 }
