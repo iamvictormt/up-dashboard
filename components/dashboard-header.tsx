@@ -117,6 +117,16 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
         {/* ÍCONES E PERFIL */}
         <div className="flex items-center gap-2 sm:gap-4">
+
+          {/* Pontos do Profissional */}
+          {user.professional && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/10">
+              <Coins className="w-4 h-4 text-yellow-400" />
+              <span className="text-sm font-semibold text-white">{user.professional.points || 0}</span>
+              <span className="text-xs text-white/60">pontos</span>
+            </div>
+          )}
+          
           <NotificationsDropdown />
 
           <DropdownMenu>
