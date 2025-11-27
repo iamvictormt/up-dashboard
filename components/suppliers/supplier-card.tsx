@@ -96,15 +96,35 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
 
   const now = new Date();
   const currentHour = now.getHours();
-  const isOpen = todayHours?.includes(':')
-    ? (() => {
-        const times = todayHours.split(':')[1]?.split('-') || [];
-        if (times.length < 2) return false;
-        const start = parseInt(times[0].trim());
-        const end = parseInt(times[1].trim());
-        return currentHour >= start && currentHour < end;
-      })()
-    : false;
+  const currentMinutes = now.getMinutes();
+  
+  const isOpen = (() => {
+    if (!todayHours || !todayHours.includes(':')) return false;
+    
+    // Extrai a parte do horário (ex: "08:00-18:00" de "Segunda: 08:00-18:00")
+    const timePart = todayHours.split(':').slice(1).join(':').trim();
+    
+    // Separa os horários de abertura e fechamento
+    const times = timePart.split('-');
+    if (times.length < 2) return false;
+    
+    // Parse do horário de abertura (ex: "08:00" ou "08")
+    const startParts = times[0].trim().split(':');
+    const startHour = parseInt(startParts[0]);
+    const startMin = startParts[1] ? parseInt(startParts[1]) : 0;
+    
+    // Parse do horário de fechamento
+    const endParts = times[1].trim().split(':');
+    const endHour = parseInt(endParts[0]);
+    const endMin = endParts[1] ? parseInt(endParts[1]) : 0;
+    
+    // Converte tudo para minutos desde meia-noite para comparação mais precisa
+    const currentTotalMin = currentHour * 60 + currentMinutes;
+    const startTotalMin = startHour * 60 + startMin;
+    const endTotalMin = endHour * 60 + endMin;
+    
+    return currentTotalMin >= startTotalMin && currentTotalMin < endTotalMin;
+  })();
 
   return (
     <Card className="group relative flex flex-col h-full overflow-hidden border-border/50 bg-background transition-all duration-300 hover:shadow-xl hover:border-primary/20 rounded-2xl">
