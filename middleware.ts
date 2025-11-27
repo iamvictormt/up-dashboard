@@ -21,15 +21,15 @@ export function middleware(request: NextRequest) {
   const permissions: any = {
     partnerSupplier: [
       '/mural',
-      '/recommended-professionals',
+      '/service-providers',
       '/store-info',
       '/help',
       '/plans',
       '/payment-confirmed',
       '/payment-confirmation',
     ],
-    professional: ['/mural', '/recommended-professionals', '/suppliers-store', '/workshops', '/events', '/help', '/benefits'],
-    loveDecoration: ['/mural', '/recommended-professionals', '/suppliers-store', '/help'],
+    professional: ['/mural', '/service-providers', '/suppliers-store', '/workshops', '/events', '/help', '/benefits'],
+    loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/help'],
   };
 
   const isStatic =

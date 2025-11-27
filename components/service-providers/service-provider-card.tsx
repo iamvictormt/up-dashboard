@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ProfessionalProfileModal } from './recommended-professional-profile-modal';
+import { ServiceProviderProfileModal } from '../service-providers/service-provider-profile-modal';
 import { AiOutlineWhatsApp } from 'react-icons/ai';
 
 interface Professional {
@@ -206,7 +206,7 @@ export function ProfessionalCard({ professional }: ProfessionalCardProps) {
       </Card>
 
       {/* Modal placeholder - you'll need to import and use your actual modal component */}
-      <ProfessionalProfileModal
+      <ServiceProviderProfileModal
         professional={professional}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

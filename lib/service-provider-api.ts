@@ -1,7 +1,7 @@
 import api from '@/services/api';
 import { AxiosResponse } from 'axios';
 
-export async function fetchRecommendedProfessionals(
+export async function fetchServiceProviders(
   search?: string,
   page: number = 1,
   limit: number = 6

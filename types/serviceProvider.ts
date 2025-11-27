@@ -1,4 +1,4 @@
-export interface RecommendedProfessionalData {
+export interface ServiceProviderData {
   id: string;
   name: string;
   profession: string;

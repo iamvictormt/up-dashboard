@@ -104,9 +104,9 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {
-      title: 'Profissionais recomendados',
+      title: 'Prestadores de serviços',
       icon: Users,
-      url: '/recommended-professionals',
+      url: '/service-providers',
       roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {

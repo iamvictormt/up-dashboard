@@ -66,7 +66,7 @@ const getInitials = (name: string) => {
   return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
 };
 
-export function ProfessionalProfileModal({ professional, isOpen, onClose }: ProfessionalProfileModalProps) {
+export function ServiceProviderProfileModal({ professional, isOpen, onClose }: ProfessionalProfileModalProps) {
   const { name, profession, description, isActive, phone, email, address, availableDays, socialMedia } = professional;
   const availableDaysList = formatAvailableDaysFull(availableDays);
   const fullAddress = formatFullAddress(address);

@@ -1,19 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ProfessionalCard } from '@/components/recommended-professionals/recommended-professional-card';
-import { Button } from '@/components/ui/button';
+import { ProfessionalCard } from '@/components/service-providers/service-provider-card';
 import { Input } from '@/components/ui/input';
 import { Search, Users } from 'lucide-react';
-import { fetchRecommendedProfessionals } from '@/lib/recommended-professional-api';
+import { fetchServiceProviders } from '@/lib/service-provider-api';
 import { toast } from 'sonner';
-import { RecommendedProfessionalData } from '@/types';
-import Image from 'next/image';
-import { appImages } from '@/constants/appImages';
+import { ServiceProviderData } from '@/types';
 
-export function RecommendedProfessionalsContent() {
+export function ServiceProvidersContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [professionals, setProfessionals] = useState<RecommendedProfessionalData[]>([]);
+  const [professionals, setProfessionals] = useState<ServiceProviderData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [limit] = useState(6);
@@ -22,7 +19,7 @@ export function RecommendedProfessionalsContent() {
   const loadProfessionals = async (query = '', pageNumber = 1) => {
     try {
       setIsLoading(true);
-      const response = await fetchRecommendedProfessionals(query, pageNumber, limit);
+      const response = await fetchServiceProviders(query, pageNumber, limit);
       if (response.status === 200) {
         setProfessionals(response.data);
         setHasMore(response.data.length === limit);
@@ -65,7 +62,7 @@ export function RecommendedProfessionalsContent() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
-              Profissionais recomendados
+              Prestadores de serviços
             </h1>
             <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais qualificados</p>
           </div>
