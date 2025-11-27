@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Calendar, MapPin, Users, Award, Clock, Building, Sparkles, TrendingUp, Check } from 'lucide-react';
+import { X, Calendar, MapPin, Users, Award, Clock, Building, Sparkles, TrendingUp, Check, CheckCircle2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,6 +34,7 @@ interface Event {
     rating: number;
     logoUrl?: string;
   };
+  isRegistered?: boolean;
 }
 
 interface EventDetailModalProps {
@@ -41,9 +42,16 @@ interface EventDetailModalProps {
   professionalId?: string;
   onClose: () => void;
   onEventUpdate?: () => void;
+  isRegistered?: boolean;
 }
 
-export function EventDetailModal({ event, professionalId = '', onClose, onEventUpdate }: EventDetailModalProps) {
+export function EventDetailModal({ 
+  event, 
+  professionalId = '', 
+  onClose, 
+  onEventUpdate,
+  isRegistered = false 
+}: EventDetailModalProps) {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const formatDate = (dateString: string) => {
@@ -100,14 +108,8 @@ export function EventDetailModal({ event, professionalId = '', onClose, onEventU
     }
   };
 
-  const getInitials = (name: string) => {
-    const words = name.trim().split(' ');
-    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
-    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-  };
-
   const handleParticipateClick = () => {
-    if (!professionalId) {
+    if (!professionalId || isRegistered) {
       return;
     }
 
@@ -134,6 +136,12 @@ export function EventDetailModal({ event, professionalId = '', onClose, onEventU
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
                 Detalhes do Evento
+                {isRegistered && (
+                  <Badge className="bg-green-500 text-white border-0 rounded-full text-xs font-bold ml-2 px-3 py-1">
+                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                    Você está registrado
+                  </Badge>
+                )}
               </DialogTitle>
               <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-white/10 rounded-xl">
                 <X className="w-5 h-5 text-white" />
@@ -142,6 +150,22 @@ export function EventDetailModal({ event, professionalId = '', onClose, onEventU
           </DialogHeader>
 
           <div className="p-6 space-y-6">
+            {/* Registration Status Banner - Só aparece se estiver registrado */}
+            {isRegistered && (
+              <div className="relative p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-green-200/30 rounded-full blur-2xl" />
+                <div className="relative flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center shadow-lg">
+                    <CheckCircle2 className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-green-900 text-lg">Inscrição Confirmada!</h4>
+                    <p className="text-green-700 text-sm">Você já está registrado neste evento. Nos vemos lá!</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Hero Section */}
             <div className="relative p-6 bg-gradient-to-br from-[#511A2B]/5 via-transparent to-[#FEC460]/5 rounded-2xl border border-[#511A2B]/10 overflow-hidden">
               {/* Decorative elements */}
@@ -282,7 +306,9 @@ export function EventDetailModal({ event, professionalId = '', onClose, onEventU
                 <div className="flex items-center gap-4 p-4 bg-white/50 rounded-xl">
                   <div className="flex-1">
                     <p className="font-bold text-[#511A2B] text-xl">{event.points} pontos</p>
-                    <p className="text-sm text-[#511A2B]/70 font-medium">Ganhe pontos ao participar do evento</p>
+                    <p className="text-sm text-[#511A2B]/70 font-medium">
+                      {isRegistered ? 'Você ganhará estes pontos ao participar' : 'Ganhe pontos ao participar do evento'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -290,29 +316,41 @@ export function EventDetailModal({ event, professionalId = '', onClose, onEventU
 
             {/* Action Button */}
             <div className="pt-4">
-              <Button
-                className="w-full bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 text-white rounded-xl py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={spotsLeft === 0 || !professionalId}
-                onClick={handleParticipateClick}
-              >
-                {spotsLeft > 0 ? (
+              {isRegistered ? (
+                <Button
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+                  disabled
+                >
                   <div className="flex items-center gap-2">
-                    Participar do Evento
-                    <Check className="w-5 h-5" />
+                    <CheckCircle2 className="w-5 h-5" />
+                    Você já está registrado neste evento
                   </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
-                    Falar com suporte para tentar uma vaga
-                  </div>
-                )}
-              </Button>
+                </Button>
+              ) : (
+                <Button
+                  className="w-full bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 hover:from-[#511A2B]/90 hover:to-[#511A2B]/80 text-white rounded-xl py-6 text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={spotsLeft === 0 || !professionalId}
+                  onClick={handleParticipateClick}
+                >
+                  {spotsLeft > 0 ? (
+                    <div className="flex items-center gap-2">
+                      Participar do Evento
+                      <Check className="w-5 h-5" />
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-5 h-5" />
+                      Falar com suporte para tentar uma vaga
+                    </div>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {showConfirmationModal && (
+      {showConfirmationModal && !isRegistered && (
         <EventConfirmationModal
           event={event}
           professionalId={professionalId}

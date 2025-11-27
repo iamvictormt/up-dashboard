@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import { EventCard } from './event-card';
 import { EventDetailModal } from './event-detail-modal';
-import { fetchEvents } from '@/lib/event-api';
+import { fetchEvents, fetchMyEvents } from '@/lib/event-api';
 import { useUser } from '@/contexts/user-context';
 
 interface Event {
@@ -34,17 +33,20 @@ interface Event {
     name: string;
     rating: number;
   };
+  // Adicionar campo para indicar se o usuário está registrado
+  isRegistered?: boolean;
 }
 
 export function EventsContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [events, setEvents] = useState<Event[]>([]);
+  const [myEventIds, setMyEventIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const { user } = useUser();
 
- const professionalId = user?.professional?.id;
+  const professionalId = user?.professional?.id;
 
   useEffect(() => {
     loadEvents();
@@ -53,8 +55,24 @@ export function EventsContent() {
   const loadEvents = async () => {
     try {
       setIsLoading(true);
-      const response = await fetchEvents();
-      setEvents(response.data);
+      
+      // Busca eventos em paralelo
+      const [eventsResponse, myEventsResponse] = await Promise.all([
+        fetchEvents(),
+        fetchMyEvents().catch(() => ({ data: [] })) // Se falhar, retorna array vazio
+      ]);
+
+      // Cria um Set com os IDs dos eventos que o usuário está registrado
+      const myIds = new Set(myEventsResponse.data.map((event: Event) => event.id));
+      setMyEventIds(myIds);
+
+      // Marca os eventos como registrados
+      const eventsWithRegistration = eventsResponse.data.map((event: Event) => ({
+        ...event,
+        isRegistered: myIds.has(event.id)
+      }));
+
+      setEvents(eventsWithRegistration);
     } catch (error) {
       console.error('Error loading events:', error);
       setEvents([]);
@@ -79,7 +97,6 @@ export function EventsContent() {
     setSelectedEvent(event);
     setShowConfirmationModal(true);
   };
-
 
   const handleEventUpdate = () => {
     // Recarrega os eventos após uma participação
@@ -106,19 +123,27 @@ export function EventsContent() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            {/* <Button variant="outline" className="border-[#511A2B]/30 text-[#511A2B] hover:bg-[#511A2B]/10 rounded-xl">
-              <Filter className="w-4 h-4 mr-2" />
-              Filtrar
-            </Button> */}
           </div>
         </div>
 
         {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-[#511A2B]/70">Carregando eventos...</p>
+          </div>
+        )}
+
+        {/* Events Grid */}
         {!isLoading && (
-          /* Events Grid */
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} onEventClick={handleEventClick}  onParticipateClick={handleParticipateClick}/>
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                onEventClick={handleEventClick}  
+                onParticipateClick={handleParticipateClick}
+                isRegistered={event.isRegistered} // Passa a prop para o card
+              />
             ))}
           </div>
         )}
@@ -127,6 +152,13 @@ export function EventsContent() {
           <div className="text-center py-12">
             <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum evento encontrado</p>
             <p className="text-[#511A2B]/70">Tente ajustar sua busca ou remover os filtros</p>
+          </div>
+        )}
+
+        {!isLoading && events.length === 0 && !searchQuery && (
+          <div className="text-center py-12">
+            <p className="text-[#511A2B] text-lg font-medium mb-2">Nenhum evento disponível</p>
+            <p className="text-[#511A2B]/70">Novos eventos serão exibidos aqui</p>
           </div>
         )}
       </div>
@@ -138,6 +170,7 @@ export function EventsContent() {
           professionalId={professionalId}
           onClose={() => setSelectedEvent(null)}
           onEventUpdate={handleEventUpdate}
+          isRegistered={selectedEvent.isRegistered} // Passa também para o modal
         />
       )}
     </div>
