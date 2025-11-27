@@ -219,7 +219,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Package className="w-3.5 h-3.5" />
               Produtos
-            </h4>
+            </h4>{' '}
             {remainingProducts > 0 ? (
               <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md">
                 +{remainingProducts}
@@ -291,45 +291,68 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
         </div>
 
         {/* Next Event Section - Ticket Style */}
-        <div className="space-y-2.5">
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5" />
-            Próximo Evento
-          </h4>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="h-px flex-1 bg-border/40" />
+            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+              Próximo Evento
+            </h4>
+            <span className="h-px flex-1 bg-border/40" />
+          </div>
+
           {nextEvent ? (
-            <div className="relative overflow-hidden rounded-xl border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/10 p-3 group/event hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors">
+            <div className="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/20 p-4 shadow-sm backdrop-blur-smtransition-all duration-300hover:shadow-md hover:border-emerald-500/50  min-h-[88px]">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <div className="flex items-center gap-2 mb-3 flex-wrap">
+                    {/* Tipo */}
                     <Badge
                       variant="outline"
-                      className="h-5 border-emerald-200 text-emerald-700 bg-emerald-100/50 text-[10px] px-1.5"
+                      className="h-5 border-emerald-300 text-emerald-800 bg-emerald-100/60 dark:bg-emerald-900/40 text-[10px] px-2"
                     >
                       {nextEvent.type}
                     </Badge>
-                    <span className="text-[10px] font-medium text-emerald-600 flex items-center gap-1 whitespace-nowrap">
+
+                    {/* Data */}
+                    <Badge
+                      variant="outline"
+                      className="h-5 border-emerald-300 text-emerald-800 bg-emerald-100/60 dark:bg-emerald-900/40 text-[10px] px-2 flex items-center gap-1"
+                    >
                       <Calendar className="w-3 h-3" />
-                      {new Date(nextEvent.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-semibold text-foreground truncate">{nextEvent.name}</h4>
-                  <div className="flex items-center gap-3 mt-2 text-[11px] text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-emerald-500" />
-                      {nextEvent.points} pts
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MoreHorizontal className="w-3 h-3" />
+                      {new Date(nextEvent.date).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'short',
+                      })}
+                    </Badge>
+
+                    {/* Pontos */}
+                    <Badge
+                      variant="outline"
+                      className="h-5 border-emerald-300 text-emerald-800 bg-emerald-100/60 dark:bg-emerald-900/40 text-[10px] px-2"
+                    >
+                      +{nextEvent.points} pts
+                    </Badge>
+
+                    {/* Vagas */}
+                    <Badge
+                      variant="outline"
+                      className="h-5 border-emerald-300 text-emerald-800 bg-emerald-100/60 dark:bg-emerald-900/40 text-[10px] px-2"
+                    >
                       {nextEvent.totalSpots - nextEvent.filledSpots} vagas
-                    </span>
+                    </Badge>
                   </div>
+
+                  {/* Nome do evento */}
+                  <h4 className="text-sm font-semibold text-emerald-800 dark:text-emerald-200 leading-tight">
+                    {nextEvent.name}
+                  </h4>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-border/50 bg-muted/10 p-3 flex flex-col items-center justify-center text-center min-h-[88px]">
+            <div className="rounded-xl border border-dashed border-border/50 bg-muted/10 p-4 flex flex-col items-center justify-center text-center min-h-[88px]">
               <Calendar className="w-6 h-6 text-muted-foreground/30 mb-1" />
-              <span className="text-[10px] font-medium text-muted-foreground/50">Sem eventos agendados</span>
+              <span className="text-[11px] font-medium text-muted-foreground/50">Sem eventos agendados</span>
             </div>
           )}
         </div>

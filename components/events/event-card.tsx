@@ -187,7 +187,6 @@ export function EventCard({ event, onEventClick, onParticipateClick, isRegistere
             }}
             className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl py-2.5 text-sm font-bold shadow-md hover:shadow-lg transition-all duration-300"
           >
-            <CheckCircle2 className="w-4 h-4 mr-2" />
             Ver Detalhes
           </Button>
         ) : (

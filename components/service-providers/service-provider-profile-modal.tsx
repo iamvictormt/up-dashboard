@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AiOutlineWhatsApp } from 'react-icons/ai';
+import { applyPhoneMask } from '@/utils/masks';
 
 interface Professional {
   id: string;
@@ -130,7 +131,7 @@ export function ServiceProviderProfileModal({ professional, isOpen, onClose }: P
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
                 <p className="text-xs sm:text-sm text-[#511A2B]/60 font-medium mb-1">Telefone</p>
-                <p className="text-base sm:text-lg font-bold text-[#511A2B] break-words">{phone}</p>
+                <p className="text-base sm:text-lg font-bold text-[#511A2B] break-words">{applyPhoneMask(phone)}</p>
               </div>
               <div className="group relative bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-4 sm:p-5 rounded-xl sm:rounded-2xl border border-[#511A2B]/10 hover:border-[#511A2B]/30 transition-all duration-300 hover:shadow-lg">
                 <p className="text-xs sm:text-sm text-[#511A2B]/60 font-medium mb-1">E-mail</p>
@@ -161,7 +162,7 @@ export function ServiceProviderProfileModal({ professional, isOpen, onClose }: P
               <span className="break-words">Disponibilidade</span>
             </h3>
             <div className="bg-gradient-to-br from-white to-[#511A2B]/[0.02] p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#511A2B]/10">
-              <p className="text-xs sm:text-sm text-[#511A2B]/60 font-medium mb-2 sm:mb-3">Dias Disponíveis</p>
+ 
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {availableDaysList.map((day, idx) => (
                   <Badge

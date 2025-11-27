@@ -74,7 +74,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
         <header className={headerClasses}>
           <Button
             variant="ghost"
-            size="icon"
+            size="xs"
             className="md:hidden text-white hover:bg-white/10 rounded-xl"
             onClick={toggleMobileMenu}
           >
@@ -102,7 +102,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
         {/* BOTÃO MOBILE MENU */}
         <Button
           variant="ghost"
-          size="icon"
+          size="xs"
           className="md:hidden text-gray-200 hover:text-white hover:bg-white/10 rounded-xl"
           onClick={toggleMobileMenu}
         >
@@ -117,17 +117,17 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
         {/* ÍCONES E PERFIL */}
         <div className="flex items-center gap-2 sm:gap-4">
+          <NotificationsDropdown />
 
           {/* Pontos do Profissional */}
           {user.professional && (
-            <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg border border-white/10">
+            <div className="hidden sm:flex items-center justify-center gap-1 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl px-3 sm:px-5 py-2 sm:py-3 cursor-default">
               <Coins className="w-4 h-4 text-yellow-400" />
               <span className="text-sm font-semibold text-white">{user.professional.points || 0}</span>
-              <span className="text-xs text-white/60">pontos</span>
+              <span className="text-xs text-white">pontos</span>
             </div>
           )}
           
-          <NotificationsDropdown />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -139,7 +139,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 <img
                   src={getProfileImage()}
                   alt="profile"
-                  className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-full border border-white/20"
+                  className="w-9 h-9 sm:w-8 sm:h-8 object-cover rounded-full border border-white/20"
                 />
               </Button>
             </DropdownMenuTrigger>
