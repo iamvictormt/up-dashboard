@@ -145,11 +145,20 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className="w-56 bg-white border-[#511A2B]/20" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
+            <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium text-[#511A2B] truncate">{getUserName()}</p>
                   <p className="text-xs text-[#511A2B]/70 truncate">{user.email}</p>
                   <p className="text-xs text-[#511A2B]/50">{getUserType()}</p>
+                  
+                  {/* Pontos no Mobile */}
+                  {user.professional && (
+                    <div className="flex items-center gap-1 mt-2 pt-2 border-t border-[#511A2B]/10 sm:hidden">
+                      <Coins className="w-4 h-4 text-yellow-500" />
+                      <span className="text-sm font-semibold text-[#511A2B]">{user.professional.points || 0}</span>
+                      <span className="text-xs text-[#511A2B]/70">pontos</span>
+                    </div>
+                  )}
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-[#511A2B]/10" />
