@@ -124,12 +124,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setIsLoading(true);
         setError(null);
 
-        if(pathname.includes("/auth")) {
+        if (pathname.includes('/auth')) {
           return;
         }
 
         const token = getCookie('token');
-        
+
         if (!token) {
           router.push(appUrl.login);
           return;
@@ -160,35 +160,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   const updateUser = (userData: Partial<User>) => {
-    if (user && user.loveDecoration)
-      setUser({
-        ...user,
-        ...userData,
-        loveDecoration: {
-          ...user.loveDecoration,
-          ...userData,
-        },
-      });
+    setUser((prev) => {
+      if (!prev) return prev;
 
-    if (user && user.professional)
-      setUser({
-        ...user,
+      return {
+        ...prev,
         ...userData,
-        professional: {
-          ...user.professional,
-          ...userData,
-        },
-      });
-
-    if (user && user.partnerSupplier)
-      setUser({
-        ...user,
-        ...userData,
-        partnerSupplier: {
-          ...user.partnerSupplier,
-          ...userData,
-        },
-      });
+        professional: userData.professional ? { ...prev.professional, ...userData.professional } : prev.professional,
+        partnerSupplier: userData.partnerSupplier
+          ? { ...prev.partnerSupplier, ...userData.partnerSupplier }
+          : prev.partnerSupplier,
+        loveDecoration: userData.loveDecoration
+          ? { ...prev.loveDecoration, ...userData.loveDecoration }
+          : prev.loveDecoration,
+      };
+    });
   };
 
   const updateProfileImage = (profileImage: string) => {

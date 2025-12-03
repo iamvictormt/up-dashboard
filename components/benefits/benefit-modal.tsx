@@ -99,16 +99,16 @@ export function BenefitModal({ benefit, isOpen, onClose, onRedeem, isRedeeming =
 
         {/* Close Button - Fixed Position */}
         <Button
-          variant="ghost"
+          variant="primary"
           size="lg"
           onClick={onClose}
           disabled={isConfirming || isRedeeming}
-          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 text-white/80 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-300 w-8 h-8 sm:w-10 sm:h-10"
+          className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 text-white/80 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-300 w-8 h-8 sm:w-10 sm:h-10 hover:bg-[#511A2B]/90 backdrop-blur-sm"
         >
           <X className="w-5 h-5 sm:w-6 sm:h-6" />
         </Button>
 
-        <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden bg-gradient-to-br from-[#511A2B] to-[#511A2B]/80">
+        <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden">
           {imageUrl ? (
             <>
               <img
@@ -120,9 +120,8 @@ export function BenefitModal({ benefit, isOpen, onClose, onRedeem, isRedeeming =
               <div className="absolute inset-0 bg-gradient-to-br from-[#511A2B]/20 via-transparent to-[#FEC460]/20" />
             </>
           ) : (
-            <div className="flex items-center justify-center h-full relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#511A2B] to-[#511A2B]/80" />
-              <Gift className="w-32 h-32 text-white/20 relative z-10 animate-pulse" />
+            <div className="flex items-center justify-center h-full relative bg-gradient-to-br from-[#511A2B]/10 to-[#FEC460]/10 flex items-center justify-center">
+              <Gift className="w-20 h-20 text-[#511A2B]/20 group-hover:scale-110 transition-transform duration-500" />
             </div>
           )}
 
@@ -140,7 +139,7 @@ export function BenefitModal({ benefit, isOpen, onClose, onRedeem, isRedeeming =
             )}
             {!isOutOfStock && isLimitedQuantity && (
               <Badge className="bg-orange-500 text-white border-0 font-bold px-4 py-2 rounded-full text-sm shadow-xl animate-in slide-in-from-right duration-500 animate-pulse">
-                <Clock className="w-4 h-4 mr-1.5" />
+                <AlertTriangle className="w-4 h-4 mr-1.5" />
                 Últimas unidades
               </Badge>
             )}
@@ -178,11 +177,7 @@ export function BenefitModal({ benefit, isOpen, onClose, onRedeem, isRedeeming =
                     Disponibilidade
                   </p>
                   {quantity !== null ? (
-                    <p
-                      className={`text-lg font-bold truncate ${
-                        isOutOfStock ? 'text-red-600' : isLimitedQuantity ? 'text-orange-600' : 'text-[#511A2B]'
-                      }`}
-                    >
+                    <p className={`text-lg font-bold truncate ${isOutOfStock ? 'text-red-600' : 'text-[#511A2B]'}`}>
                       {isOutOfStock ? 'Esgotado' : `${quantity} ${quantity === 1 ? 'unidade' : 'unidades'}`}
                     </p>
                   ) : (

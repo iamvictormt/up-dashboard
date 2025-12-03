@@ -17,6 +17,7 @@ export interface BenefitRedemptionData {
   userId: string;
   status: 'PENDING' | 'USED' | 'CANCELED' | 'EXPIRED';
   redeemedAt: string;
+  pointsSpent: number;
   usedAt?: string | null;
   expiresAt?: string | null;
   benefit: BenefitData;

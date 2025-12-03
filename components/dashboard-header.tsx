@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, User, Menu, X, ImageIcon, Coins } from 'lucide-react';
+import { LogOut, User, Menu, X, ImageIcon, Coins, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -17,6 +17,7 @@ import { NotificationsDropdown } from './notifications-dropdown';
 import { UserEditModal } from './user/user-edit-modal';
 import { UserImageModal } from './user/user-image-modal';
 import { MyPlanModal } from './plans/my-plan-modal';
+import { cn } from '@/lib/utils';
 
 interface DashboardHeaderProps {
   isSidebarExpanded?: boolean;
@@ -53,140 +54,164 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
     return 'Usuário';
   };
 
-  // padding menor no mobile, mais espaçado no desktop
-  const headerClasses = `
-    fixed top-0 z-40 flex items-center justify-between
-    bg-background transition-all duration-300 w-full left-0
-    px-5 py-3 sm:px-6 sm:py-4 md:px-8 md:py-5
-    h-[72px] sm:h-[80px] md:h-[10vh]
-    ${isSidebarExpanded ? 'md:left-72 md:w-[calc(100%-18rem)]' : 'md:left-24 md:w-[calc(100%-6rem)]'}
-    shadow-sm border-b border-white/5
-  `;
+  const headerClasses = cn(
+    'fixed top-0 z-40 flex items-center justify-between',
+    'bg-background backdrop-blur-sm bg-opacity-95',
+    'transition-all duration-300 w-full left-0',
+    'px-4 sm:px-6 lg:px-8',
+    'h-16 lg:h-[72px]',
+    'border-b border-white/10',
+    isSidebarExpanded ? 'lg:left-72 lg:w-[calc(100%-18rem)]' : 'lg:left-24 lg:w-[calc(100%-6rem)]'
+  );
 
   if (isLoading) return null;
 
-  // --------------------
-  // HEADER SEM USUÁRIO
-  // --------------------
+  // Header sem usuário
   if (!user) {
     return (
       <>
         <header className={headerClasses}>
           <Button
             variant="ghost"
-            size="xs"
-            className="md:hidden text-white hover:bg-white/10 rounded-xl"
+            size="sm"
+            className="lg:hidden text-white/90 hover:text-white hover:bg-white/10"
             onClick={toggleMobileMenu}
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
 
-          <h1 className="text-lg font-semibold text-white">UP Connection</h1>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">UP</span>
+            </div>
+            <h1 className="text-lg font-semibold text-white hidden sm:block">UP Connection</h1>
+          </div>
 
-          <span className="text-xs text-white/70">Acesso restrito</span>
+          <span className="text-xs text-white/60 font-medium">Acesso restrito</span>
         </header>
 
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
         </div>
       </>
     );
   }
 
-  // --------------------
-  // HEADER COM USUÁRIO
-  // --------------------
+  // Header com usuário
   return (
     <>
       <header className={headerClasses}>
-        {/* BOTÃO MOBILE MENU */}
+        {/* Mobile menu toggle */}
         <Button
           variant="ghost"
-          size="xs"
-          className="md:hidden text-gray-200 hover:text-white hover:bg-white/10 rounded-xl"
+          size="sm"
+          className="lg:hidden text-white/90 hover:text-white hover:bg-white/10 transition-colors"
           onClick={toggleMobileMenu}
         >
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
 
-        {/* LOGO / NOME */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-          <h1 className="text-lg sm:text-xl font-semibold text-white leading-tight">UP Connection</h1>
-          <p className="text-[12px] sm:text-sm text-white/70 hidden sm:block">{getUserType()}</p>
+        {/* Logo e Nome */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex flex-col">
+            <h1 className="text-base lg:text-lg font-semibold text-white leading-tight">UP Connection</h1>
+            <p className="text-[11px] lg:text-xs text-white/60 font-medium">{getUserType()}</p>
+          </div>
         </div>
 
-        {/* ÍCONES E PERFIL */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        {/* Actions */}
+        <div className="flex items-center gap-2 lg:gap-3">
+          {/* Notificações */}
           <NotificationsDropdown />
 
-          {/* Pontos do Profissional */}
+          {/* Pontos do Profissional - Desktop */}
           {user.professional && (
-            <div className="hidden sm:flex items-center justify-center gap-1 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl px-3 sm:px-5 py-2 sm:py-3 cursor-default">
+            <div className="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition-colors rounded-lg px-4 py-2 border border-white/10">
               <Coins className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm font-semibold text-white">{user.professional.points || 0}</span>
-              <span className="text-xs text-white">pontos</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-sm font-semibold text-white">{user.professional.points || 0}</span>
+                <span className="text-[11px] text-white/70 font-medium hidden md:inline">pontos</span>
+                <span className="text-[11px] text-white/70 font-medium inline md:hidden">pts</span>
+              </div>
             </div>
           )}
-          
 
+          {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center justify-center gap-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl px-3 sm:px-5 py-2 sm:py-3"
+                className="flex items-center gap-2 lg:gap-3 hover:bg-white/10 transition-colors h-auto px-2 lg:px-3 py-2"
               >
-                <span className="hidden sm:inline text-sm font-semibold">Olá, {getUserName().split(' ')[0]}</span>
-                <img
-                  src={getProfileImage()}
-                  alt="profile"
-                  className="w-9 h-9 sm:w-8 sm:h-8 object-cover rounded-full border border-white/20"
-                />
+                <span className="hidden lg:block text-sm font-medium text-white/90">{getUserName().split(' ')[0]}</span>
+                <div className="relative">
+                  <img
+                    src={getProfileImage() || '/placeholder.svg'}
+                    alt="profile"
+                    className="w-8 h-8 lg:w-9 lg:h-9 object-cover rounded-full border-2 border-white/20"
+                  />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-[#511A2B]" />
+                </div>
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-56 bg-white border-[#511A2B]/20" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium text-[#511A2B] truncate">{getUserName()}</p>
-                  <p className="text-xs text-[#511A2B]/70 truncate">{user.email}</p>
-                  <p className="text-xs text-[#511A2B]/50">{getUserType()}</p>
-                  
-                  {/* Pontos no Mobile */}
-                  {user.professional && (
-                    <div className="flex items-center gap-1 mt-2 pt-2 border-t border-[#511A2B]/10 sm:hidden">
-                      <Coins className="w-4 h-4 text-yellow-500" />
-                      <span className="text-sm font-semibold text-[#511A2B]">{user.professional.points || 0}</span>
-                      <span className="text-xs text-[#511A2B]/70">pontos</span>
-                    </div>
-                  )}
+            <DropdownMenuContent className="w-64 bg-white shadow-xl border-gray-200" align="end">
+              <DropdownMenuLabel className="font-normal px-3 py-3">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={getProfileImage() || '/placeholder.svg'}
+                    alt="profile"
+                    className="w-12 h-12 object-cover rounded-full border-2 border-[#511A2B]/20"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-[#511A2B] truncate">{getUserName()}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{getUserType()}</p>
+                  </div>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-[#511A2B]/10" />
 
-              <DropdownMenuItem onClick={() => setIsProfileModalOpen(true)} className="text-[#511A2B]">
-                <User className="mr-2 h-4 w-4" />
-                Alterar Perfil
-              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-gray-100" />
 
-              <DropdownMenuItem onClick={() => setIsImageModalOpen(true)} className="text-[#511A2B]">
-                <ImageIcon className="mr-2 h-4 w-4" />
-                Alterar Imagem
-              </DropdownMenuItem>
+              <div className="px-1 py-1">
+                <DropdownMenuItem
+                  onClick={() => setIsProfileModalOpen(true)}
+                  className="text-gray-700 hover:bg-gray-50 hover:text-[#511A2B] cursor-pointer rounded-md px-2 py-2"
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  <span className="text-sm font-medium">Alterar Perfil</span>
+                </DropdownMenuItem>
 
-              {user.partnerSupplier && user.partnerSupplier.subscription && (
-                <>
-                  <DropdownMenuItem onClick={() => setIsPlanModalOpen(true)} className="text-[#511A2B]">
-                    <Coins className="mr-2 h-4 w-4" />
-                    Minha Assinatura
+                <DropdownMenuItem
+                  onClick={() => setIsImageModalOpen(true)}
+                  className="text-gray-700 hover:bg-gray-50 hover:text-[#511A2B] cursor-pointer rounded-md px-2 py-2"
+                >
+                  <ImageIcon className="mr-2 h-4 w-4" />
+                  <span className="text-sm font-medium">Alterar Imagem</span>
+                </DropdownMenuItem>
+
+                {user.partnerSupplier && user.partnerSupplier.subscription && (
+                  <DropdownMenuItem
+                    onClick={() => setIsPlanModalOpen(true)}
+                    className="text-gray-700 hover:bg-gray-50 hover:text-[#511A2B] cursor-pointer rounded-md px-2 py-2"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span className="text-sm font-medium">Minha Assinatura</span>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-[#511A2B]/10" />
-                </>
-              )}
+                )}
+              </div>
 
-              <DropdownMenuItem className="text-red-600 hover:bg-red-50 cursor-pointer" onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Sair
-              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-gray-100" />
+
+              <div className="px-1 py-1">
+                <DropdownMenuItem
+                  className="text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer rounded-md px-2 py-2"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span className="text-sm font-medium">Sair</span>
+                </DropdownMenuItem>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -200,11 +225,13 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
           onClose={() => setIsPlanModalOpen(false)}
         />
       )}
+
       {isProfileModalOpen && <UserEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />}
+
       {isImageModalOpen && <UserImageModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} />}
 
       {/* Sidebar Mobile */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <AppSidebar isMobileOpen={isMobileMenuOpen} onToggleMobile={toggleMobileMenu} />
       </div>
     </>
