@@ -1,8 +1,9 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileText, Shield } from 'lucide-react';
+import { FileText, Shield, X } from 'lucide-react';
 
 export type LegalType = 'terms' | 'privacy' | null;
 
@@ -38,6 +39,9 @@ export function LegalModal({ openType, onClose }: LegalModalProps) {
               <p className="text-sm text-slate-600 mt-1">Última atualização: Junho de 2025</p>
             </div>
           </div>
+          <Button variant="ghost" size="sm" onClick={onClose} className="absolute top-2 right-2 sm:top-4 sm:right-4">
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+          </Button>
         </DialogHeader>
 
         <ScrollArea className="flex-1 p-6">
@@ -56,15 +60,15 @@ function TermosContent() {
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">1. Aceitação dos Termos</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Ao acessar e usar nossa plataforma, você concorda em cumprir e estar vinculado a estes Termos de Uso.
-          Se você não concordar com qualquer parte destes termos, não deve usar nossos serviços.
+          Ao acessar e usar nossa plataforma, você concorda em cumprir e estar vinculado a estes Termos de Uso. Se você
+          não concordar com qualquer parte destes termos, não deve usar nossos serviços.
         </p>
       </section>
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">2. Descrição dos Serviços</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Nossa plataforma conecta profissionais do setor de eventos e decoração com clientes, fornecendo um
-          marketplace digital para serviços especializados.
+          Nossa plataforma conecta profissionais do setor de eventos e decoração com clientes, fornecendo um marketplace
+          digital para serviços especializados.
         </p>
         <ul className="list-disc list-inside text-slate-700 space-y-2 ml-4">
           <li>Conexão entre profissionais e clientes</li>
@@ -87,24 +91,23 @@ function TermosContent() {
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">4. Propriedade Intelectual</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, ícones, imagens, clipes de áudio,
-          downloads digitais e software, é propriedade nossa ou de nossos licenciadores e está protegido por
-          leis de direitos autorais.
+          Todo o conteúdo da plataforma, incluindo textos, gráficos, logos, ícones, imagens, clipes de áudio, downloads
+          digitais e software, é propriedade nossa ou de nossos licenciadores e está protegido por leis de direitos
+          autorais.
         </p>
       </section>
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">5. Limitações de Responsabilidade</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Nossa plataforma atua como intermediária entre profissionais e clientes. Não somos responsáveis pela
-          qualidade dos serviços prestados pelos profissionais cadastrados, nem por disputas entre as partes.
+          Nossa plataforma atua como intermediária entre profissionais e clientes. Não somos responsáveis pela qualidade
+          dos serviços prestados pelos profissionais cadastrados, nem por disputas entre as partes.
         </p>
       </section>
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">6. Modificações e Rescisão</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
           Reservamo-nos o direito de modificar estes termos a qualquer momento. As alterações entrarão em vigor
-          imediatamente após a publicação. Podemos também suspender ou encerrar sua conta por violação destes
-          termos.
+          imediatamente após a publicação. Podemos também suspender ou encerrar sua conta por violação destes termos.
         </p>
       </section>
       <section className="mb-8">
@@ -124,8 +127,8 @@ function PrivacidadeContent() {
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">1. Informações que Coletamos</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Coletamos informações que você nos fornece diretamente e informações coletadas automaticamente quando
-          você usa nossos serviços.
+          Coletamos informações que você nos fornece diretamente e informações coletadas automaticamente quando você usa
+          nossos serviços.
         </p>
         <div className="mb-4">
           <h4 className="font-medium text-slate-900 mb-2">Informações Fornecidas por Você:</h4>
@@ -174,8 +177,8 @@ function PrivacidadeContent() {
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">4. Segurança dos Dados</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Implementamos medidas de segurança técnicas e organizacionais apropriadas para proteger suas
-          informações pessoais contra acesso não autorizado, alteração, divulgação ou destruição.
+          Implementamos medidas de segurança técnicas e organizacionais apropriadas para proteger suas informações
+          pessoais contra acesso não autorizado, alteração, divulgação ou destruição.
         </p>
         <ul className="list-disc list-inside text-slate-700 space-y-2 ml-4">
           <li>Criptografia de dados em trânsito e em repouso</li>
@@ -201,9 +204,9 @@ function PrivacidadeContent() {
       <section className="mb-8">
         <h3 className="text-lg font-semibold text-slate-900 mb-3">6. Cookies e Tecnologias Similares</h3>
         <p className="text-slate-700 leading-relaxed mb-4">
-          Utilizamos cookies e tecnologias similares para melhorar sua experiência, analisar o uso da plataforma
-          e personalizar conteúdo. Você pode gerenciar suas preferências de cookies através das configurações do
-          seu navegador.
+          Utilizamos cookies e tecnologias similares para melhorar sua experiência, analisar o uso da plataforma e
+          personalizar conteúdo. Você pode gerenciar suas preferências de cookies através das configurações do seu
+          navegador.
         </p>
       </section>
     </>
