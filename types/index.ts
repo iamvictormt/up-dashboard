@@ -9,3 +9,4 @@ export * from './store';
 export * from './profession';
 export * from './auth';
 export * from './notification';
+export * from './benefit';

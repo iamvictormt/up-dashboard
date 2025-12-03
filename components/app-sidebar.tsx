@@ -18,6 +18,7 @@ import {
   Crown,
   Quote,
   ShoppingCart,
+  Coins,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
@@ -135,11 +136,10 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       roles: ['partnerSupplier'],
     },
     {
-      title: 'Meus benefícios',
-      icon: Crown,
+      title: 'Benefícios',
+      icon: Coins,
       url: '/benefits',
       roles: ['professional'],
-      disabled: true,
     },
   ];
 
