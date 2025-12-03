@@ -90,7 +90,7 @@ export function BenefitCard({ benefit, onRedeem, isRedeeming = false }: BenefitC
             </h3>
 
             {/* Descrição */}
-            <p className="text-sm text-[#511A2B]/60 line-clamp-2 leading-relaxed mb-6 h-12">
+            <p className="text-sm text-[#511A2B]/60 line-clamp-2 leading-relaxed mb-6 md:h-12">
               {description || 'Sem descrição disponível.'}
             </p>
 

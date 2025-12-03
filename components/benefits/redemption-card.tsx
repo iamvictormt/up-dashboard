@@ -90,7 +90,7 @@ export function RedemptionCard({ redemption }: RedemptionCardProps) {
         </div>
 
         {/* Description */}
-        <p className="text-sm text-[#511A2B]/70 mb-4 line-clamp-2 h-12">{benefit.description}</p>
+        <p className="text-sm text-[#511A2B]/70 mb-4 line-clamp-2 md:h-12">{benefit.description}</p>
 
         {/* Dates */}
         <div className="space-y-2">
