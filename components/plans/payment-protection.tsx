@@ -25,7 +25,7 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
       const shouldNotSeePlans =
         user?.professional ||
         user?.loveDecoration ||
-        (user?.partnerSupplier && user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE');
+        (user?.partnerSupplier && (user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE' || user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING'));
 
       if (shouldNotSeePlans) {
         router.push('/mural');
@@ -34,7 +34,7 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
     }
 
     if (user?.partnerSupplier) {
-      const hasActiveSubscription = user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE';
+      const hasActiveSubscription = user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE' || user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING';
 
       if (!hasActiveSubscription) {
         router.push('/plans');
