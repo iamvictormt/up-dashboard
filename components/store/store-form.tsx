@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useEffect, useState } from 'react';
-import { X, Save, Store, MapPin, Clock, Copy, Building, WholeWord, Map, Hash, Plus } from 'lucide-react';
+import { X, Save, Store, MapPin, Clock, Copy, Building, WholeWord, Map, Hash, Plus, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { createStore, updateStore } from '@/lib/store-api';
 import { useUser } from '@/contexts/user-context';
 import { applyZipCodeMask } from '@/utils/masks';
@@ -49,6 +50,7 @@ interface StoreFormData {
   description: string;
   website: string;
   openingHours: string;
+  type: 'SUPPLIER' | 'WELLNESS';
   address: {
     state: string;
     city: string;
@@ -356,6 +358,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     openingHours:
       storeData?.openingHours ||
       'Segunda-feira: 08:00 - 18:00 | Terça-feira: 08:00 - 18:00 | Quarta-feira: 08:00 - 18:00 | Quinta-feira: 08:00 - 18:00 | Sexta-feira: 08:00 - 18:00 | Sábado: 08:00 - 14:00',
+    type: (storeData as any)?.type || 'SUPPLIER',
     address: {
       state: storeData?.address.state || '',
       city: storeData?.address.city || '',
@@ -565,21 +568,44 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
                 </div>
 
-                <div>
-                  <Label htmlFor="website" className="text-[#511A2B] font-medium">
-                    Website
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="website"
-                      value={formData.website}
-                      onChange={(e) => handleInputChange('website', e.target.value)}
-                      placeholder="https://meusite.com.br"
-                      className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
-                    />
-                    <WholeWord className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="website" className="text-[#511A2B] font-medium">
+                      Website
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="website"
+                        value={formData.website}
+                        onChange={(e) => handleInputChange('website', e.target.value)}
+                        placeholder="https://meusite.com.br"
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                      />
+                      <WholeWord className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
+                    {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
                   </div>
-                  {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
+
+                  <div>
+                    <Label htmlFor="type" className="text-[#511A2B] font-medium">
+                      Tipo de Loja *
+                    </Label>
+                    <div className="relative">
+                      <Select
+                        value={formData.type}
+                        onValueChange={(value) => handleInputChange('type', value)}
+                      >
+                        <SelectTrigger id="type" className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40 h-10">
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="SUPPLIER">Convencional</SelectItem>
+                          <SelectItem value="WELLNESS">Wellness</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="z-[1]">

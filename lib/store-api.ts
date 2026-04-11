@@ -29,3 +29,29 @@ export async function createStore(data: any): Promise<AxiosResponse> {
 export async function updateStore(id: string, data: any): Promise<AxiosResponse> {
   return await api.patch(`stores/${id}/my-store`, data);
 }
+
+export async function fetchWellnessPartners(
+  searchQuery?: string,
+  page: number = 1,
+  limit: number = 6
+): Promise<AxiosResponse> {
+  const params: Record<string, string | number> = {
+    page,
+    limit,
+    type: 'WELLNESS',
+  };
+
+  if (searchQuery) {
+    params['search'] = searchQuery;
+  }
+
+  return await api.get('partner-suppliers', { params });
+}
+
+export async function toggleFavoritePartner(id: string): Promise<AxiosResponse> {
+  return await api.post(`partner-suppliers/${id}/favorite`);
+}
+
+export async function togglePartnerVerification(id: string): Promise<AxiosResponse> {
+  return await api.patch(`admin/partner-suppliers/${id}/toggle-verification`);
+}

@@ -17,4 +17,5 @@ export interface ProductData {
   featured: boolean;
   promotion: boolean;
   storeId?: string;
+  duration?: string;
 }

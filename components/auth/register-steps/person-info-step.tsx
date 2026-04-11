@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard } from 'lucide-react';
+import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard, Activity } from 'lucide-react';
 import { applyPhoneMask, applyDocumentMask, applyDocumentCnpjMask } from '@/utils/masks';
 import { PhotoUploadSimple } from './photo-upload-simple';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -364,23 +364,46 @@ export function PersonalInfoStep({
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="supplier-contact" className="text-sm font-medium">
-                Contato
-              </Label>
-              <div className="relative">
-                <Input
-                  value={formData.partnerSupplier.contact}
-                  onChange={(e) => handleInputChange('partnerSupplier', 'contact', e.target.value)}
-                  placeholder="(00) 00000-0000"
-                  required
-                  onBlur={(e) => {
-                    e.target.value.length !== 15 &&
-                      e.target.value.length !== 14 &&
-                      handleInputChange('partnerSupplier', 'contact', '');
-                  }}
-                />
-                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="supplier-contact" className="text-sm font-medium">
+                  Contato
+                </Label>
+                <div className="relative">
+                  <Input
+                    value={formData.partnerSupplier.contact}
+                    onChange={(e) => handleInputChange('partnerSupplier', 'contact', e.target.value)}
+                    placeholder="(00) 00000-0000"
+                    required
+                    onBlur={(e) => {
+                      e.target.value.length !== 15 &&
+                        e.target.value.length !== 14 &&
+                        handleInputChange('partnerSupplier', 'contact', '');
+                    }}
+                  />
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="type" className="text-sm font-medium">
+                  Tipo de Parceiro
+                </Label>
+                <div className="relative">
+                  <Select
+                    value={formData.partnerSupplier.type}
+                    onValueChange={(value) => handleInputChange('partnerSupplier', 'type', value)}
+                  >
+                    <SelectTrigger id="type" className="pl-11 h-12">
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="SUPPLIER">Convencional</SelectItem>
+                      <SelectItem value="WELLNESS">Wellness</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
               </div>
             </div>
           </>
