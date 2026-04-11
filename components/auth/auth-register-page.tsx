@@ -11,7 +11,7 @@ export function AuthRegisterPage() {
   const handleRegisterSuccess = () => {
     toast.success('Conta criada com sucesso! Redirecionando...');
     setTimeout(() => {
-      router.push('/auth/login');
+      router.push('/auth/entrar');
     }, 2000);
   };
 
@@ -22,7 +22,7 @@ export function AuthRegisterPage() {
       subtitle="Junte-se à nossa comunidade"
       footerText="Já tem uma conta?"
       footerLinkText="Fazer login"
-      footerLinkHref="/auth/login"
+      footerLinkHref="/auth/entrar"
       leftSideContent={<RegisterCarousel />}
     >
       <RegisterFlow onSuccess={handleRegisterSuccess} />

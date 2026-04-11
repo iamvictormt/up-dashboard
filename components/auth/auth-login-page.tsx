@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 import Cookies from 'js-cookie';
 import { appUrl } from '@/constants/appRoutes';
 import { AuthContainer } from './auth-container';
-import { LoginForm } from './login-form';
-import { ForgotPasswordModal } from '../login/forgot-password-modal';
+import { LoginForm } from './auth/entrar-form';
+import { ForgotPasswordModal } from '../auth/entrar/forgot-password-modal';
 import { RegisterCarousel } from './register-carousel';
 import api from '@/services/api';
 
@@ -33,7 +33,7 @@ export function AuthLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const response = await api.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/entrar`, {
         email: formData.email,
         password: formData.password,
       });
@@ -65,7 +65,7 @@ export function AuthLoginPage() {
         subtitle="Entre na sua conta para continuar"
         footerText="Não tem uma conta?"
         footerLinkText="Criar conta gratuita"
-        footerLinkHref="/auth/register"
+        footerLinkHref="/auth/registrar"
         leftSideContent={<RegisterCarousel />}
       >
         <LoginForm

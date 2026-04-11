@@ -108,44 +108,44 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     {
       title: 'Prestadores de serviços',
       icon: Users,
-      url: '/service-providers',
+      url: '/prestadores-de-servicos',
       roles: ['professional', 'partnerSupplier', 'loveDecoration'],
     },
     {
       title: 'Lojistas parceiros',
       icon: Store,
-      url: '/suppliers-store',
+      url: '/lojas-parceiras',
       roles: ['professional', 'loveDecoration'],
     },
     // {
     //   title: 'Wellness Parceiros',
     //   icon: Heart,
-    //   url: '/wellness-partners',
+    //   url: '/parceiros-bem-estar',
     //   roles: ['professional', 'loveDecoration'],
     // },
     // {
     //   title: 'Workshops',
     //   icon: GraduationCap,
-    //   url: '/workshops',
+    //   url: '/oficinas',
     //   roles: ['professional'],
     //   disabled: true,
     // },
     {
       title: 'Eventos',
       icon: Calendar,
-      url: '/events',
+      url: '/eventos',
       roles: ['professional'],
     },
     {
       title: 'Minha loja',
       icon: ShoppingCart,
-      url: '/store-info',
+      url: '/minha-loja',
       roles: ['partnerSupplier'],
     },
     {
       title: 'Benefícios',
       icon: Coins,
-      url: '/benefits',
+      url: '/beneficios',
       roles: ['professional'],
     },
   ];
@@ -154,7 +154,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     {
       title: 'Ajuda',
       icon: HelpCircle,
-      url: '/help',
+      url: '/ajuda',
     },
   ];
 

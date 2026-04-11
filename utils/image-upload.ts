@@ -60,7 +60,7 @@ export const createImagePreview = (file: File): Promise<string> => {
  */
 export const uploadProfileImage = async (userId: string, imageBase64: string): Promise<boolean> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/profile-image`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/perfil-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

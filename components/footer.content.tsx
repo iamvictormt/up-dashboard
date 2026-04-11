@@ -1,5 +1,5 @@
 import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
-import { LegalModal } from './auth/register-steps/legal-modal';
+import { LegalModal } from './auth/registrar-steps/legal-modal';
 import { useState } from 'react';
 
 export function FooterContent() {

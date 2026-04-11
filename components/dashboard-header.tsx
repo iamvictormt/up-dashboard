@@ -16,7 +16,7 @@ import { AppSidebar } from './app-sidebar';
 import { NotificationsDropdown } from './notifications-dropdown';
 import { UserEditModal } from './user/user-edit-modal';
 import { UserImageModal } from './user/user-image-modal';
-import { MyPlanModal } from './plans/my-plan-modal';
+import { MyPlanModal } from './planos/my-plan-modal';
 import { PointsHistoryModal } from './user/points-history-modal';
 import { cn } from '@/lib/utils';
 
@@ -36,7 +36,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/auth/login';
+    window.location.href = '/auth/entrar';
   };
 
   const getUserName = () => {

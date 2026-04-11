@@ -28,7 +28,7 @@ import { StoreData } from '@/types';
 import { StoreForm } from './store-form';
 import { NoStoreView } from './no-store-view';
 import { ProductFormModal } from './product-form';
-import StoreInfoSection from './store-info-section';
+import StoreInfoSection from './minha-loja-section';
 import { formatCurrency } from '@/lib/utils';
 
 const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData | null> => {

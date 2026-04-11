@@ -7,9 +7,9 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/components/ui/use-mobile';
 import { ForgotPasswordModal } from './forgot-password-modal';
-import { LoginHeader } from './login-header';
-import { LoginSidebar } from './login-sidebar';
-import { LoginForm } from './login-form';
+import { LoginHeader } from './auth/entrar-header';
+import { LoginSidebar } from './auth/entrar-sidebar';
+import { LoginForm } from './auth/entrar-form';
 import { UserTypeSelector } from './user-type-selector';
 import { LoveDecorationForm } from './register-forms/love-decoration-form';
 import { ProfessionalForm } from './register-forms/profession-form';
@@ -188,7 +188,7 @@ export function LoginContent() {
     setLoginError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/entrar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -410,7 +410,7 @@ export function LoginContent() {
       current.delete('expired');
       const newQuery = current.toString();
       const newUrl = newQuery ? `?${newQuery}` : '';
-      router.replace(`/login${newUrl}`);
+      router.replace(`/auth/entrar${newUrl}`);
     }
   }, [searchParams, router]);
 

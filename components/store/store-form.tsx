@@ -16,7 +16,7 @@ import { createStore, updateStore } from '@/lib/store-api';
 import { useUser } from '@/contexts/user-context';
 import { applyZipCodeMask } from '@/utils/masks';
 import { fetchAddressByZipCode } from '@/lib/address-api';
-import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { PhotoUploadSimple } from '../auth/registrar-steps/photo-upload-simple';
 import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface StoreFormProps {

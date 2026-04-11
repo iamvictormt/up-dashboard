@@ -4,11 +4,11 @@ import type React from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AppSidebar } from '@/components/app-sidebar';
-import { DashboardHeader } from '@/components/dashboard-header';
+import { DashboardHeader } from '@/components/painel-header';
 import { UserProvider } from '@/contexts/user-context';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { PaymentProtection } from '@/components/plans/payment-protection';
+import { PaymentProtection } from '@/components/planos/payment-protection';
 import { Toaster } from 'sonner';
 import { FooterContent } from '@/components/footer.content';
 

@@ -5,6 +5,9 @@ import { Post } from '@/types/post';
 import { fetchMyPosts, fetchPostsByCommunity } from '@/lib/post-api';
 import { PostCard } from './post-card';
 import { useMuralUpdate } from '@/contexts/mural-update-context';
+import { ListingLoading } from '@/components/ui/listing-loading';
+import { ListingEmpty } from '@/components/ui/listing-empty';
+import { Quote } from 'lucide-react';
 
 interface PostListProps {
   communityId: string;
@@ -43,7 +46,7 @@ export function PostList({ communityId }: PostListProps) {
   };
 
   if (loading) {
-    return <></>;
+    return <ListingLoading message="Carregando publicações..." />;
   }
 
   if (error) {
@@ -56,14 +59,15 @@ export function PostList({ communityId }: PostListProps) {
 
   if (posts.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-        <h3 className="text-lg font-medium mb-2">Nenhum post encontrado</h3>
-        {communityId === '' ? (
-          <p className="text-gray-500">Tem algo legal para mostrar? Compartilhe com a comunidade!</p>
-        ) : (
-          <p className="text-gray-500">Seja o primeiro a compartilhar algo nesta comunidade!</p>
-        )}
-      </div>
+      <ListingEmpty
+        icon={<Quote className="h-12 w-12 text-[#511A2B]/30" />}
+        title="Nenhuma publicação encontrada"
+        description={
+          communityId === ''
+            ? 'Tem algo legal para mostrar? Compartilhe com a comunidade!'
+            : 'Seja o primeiro a compartilhar algo nesta comunidade!'
+        }
+      />
     );
   }
 

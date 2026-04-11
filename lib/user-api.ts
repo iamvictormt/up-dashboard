@@ -52,7 +52,7 @@ export async function updateAddressUser(userId: string, addressChanged: Partial<
 }
 
 export async function updateImageUser(userId: string, profileImageUrl: string) {
-  return await api.patch(`users/${userId}/profile-image`, { profileImage: profileImageUrl });
+  return await api.patch(`users/${userId}/perfil-image`, { profileImage: profileImageUrl });
 }
 
 export async function saveUser(data: any, registerType: string) {

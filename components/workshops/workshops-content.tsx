@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { WorkshopCard } from '@/components/workshops/workshop-card';
+import { WorkshopCard } from '@/components/oficinas/workshop-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import { toast } from 'sonner';
-import { fetchWorkshops } from '@/lib/workshops-api';
+import { fetchWorkshops } from '@/lib/oficinas-api';
 
 interface Workshop {
   id: string;

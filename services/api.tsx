@@ -41,7 +41,7 @@ api.interceptors.response.use(
 
       setTimeout(() => {
         if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
+          window.location.href = '/auth/entrar';
         }
       }, 2000);
     }

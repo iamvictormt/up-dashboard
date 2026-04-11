@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       ],
       mode: 'subscription',
       payment_method_types: ['card'],
-      return_url: `${request.headers.get('origin')}/payment-confirmed?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${request.headers.get('origin')}/pagamento-confirmado?session_id={CHECKOUT_SESSION_ID}`,
       customer_email: email,
       metadata: {
         planId: planId,

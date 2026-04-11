@@ -21,24 +21,24 @@ export function middleware(request: NextRequest) {
   const permissions: any = {
     partnerSupplier: [
       '/mural',
-      '/service-providers',
-      '/store-info',
-      '/help',
-      '/plans',
-      '/payment-confirmed',
-      '/payment-confirmation',
+      '/prestadores-de-servicos',
+      '/minha-loja',
+      '/ajuda',
+      '/planos',
+      '/pagamento-confirmado',
+      '/confirmacao-de-pagamento',
     ],
     professional: [
       '/mural',
-      '/service-providers',
-      '/suppliers-store',
-      '/wellness-partners',
-      '/workshops',
-      '/events',
-      '/help',
-      '/benefits',
+      '/prestadores-de-servicos',
+      '/lojas-parceiras',
+      '/parceiros-bem-estar',
+      '/oficinas',
+      '/eventos',
+      '/ajuda',
+      '/beneficios',
     ],
-    loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
+    loveDecoration: ['/mural', '/prestadores-de-servicos', '/lojas-parceiras', '/parceiros-bem-estar', '/ajuda'],
   };
 
   const isStatic =
@@ -55,7 +55,7 @@ export function middleware(request: NextRequest) {
   if (!isAuthPage && (!token || isTokenExpired(token))) {
     deleteCookie('token');
 
-    const url = new URL('/auth/login', request.url);
+    const url = new URL('/auth/entrar', request.url);
 
     if (token && isTokenExpired(token)) {
       url.searchParams.set('expired', 'true');
@@ -66,7 +66,7 @@ export function middleware(request: NextRequest) {
 
   if (!isAuthPage) {
     if (!role) {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/auth/entrar', request.url));
     } else {
       if (url === '/') {
         return NextResponse.next();

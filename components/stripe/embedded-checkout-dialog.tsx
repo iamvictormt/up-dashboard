@@ -64,7 +64,7 @@ export function EmbeddedCheckoutDialog({ isOpen, onClose, plan }: EmbeddedChecko
     fetchClientSecret,
     onComplete: () => {
       onClose();
-      router.push('/payment-confirmation');
+      router.push('/confirmacao-de-pagamento');
     },
   };
 

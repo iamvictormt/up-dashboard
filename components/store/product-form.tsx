@@ -14,7 +14,7 @@ import { createProduct } from '@/lib/product-api';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { formatCurrency } from '@/lib/utils';
-import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { PhotoUploadSimple } from '../auth/registrar-steps/photo-upload-simple';
 import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface ProductFormModalProps {

@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { ProductData } from '@/types';
 import { deleteProduct, updateProduct } from '@/lib/product-api';
 import { formatCurrency } from '@/lib/utils';
-import { PhotoUploadSimple } from '../auth/register-steps/photo-upload-simple';
+import { PhotoUploadSimple } from '../auth/registrar-steps/photo-upload-simple';
 import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface ProductEditModalProps {
