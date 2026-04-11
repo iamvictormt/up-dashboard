@@ -28,8 +28,17 @@ export function middleware(request: NextRequest) {
       '/payment-confirmed',
       '/payment-confirmation',
     ],
-    professional: ['/mural', '/service-providers', '/suppliers-store', '/workshops', '/events', '/help', '/benefits'],
-    loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/help'],
+    professional: [
+      '/mural',
+      '/service-providers',
+      '/suppliers-store',
+      '/wellness-partners',
+      '/workshops',
+      '/events',
+      '/help',
+      '/benefits',
+    ],
+    loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
   };
 
   const isStatic =
