@@ -117,12 +117,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    {
-      title: 'Wellness Parceiros',
-      icon: Heart,
-      url: '/wellness-partners',
-      roles: ['professional', 'loveDecoration'],
-    },
+    // {
+    //   title: 'Wellness Parceiros',
+    //   icon: Heart,
+    //   url: '/wellness-partners',
+    //   roles: ['professional', 'loveDecoration'],
+    // },
     // {
     //   title: 'Workshops',
     //   icon: GraduationCap,
