@@ -19,6 +19,7 @@ import {
   Quote,
   ShoppingCart,
   Coins,
+  Heart,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
