@@ -118,7 +118,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       roles: ['professional', 'loveDecoration'],
     },
     {
-      title: 'Wellness Partners',
+      title: 'Wellness Parceiros',
       icon: Heart,
       url: '/wellness-partners',
       roles: ['professional', 'loveDecoration'],
