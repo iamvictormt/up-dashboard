@@ -20,6 +20,8 @@ import {
   ShoppingCart,
   Coins,
   Heart,
+  LayoutDashboard,
+  Ticket,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
@@ -100,16 +102,22 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
 
   const mainMenuItems: SidebarItem[] = [
     {
+      title: 'Painel Admin',
+      icon: LayoutDashboard,
+      url: '/admin',
+      roles: ['admin'],
+    },
+    {
       title: 'Mural da comunidade',
       icon: Quote,
       url: '/mural',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'admin'],
     },
     {
       title: 'Prestadores de serviços',
       icon: Users,
       url: '/service-providers',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'admin'],
     },
     {
       title: 'Lojistas parceiros',
@@ -140,6 +148,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       title: 'Minha loja',
       icon: ShoppingCart,
       url: '/store-info',
+      roles: ['partnerSupplier'],
+    },
+    {
+      title: 'Conexão Premiada',
+      icon: Ticket,
+      url: '/store-info?tab=physical-sales',
       roles: ['partnerSupplier'],
     },
     {

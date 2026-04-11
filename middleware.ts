@@ -39,6 +39,7 @@ export function middleware(request: NextRequest) {
       '/benefits',
     ],
     loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
+    admin: ['/mural', '/service-providers', '/admin', '/help'],
   };
 
   const isStatic =

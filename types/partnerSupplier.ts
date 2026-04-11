@@ -10,4 +10,6 @@ export interface PartnerSupplierData extends UserData {
   contact: string;
   type: PartnerSupplierType;
   isVerified: boolean;
+  pointsLimit?: number;
+  currentPointsAwarded?: number;
 }

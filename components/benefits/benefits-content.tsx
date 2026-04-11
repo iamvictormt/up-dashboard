@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import type { BenefitData, BenefitRedemptionData } from '@/types';
 import { useUser } from '@/contexts/user-context';
 import { RedemptionCard } from './redemption-card';
+import { RedeemPointsForm } from './redeem-points-form';
 
 type ViewMode = 'available' | 'redemptions';
 
@@ -165,6 +166,10 @@ export function BenefitsContent() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="max-w-xl mx-auto">
+          <RedeemPointsForm />
         </div>
 
         <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-[#511A2B]/5 rounded-xl w-full md:w-fit">

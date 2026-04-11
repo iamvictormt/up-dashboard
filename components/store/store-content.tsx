@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Star,
   Store,
@@ -21,6 +22,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { EventForm } from '@/components/store/event-form';
 import { EventEditModal } from './event-edit-modal';
+import { PhysicalSaleForm } from './physical-sale-form';
 import { fetchMyStore, fetchStoreById } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
@@ -52,6 +54,15 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   const [editingEvent, setEditingEvent] = useState<number | null>(null);
   const [storeData, setStoreData] = useState<StoreData | null>(null);
   const [showStoreForm, setShowStoreForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<'products' | 'events' | 'physical-sales'>('products');
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'physical-sales' || tab === 'products' || tab === 'events') {
+      setActiveTab(tab as any);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     loadStoreData();
@@ -256,108 +267,127 @@ export function StoreContent({ supplierId }: StoreContentProps) {
         {/* Main Content */}
         <div className="px-6 py-16">
           <div className="max-w-7xl mx-auto space-y-16">
-            {/* Produtos Section */}
-            <section>
-              <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
-                <div>
-                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
-                    {!supplierId ? 'Gerenciar produtos' : 'Produtos da loja'}
-                  </h2>
-                  <p className="text-[#511A2B]/70">
-                    {!supplierId
-                      ? 'Organize e atualize sua linha de produtos com facilidade'
-                      : 'Conheça a linha completa de produtos desta loja'}
-                  </p>
-                </div>
-                {!supplierId && (
-                  <Button
-                    onClick={() => setShowProductForm(true)}
-                    className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Produto
-                  </Button>
-                )}
-              </div>
+            <div className="flex bg-[#511A2B]/5 p-1.5 rounded-xl w-fit mb-8">
+              <Button
+                variant={activeTab === 'products' ? 'primary' : 'ghost'}
+                onClick={() => setActiveTab('products')}
+                className="rounded-lg"
+              >
+                Produtos
+              </Button>
+              {storeData.events && storeData.events.length > 0 && (
+                <Button
+                  variant={activeTab === 'events' ? 'primary' : 'ghost'}
+                  onClick={() => setActiveTab('events')}
+                  className="rounded-lg"
+                >
+                  Eventos
+                </Button>
+              )}
+              {!supplierId && (
+                <Button
+                  variant={activeTab === 'physical-sales' ? 'primary' : 'ghost'}
+                  onClick={() => setActiveTab('physical-sales')}
+                  className="rounded-lg"
+                >
+                  Conexão Premiada
+                </Button>
+              )}
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {storeData.products.map((product, index) => (
-                  <Card
-                    key={index}
-                    className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2"
-                  >
-                    <div className="relative">
-                      <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                        <Image
-                          src={product.photoUrl || '/placeholder.svg?height=300&width=300'}
-                          alt={product.name}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          {product.featured && (
-                            <Badge className="bg-[#FEC460] text-[#511A2B] hover:bg-[#FEC460]/90 shadow-lg">
-                              Destaque
-                            </Badge>
-                          )}
-                          {product.promotion && (
-                            <Badge className="bg-red-500 text-white hover:bg-red-600 shadow-lg">Promoção</Badge>
+            {activeTab === 'products' && (
+              <section>
+                <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
+                  <div>
+                    <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
+                      {!supplierId ? 'Gerenciar produtos' : 'Produtos da loja'}
+                    </h2>
+                    <p className="text-[#511A2B]/70">
+                      {!supplierId
+                        ? 'Organize e atualize sua linha de produtos com facilidade'
+                        : 'Conheça a linha completa de produtos desta loja'}
+                    </p>
+                  </div>
+                  {!supplierId && (
+                    <Button
+                      onClick={() => setShowProductForm(true)}
+                      className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Adicionar Produto
+                    </Button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {storeData.products.map((product, index) => (
+                    <Card
+                      key={index}
+                      className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden hover:-translate-y-2"
+                    >
+                      <div className="relative">
+                        <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                          <Image
+                            src={product.photoUrl || '/placeholder.svg?height=300&width=300'}
+                            alt={product.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 left-3 flex gap-2">
+                            {product.featured && (
+                              <Badge className="bg-[#FEC460] text-[#511A2B] hover:bg-[#FEC460]/90 shadow-lg">
+                                Destaque
+                              </Badge>
+                            )}
+                            {product.promotion && (
+                              <Badge className="bg-red-500 text-white hover:bg-red-600 shadow-lg">Promoção</Badge>
+                            )}
+                          </div>
+                          {!supplierId && (
+                            <div className="absolute top-3 right-3">
+                              <Button
+                                size="lg"
+                                className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
+                                onClick={() => setEditingProduct(index)}
+                              >
+                                <Edit3 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           )}
                         </div>
-                        {!supplierId && (
-                          <div className="absolute top-3 right-3">
-                            <Button
-                              size="lg"
-                              className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[#511A2B] hover:bg-[#511A2B]/90 text-white"
-                              onClick={() => setEditingProduct(index)}
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        )}
                       </div>
-                    </div>
 
-                    <CardContent className="p-6">
-                      <h3 className="font-bold text-[#511A2B] mb-2 text-lg">{product.name}</h3>
-                      <p className="text-sm text-[#511A2B]/70 mb-4 overflow-hidden whitespace-normal break-words line-clamp-3">
-                        {product.description}
-                      </p>
+                      <CardContent className="p-6">
+                        <h3 className="font-bold text-[#511A2B] mb-2 text-lg">{product.name}</h3>
+                        <p className="text-sm text-[#511A2B]/70 mb-4 overflow-hidden whitespace-normal break-words line-clamp-3">
+                          {product.description}
+                        </p>
 
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                        <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
-                        <Button
-                          variant="primary"
-                          onClick={() => window.open(product.link, '_blank')}
-                          disabled={!product.link}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-1" />
-                          Ver Produto
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
+                          <Button
+                            variant="primary"
+                            onClick={() => window.open(product.link, '_blank')}
+                            disabled={!product.link}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-1" />
+                            Ver Produto
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
 
-            {/* Eventos Section */}
-            {storeData.events && (
+            {activeTab === 'events' && storeData.events && (
               <section>
                 <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                   <div>
                     <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Eventos disponíveis</h2>
                     <p className="text-[#511A2B]/70">Atividades e workshops promovidos pela loja</p>
                   </div>
-                  {/* {!supplierId && (
-                  <Button
-                    onClick={() => setShowEventForm(true)}
-                    className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Criar Evento
-                  </Button>
-                )} */}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -419,6 +449,12 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                     </Card>
                   ))}
                 </div>
+              </section>
+            )}
+
+            {activeTab === 'physical-sales' && !supplierId && (
+              <section className="max-w-3xl mx-auto">
+                <PhysicalSaleForm />
               </section>
             )}
 
