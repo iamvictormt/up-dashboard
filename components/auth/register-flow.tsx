@@ -65,6 +65,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       document: '',
       stateRegistration: '',
       contact: '',
+      type: 'SUPPLIER' as 'SUPPLIER' | 'WELLNESS',
     },
   });
 

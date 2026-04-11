@@ -32,6 +32,7 @@ interface ProductData {
   link: string;
   featured: boolean;
   promotion: boolean;
+  duration?: string;
 }
 
 export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }: ProductFormModalProps) {
@@ -42,6 +43,7 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
     link: '',
     featured: false,
     promotion: false,
+    duration: '',
   });
 
   const [errors, setErrors] = useState<Partial<ProductData>>({});
@@ -209,22 +211,38 @@ export function ProductFormModal({ storeId, onProductCreated, onClose, isOpen }:
             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
           </div>
 
-          {/* Link */}
-          <div>
-            <Label htmlFor="link" className="text-[#511A2B] font-medium">
-              Link (opcional)
-            </Label>
-            <Input
-              id="link"
-              type="url"
-              value={productData.link}
-              onChange={(e) => handleInputChange('link', e.target.value)}
-              placeholder="https://exemplo.com/produto"
-              className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
-                errors.link ? 'border-red-500' : ''
-              }`}
-            />
-            {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Link */}
+            <div>
+              <Label htmlFor="link" className="text-[#511A2B] font-medium">
+                Link (opcional)
+              </Label>
+              <Input
+                id="link"
+                type="url"
+                value={productData.link}
+                onChange={(e) => handleInputChange('link', e.target.value)}
+                placeholder="https://exemplo.com/produto"
+                className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
+                  errors.link ? 'border-red-500' : ''
+                }`}
+              />
+              {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
+            </div>
+
+            {/* Duração */}
+            <div>
+              <Label htmlFor="duration" className="text-[#511A2B] font-medium">
+                Duração (opcional, ex: 60 min)
+              </Label>
+              <Input
+                id="duration"
+                value={productData.duration}
+                onChange={(e) => handleInputChange('duration', e.target.value)}
+                placeholder="Ex: 60 min, 1 hora"
+                className="pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+              />
+            </div>
           </div>
 
           {/* Switches */}
