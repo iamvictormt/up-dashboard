@@ -101,12 +101,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    {
-      title: 'Parceiros Wellness',
-      icon: Sparkles,
-      url: '/wellness-partners',
-      roles: ['professional', 'loveDecoration'],
-    },
+    // {
+    //   title: 'Parceiros Wellness',
+    //   icon: Sparkles,
+    //   url: '/wellness-partners',
+    //   roles: ['professional', 'loveDecoration'],
+    // },
     {
       title: 'Eventos',
       icon: Calendar,

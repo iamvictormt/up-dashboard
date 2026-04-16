@@ -248,7 +248,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 sm:p-5 pt-0 gap-2">
-        <Link href={`/wellness-partners/${id}`} className="flex-1">
+        <Link href={`/wellness-partners/${storeData?.id}`} className="flex-1">
           <Button variant="outline" className="w-full rounded-xl font-semibold transition-all">
             Ver Perfil
           </Button>
