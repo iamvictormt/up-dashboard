@@ -1,27 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Star,
-  Store,
-  Globe,
-  Package,
-  Calendar,
-  Award,
-  Edit3,
-  Plus,
-  ExternalLink,
-  Heart,
-  MapPin,
-  Users,
-} from 'lucide-react';
+import { Store, Globe, Package, Calendar, Edit3, Plus, ExternalLink, MapPin, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import { EventForm } from '@/components/store/event-form';
-import { EventEditModal } from './event-edit-modal';
-import { fetchMyStore, fetchStoreById } from '@/lib/store-api';
+import { fetchMyStore, fetchPartnerSupplierById, fetchStoreById } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
@@ -30,11 +15,22 @@ import { NoStoreView } from './no-store-view';
 import { ProductFormModal } from './product-form';
 import StoreInfoSection from './store-info-section';
 import { formatCurrency } from '@/lib/utils';
+import { useUser } from '@/contexts/user-context';
 
-const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData | null> => {
+const fetchStoreData = async (
+  supplierId: string | undefined,
+  allowPartnerSupplierFallback: boolean
+): Promise<StoreData | null> => {
   const response = supplierId ? await fetchStoreById(supplierId) : await fetchMyStore();
   if (response.status === 200) {
     return response.data;
+  }
+
+  if (supplierId && allowPartnerSupplierFallback) {
+    const partnerSupplierResponse = await fetchPartnerSupplierById(supplierId);
+    if (partnerSupplierResponse.status === 200) {
+      return partnerSupplierResponse.data?.store ?? null;
+    }
   }
 
   return null;
@@ -42,25 +38,27 @@ const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData
 
 interface StoreContentProps {
   supplierId?: string;
+  viewMode?: 'default' | 'wellness';
 }
 
-export function StoreContent({ supplierId }: StoreContentProps) {
+export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentProps) {
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
-  const [showEventForm, setShowEventForm] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
-  const [editingEvent, setEditingEvent] = useState<number | null>(null);
   const [storeData, setStoreData] = useState<StoreData | null>(null);
   const [showStoreForm, setShowStoreForm] = useState(false);
 
   useEffect(() => {
     loadStoreData();
-  }, []);
+  }, [supplierId]);
 
   const loadStoreData = async () => {
     try {
       setIsLoading(true);
-      const data = await fetchStoreData(supplierId);
+      const role = (user as any)?.role;
+      const allowPartnerSupplierFallback = role === 'professional' || role === 'loveDecoration';
+      const data = await fetchStoreData(supplierId, allowPartnerSupplierFallback);
       setStoreData(data);
     } catch (error) {
       console.error('Erro ao carregar dados da loja:', error);
@@ -72,25 +70,17 @@ export function StoreContent({ supplierId }: StoreContentProps) {
   const handleStoreCreated = (newStoreData: StoreData) => {
     setStoreData(newStoreData);
     setShowStoreForm(false);
-    toast.success('Loja cadastrada com sucesso.');
+    toast.success('Perfil cadastrado com sucesso.');
   };
 
   const handleStoreUpdated = (updatedStoreData: StoreData) => {
     setStoreData(updatedStoreData);
     setShowStoreForm(false);
-    toast.success('Loja atualizada com sucesso.');
+    toast.success('Perfil atualizado com sucesso.');
   };
 
-  const handleEventCreated = async (eventData: any) => {
+  const handleProductCreated = async () => {
     if (!storeData) return;
-
-    setShowEventForm(false);
-    loadStoreData();
-  };
-
-  const handleProductCreated = async (productData: any) => {
-    if (!storeData) return;
-
     setShowProductForm(false);
     loadStoreData();
   };
@@ -106,25 +96,32 @@ export function StoreContent({ supplierId }: StoreContentProps) {
     );
   };
 
-  const removeEvent = (index: number) => {
-    setStoreData((prev) =>
-      prev
-        ? {
-            ...prev,
-            events: prev.events.filter((_, i) => i !== index),
-          }
-        : null
-    );
-  };
-
   if (isLoading) {
     return <></>;
   }
 
+  if (!storeData && supplierId) {
+    return (
+      <div className="p-6 md:p-8 w-full">
+        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-[#1A3B51]/10 shadow-lg w-full text-center">
+          <h2 className="text-2xl font-bold text-[#1A3B51] mb-3">Perfil indisponível</h2>
+          <p className="text-[#1A3B51]/70">
+            Este parceiro ainda não possui um perfil público com serviços/produtos cadastrados.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!storeData) {
+    const partnerSupplierType = (user?.partnerSupplier as any)?.type;
+    const shouldRenderWellnessEmptyState = partnerSupplierType
+      ? partnerSupplierType === 'WELLNESS'
+      : viewMode === 'wellness';
+
     return (
       <>
-        <NoStoreView onCreateStore={() => setShowStoreForm(true)} />
+        <NoStoreView onCreateStore={() => setShowStoreForm(true)} isWellness={shouldRenderWellnessEmptyState} />
 
         {showStoreForm && (
           <StoreForm onStoreCreated={handleStoreCreated} onClose={() => setShowStoreForm(false)} isEditing={false} />
@@ -133,30 +130,52 @@ export function StoreContent({ supplierId }: StoreContentProps) {
     );
   }
 
+  const resolvedStoreType = storeData.type ?? (user?.partnerSupplier as any)?.type;
+  const isWellnessStore = resolvedStoreType
+    ? resolvedStoreType === 'WELLNESS'
+    : viewMode === 'wellness';
+  const headline = isWellnessStore ? 'Espaço Wellness' : 'Loja Parceira';
+  const catalogTitle = !supplierId
+    ? isWellnessStore
+      ? 'Gerenciar serviços'
+      : 'Gerenciar produtos'
+    : isWellnessStore
+    ? 'Serviços disponíveis'
+    : 'Produtos da loja';
+  const catalogDescription = !supplierId
+    ? isWellnessStore
+      ? 'Organize e atualize seus serviços com foco em experiência e bem-estar'
+      : 'Organize e atualize sua linha de produtos com facilidade'
+    : isWellnessStore
+    ? 'Conheça os serviços e experiências oferecidos por este parceiro'
+    : 'Conheça a linha completa de produtos desta loja';
+  const addCatalogItemLabel = isWellnessStore ? 'Adicionar Serviço' : 'Adicionar Produto';
+  const itemViewLabel = isWellnessStore ? 'Ver Serviço' : 'Ver Produto';
+  const emptyCatalogLabel = isWellnessStore ? 'Nenhum serviço cadastrado' : 'Nenhum produto cadastrado';
+  const statsLabel = isWellnessStore ? 'Serviços disponíveis' : 'Produtos disponíveis';
+  const eventSectionDescription = isWellnessStore
+    ? 'Vivências, aulas e encontros promovidos por este parceiro wellness'
+    : 'Atividades e workshops promovidos pela loja';
+
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
-        {/* Floating Action Buttons */}
         <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
-          {!supplierId ? (
+          {!supplierId && (
             <Button
               onClick={() => setShowStoreForm(true)}
               className="rounded-2xl bg-white text-[#511A2B] hover:bg-white/90 shadow-xl backdrop-blur-sm hover:scale-110 transition-all duration-300 p-6"
             >
               <Edit3 className="w-5 h-5" />
             </Button>
-          ) : (
-            ''
           )}
         </div>
 
-        {/* Hero Section */}
         <div className="relative overflow-hidden">
           <div className="absolute inset-0 bg-[#46142b] rounded-xl" />
           <div className="relative px-6 py-16 md:py-24">
             <div className="max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center gap-12 w-full px-4">
-                {/* Logo/Ícone da Loja */}
                 <div className="relative">
                   {storeData.logoUrl ? (
                     <div className="w-44 h-44 rounded-2xl overflow-hidden border-3 border-primary/30 shadow-md">
@@ -173,31 +192,20 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                   )}
                 </div>
 
-                {/* Informações Principais */}
                 <div className="w-full lg:flex-1 text-center lg:text-left text-white break-words max-w-full">
+                  <Badge className="mb-4 bg-white/20 border border-white/30 text-white hover:bg-white/20">
+                    {headline}
+                  </Badge>
                   <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white">{storeData.name}</h1>
 
-                  {/* Rating */}
-                  {/* <div className="flex items-center justify-center lg:justify-start mb-6">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-6 h-6 ${
-                            i < Math.floor(storeData.rating) ? 'text-yellow-300 fill-yellow-300' : 'text-white/30'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="ml-3 text-2xl font-bold">{storeData?.rating?.toFixed(1) || 0}</span>
-                    <span className="ml-2 text-white/80 hidden md:block">• Excelente</span>
-                  </div> */}
-
                   <p className="text-lg text-white/90 leading-relaxed mb-8 w-full break-words">
-                    {storeData.description.charAt(0).toUpperCase() + storeData.description.slice(1).toLowerCase()}
+                    {storeData.description
+                      ? `${storeData.description.charAt(0).toUpperCase()}${storeData.description.slice(1).toLowerCase()}`
+                      : isWellnessStore
+                      ? 'Conheça este parceiro wellness e suas soluções para saúde integral.'
+                      : 'Conheça este parceiro e os benefícios disponíveis.'}
                   </p>
 
-                  {/* Botões de Ação */}
                   <div className="flex flex-col sm:flex-row gap-4">
                     {storeData.website && (
                       <Button
@@ -216,27 +224,16 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           </div>
         </div>
 
-        {/* Stats Cards */}
         <div className="px-6 -mt-12 relative z-10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              {/* <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#511A2B] to-[#D56235] rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <Star className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-[#511A2B]">{storeData?.rating?.toFixed(1) || 0}</div>
-                  <div className="text-sm text-[#511A2B]/70">Avaliação</div>
-                </CardContent>
-              </Card> */}
-
               <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-[#46142b] rounded-xl flex items-center justify-center mx-auto mb-3">
                     <Package className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData.products.length}</div>
-                  <div className="text-sm text-[#511A2B]/70">Produtos disponíveis</div>
+                  <div className="text-sm text-[#511A2B]/70">{statsLabel}</div>
                 </CardContent>
               </Card>
 
@@ -246,28 +243,22 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                     <Calendar className="w-6 h-6 text-white" />
                   </div>
                   <div className="text-2xl font-bold text-[#511A2B]">{storeData.events.length}</div>
-                  <div className="text-sm text-[#511A2B]/70">Eventos disponíveis</div>
+                  <div className="text-sm text-[#511A2B]/70">
+                    {isWellnessStore ? 'Experiências e eventos' : 'Eventos disponíveis'}
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="px-6 py-16">
           <div className="max-w-7xl mx-auto space-y-16">
-            {/* Produtos Section */}
             <section>
               <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                 <div>
-                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
-                    {!supplierId ? 'Gerenciar produtos' : 'Produtos da loja'}
-                  </h2>
-                  <p className="text-[#511A2B]/70">
-                    {!supplierId
-                      ? 'Organize e atualize sua linha de produtos com facilidade'
-                      : 'Conheça a linha completa de produtos desta loja'}
-                  </p>
+                  <h2 className="text-3xl font-bold text-[#511A2B] mb-2">{catalogTitle}</h2>
+                  <p className="text-[#511A2B]/70">{catalogDescription}</p>
                 </div>
                 {!supplierId && (
                   <Button
@@ -275,7 +266,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                     className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
                   >
                     <Plus className="w-4 h-4 mr-2" />
-                    Adicionar Produto
+                    {addCatalogItemLabel}
                   </Button>
                 )}
               </div>
@@ -297,7 +288,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                         <div className="absolute top-3 left-3 flex gap-2">
                           {product.featured && (
                             <Badge className="bg-[#FEC460] text-[#511A2B] hover:bg-[#FEC460]/90 shadow-lg">
-                              Destaque
+                              {isWellnessStore ? 'Mais buscado' : 'Destaque'}
                             </Badge>
                           )}
                           {product.promotion && (
@@ -332,32 +323,30 @@ export function StoreContent({ supplierId }: StoreContentProps) {
                           disabled={!product.link}
                         >
                           <ExternalLink className="w-4 h-4 mr-1" />
-                          Ver Produto
+                          {itemViewLabel}
                         </Button>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
+
+              {storeData.products.length === 0 && (
+                <Card className="bg-white border border-dashed border-[#511A2B]/20 shadow-sm rounded-2xl">
+                  <CardContent className="p-8 text-center text-[#511A2B]/70">{emptyCatalogLabel}</CardContent>
+                </Card>
+              )}
             </section>
 
-            {/* Eventos Section */}
-            {storeData.events && (
+            {storeData.events && storeData.events.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-8 grid grid-cols-1 md:grid-cols-2">
                   <div>
-                    <h2 className="text-3xl font-bold text-[#511A2B] mb-2">Eventos disponíveis</h2>
-                    <p className="text-[#511A2B]/70">Atividades e workshops promovidos pela loja</p>
+                    <h2 className="text-3xl font-bold text-[#511A2B] mb-2">
+                      {isWellnessStore ? 'Experiências e eventos' : 'Eventos disponíveis'}
+                    </h2>
+                    <p className="text-[#511A2B]/70">{eventSectionDescription}</p>
                   </div>
-                  {/* {!supplierId && (
-                  <Button
-                    onClick={() => setShowEventForm(true)}
-                    className="bg-[#511A2B] hover:bg-[#511A2B]/90 text-white rounded-xl px-6 py-3 w-[100%] md:w-[33%] mt-2 md:mt-0 md:place-self-end"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Criar Evento
-                  </Button>
-                )} */}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -422,15 +411,14 @@ export function StoreContent({ supplierId }: StoreContentProps) {
               </section>
             )}
 
-            <StoreInfoSection storeData={storeData} />
+            <StoreInfoSection storeData={storeData} isWellness={isWellnessStore} />
           </div>
         </div>
 
-        {/* Modals */}
         {editingProduct !== null && (
           <ProductEditModal
             product={storeData.products[editingProduct]}
-            onProductUpdated={(updatedProduct) => {
+            onProductUpdated={() => {
               loadStoreData();
               setEditingProduct(null);
             }}
@@ -439,23 +427,7 @@ export function StoreContent({ supplierId }: StoreContentProps) {
               setEditingProduct(null);
             }}
             onClose={() => setEditingProduct(null)}
-          />
-        )}
-
-        {/* Modal de edição de evento */}
-        {editingEvent !== null && (
-          <EventEditModal
-            event={storeData.events[editingEvent]}
-            storeAddress={storeData.address}
-            onEventUpdated={(updatedEvent) => {
-              loadStoreData();
-              setEditingEvent(null);
-            }}
-            onDelete={() => {
-              removeEvent(editingEvent);
-              setEditingEvent(null);
-            }}
-            onClose={() => setEditingEvent(null)}
+            isWellness={isWellnessStore}
           />
         )}
 
@@ -468,21 +440,13 @@ export function StoreContent({ supplierId }: StoreContentProps) {
           />
         )}
 
-        {showEventForm && (
-          <EventForm
-            storeId={storeData.id}
-            storeAddress={storeData.address}
-            onEventCreated={handleEventCreated}
-            onClose={() => setShowEventForm(false)}
-          />
-        )}
-
-        {showProductForm && storeData && (
+        {showProductForm && storeData?.id && (
           <ProductFormModal
             storeId={storeData.id}
             onProductCreated={handleProductCreated}
             onClose={() => setShowProductForm(false)}
             isOpen={showProductForm}
+            isWellness={isWellnessStore}
           />
         )}
       </div>

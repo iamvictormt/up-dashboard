@@ -21,7 +21,7 @@ import { uploadImageCloudinary } from '@/lib/user-api';
 
 interface StoreFormProps {
   storeData?: {
-    id: string;
+    id?: string;
     name: string;
     description: string;
     website: string;
@@ -87,7 +87,6 @@ function OpeningHoursInput({
   onChange: (value: string) => void;
   error?: string;
 }) {
-  // Parse the existing string value into schedule object
   const parseStringToSchedule = (str: string): WeekSchedule => {
     const defaultSchedule: WeekSchedule = {
       monday: { isOpen: false, openTime: '08:00', closeTime: '18:00' },
@@ -101,7 +100,6 @@ function OpeningHoursInput({
 
     if (!str || str === 'Fechado') return defaultSchedule;
 
-    // Parse the string format like "Segunda-feira: 08:00 - 18:00 | Terça-feira: 08:00 - 18:00"
     const dayMappings: Record<string, keyof WeekSchedule> = {
       'Segunda-feira': 'monday',
       'Terça-feira': 'tuesday',
@@ -154,7 +152,6 @@ function OpeningHoursInput({
     };
     setSchedule(newSchedule);
 
-    // Convert to readable string format for storage
     const readableFormat = formatScheduleToString(newSchedule);
     onChange(readableFormat);
   };
@@ -229,7 +226,6 @@ function OpeningHoursInput({
 
   return (
     <div className="space-y-4">
-      {/* Quick Actions */}
       <div className="flex flex-wrap gap-2 mb-4">
         <Button
           type="button"
@@ -390,7 +386,6 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
       });
     }
 
-    // Limpar erro do campo
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
@@ -461,10 +456,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     setIsSubmitting(true);
 
     try {
-      console.log('Submitting store data:', formData);
       if (formData.logoUrl && !formData.logoUrl.includes(`https://res.cloudinary.com`)) cloudinaryImageURL = await uploadImageCloudinary(formData.logoUrl) || '';
       formData.logoUrl = cloudinaryImageURL;
-      console.log('cloudinaryImageURL:', cloudinaryImageURL);
 
       const response =
         isEditing && storeData?.id ? await updateStore(storeData?.id, formData) : await createStore(formData);
@@ -475,8 +468,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
         onStoreCreated(response.data);
       }
     } catch (error) {
-      console.error('Erro ao salvar loja:', error);
-      setErrors({ general: 'Erro ao salvar loja. Tente novamente.' });
+      console.error('Erro ao salvar perfil:', error);
+      setErrors({ general: 'Erro ao salvar perfil. Tente novamente.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -503,7 +496,6 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     }
   }, [formData.address.zipCode]);
 
-  // Sempre renderizar como modal
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -512,7 +504,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
             <div className="w-10 h-10 bg-[#511A2B] rounded-xl flex items-center justify-center">
               <Store className="w-5 h-5 text-white" />
             </div>
-            <DialogTitle className="text-[#511A2B]"> {isEditing ? 'Editar Loja' : 'Cadastrar Loja'}</DialogTitle>
+            <DialogTitle className="text-[#511A2B]"> {isEditing ? 'Editar Perfil' : 'Cadastrar Perfil'}</DialogTitle>
           </div>
         </DialogHeader>
 
@@ -524,10 +516,9 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
               </div>
             )}
 
-            {/* Informações Básicas */}
             <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-[#511A2B] flex items-center">Informações da Loja</CardTitle>
+                <CardTitle className="text-[#511A2B] flex items-center">Informações do Perfil</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <PhotoUploadSimple
@@ -538,14 +529,14 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
                 <div>
                   <Label htmlFor="name" className="text-[#511A2B] font-medium">
-                    Nome da Loja *
+                    Nome do Perfil *
                   </Label>
                   <div className="relative">
                     <Input
                       id="name"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="Ex: Super Soluções"
+                      placeholder="Ex: Espaço Harmonia"
                       className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                     />
                     <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -561,7 +552,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     id="description"
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Descreva sua loja, produtos e serviços..."
+                    placeholder="Descreva sua loja, serviços e diferenciais..."
                     className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
                     rows={3}
                   />
@@ -588,7 +579,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
                   <div>
                     <Label htmlFor="type" className="text-[#511A2B] font-medium">
-                      Tipo de Loja *
+                      Tipo de Perfil *
                     </Label>
                     <div className="relative">
                       <Select
@@ -623,10 +614,9 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
               </CardContent>
             </Card>
 
-            {/* Endereço */}
             <Card className="bg-white/80 border-[#511A2B]/10 rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-[#511A2B] flex items-center">Endereço da Loja</CardTitle>
+                <CardTitle className="text-[#511A2B] flex items-center">Endereço do Perfil</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -769,7 +759,6 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
               </CardContent>
             </Card>
 
-            {/* Botões de Ação */}
             <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-3 pt-4">
               <Button
                 type="button"
@@ -793,7 +782,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    {isEditing ? 'Atualizar Loja' : 'Cadastrar Loja'}
+                    {isEditing ? 'Atualizar Perfil' : 'Cadastrar Perfil'}
                   </>
                 )}
               </Button>

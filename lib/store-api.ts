@@ -18,6 +18,10 @@ export async function fetchStoreById(id: string): Promise<AxiosResponse> {
   return await api.get(`stores/${id}`);
 }
 
+export async function fetchPartnerSupplierById(id: string): Promise<AxiosResponse> {
+  return await api.get(`partner-suppliers/${id}`);
+}
+
 export async function fetchMyStore(): Promise<AxiosResponse> {
   return await api.get('stores/my-store');
 }
