@@ -17,6 +17,7 @@ import {
   ShoppingCart,
   Coins,
   Trophy,
+  Sparkles,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
