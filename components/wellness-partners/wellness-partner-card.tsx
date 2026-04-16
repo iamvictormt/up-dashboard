@@ -6,26 +6,28 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { cn, formatCurrency } from '@/lib/utils';
-import { StoreData } from '@/types';
+import { WellnessPartnerListItem } from '@/types';
 import { useState } from 'react';
 import { toggleFavoritePartner } from '@/lib/store-api';
 import { toast } from 'sonner';
 
 interface WellnessPartnerCardProps {
-  partner: StoreData;
+  partner: WellnessPartnerListItem;
 }
 
 export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
-  const { id, name, description, rating, openingHours, address, products, logoUrl, isVerified, isFavorite } = partner;
-  const [favorite, setFavorite] = useState(isFavorite);
+  const { id, tradeName, contact, isVerified, isFavorite, store } = partner;
+  const [favorite, setFavorite] = useState(Boolean(isFavorite));
+  const storeData = store;
 
   if (!id) {
     return null;
   }
 
-  const serviceOfferings = products ?? [];
+  const serviceOfferings = storeData?.products ?? [];
   const displayServices = serviceOfferings.slice(0, 2);
   const remainingServices = Math.max(0, serviceOfferings.length - displayServices.length);
+  const openingHours = storeData?.openingHours ?? '';
   const openingHoursList = openingHours ? openingHours.split('|').map((entry) => entry.trim()).filter(Boolean) : [];
   const mainOpeningHour = openingHoursList[0] || 'Horário não informado';
   const hasMoreHours = openingHoursList.length > 1;
@@ -55,16 +57,11 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
     return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes < endTotalMinutes;
   })();
 
-  const whatsapp = (
-    (partner as any).contact ||
-    (partner as any).partnerSupplier?.contact ||
-    (partner as any).user?.partnerSupplier?.contact ||
-    ''
-  ).replace(/\D/g, '');
+  const whatsapp = (contact || '').replace(/\D/g, '');
 
   const handleToggleFavorite = async () => {
     try {
-      await toggleFavoritePartner(id!);
+      await toggleFavoritePartner(id);
       setFavorite(!favorite);
       toast.success(favorite ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
     } catch (error) {
@@ -95,16 +92,20 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-background bg-white overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              {logoUrl ? (
-                <img src={logoUrl || '/placeholder.svg'} alt={name || 'Parceiro wellness'} className="w-full h-full object-cover" />
+              {storeData?.logoUrl ? (
+                <img
+                  src={storeData.logoUrl || '/placeholder.svg'}
+                  alt={storeData.name || tradeName || 'Parceiro wellness'}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <Sparkles className="w-8 h-8 text-[#1A3B51]/40" />
               )}
             </div>
-            {rating > 0 && (
+            {Boolean(storeData?.rating && storeData.rating > 0) && (
               <div className="absolute -bottom-2 -right-2 bg-background border border-border/50 shadow-sm rounded-full px-2 py-0.5 flex items-center gap-1">
                 <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span className="text-xs font-bold text-foreground">{rating.toFixed(1)}</span>
+                <span className="text-xs font-bold text-foreground">{storeData?.rating.toFixed(1)}</span>
               </div>
             )}
           </div>
@@ -112,7 +113,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           <div className="flex-1 w-full min-w-0 pt-1 sm:pt-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
               <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground truncate group-hover:text-blue-600 transition-colors duration-300">
-                {name || 'Parceiro Wellness'}
+                {storeData?.name || tradeName || 'Parceiro Wellness'}
               </h3>
               {isVerified && (
                 <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200 flex items-center gap-0.5 px-1.5 py-0">
@@ -123,7 +124,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
             </div>
             <div className="flex items-center justify-center sm:justify-start gap-1 mt-1 text-muted-foreground text-xs sm:text-sm">
               <span className="truncate">
-                {address.city}, {address.state}
+                  {storeData?.address?.city || 'Cidade não informada'}, {storeData?.address?.state || '--'}
               </span>
             </div>
 
@@ -177,7 +178,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
       <CardContent className="flex-1 flex flex-col gap-4 sm:gap-5 px-4 sm:px-5 py-4">
         <p className="text-sm text-[#1A3B51]/75 line-clamp-2 leading-relaxed min-h-[40px]">
-          {description || 'Conheça experiências e serviços voltados ao seu bem-estar.'}
+          {storeData?.description || 'Conheça experiências e serviços voltados ao seu bem-estar.'}
         </p>
 
         <div className="space-y-2.5 p-3 rounded-xl border border-[#1A3B51]/10 bg-[#f9fcff]">

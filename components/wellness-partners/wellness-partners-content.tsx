@@ -5,11 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { WellnessPartnerCard } from './wellness-partner-card';
 import { fetchWellnessPartners } from '@/lib/store-api';
-import { StoreData } from '@/types';
+import { WellnessPartnerListItem } from '@/types';
 
 export function WellnessPartnersContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [partners, setPartners] = useState<StoreData[]>([]);
+  const [partners, setPartners] = useState<WellnessPartnerListItem[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const limit = 6;
@@ -19,8 +19,9 @@ export function WellnessPartnersContent() {
     try {
       setIsLoading(true);
       const response = await fetchWellnessPartners(query, pageNumber, limit);
-      setPartners(response.data);
-      setHasMore(response.data.length === limit);
+      const items = (response.data ?? []) as WellnessPartnerListItem[];
+      setPartners(items);
+      setHasMore(items.length === limit);
     } catch (error) {
       console.error('Error loading wellness partners:', error);
       setPartners([]);
