@@ -6,71 +6,19 @@ import {
   Store,
   Package,
   Calendar,
-  Clock,
   ArrowRight,
-  Sparkles,
-  MoreHorizontal,
-  Heart,
-  Share2,
   ChevronDown,
-  Info,
 } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { cn, formatCurrency } from '@/lib/utils';
+import { StoreData } from '@/types';
 
-interface Supplier {
-  id: string;
-  name: string;
-  logoUrl?: string | null;
-  description: string;
-  website: string;
-  rating: number;
-  openingHours: string;
-  address: {
-    state: string;
-    city: string;
-    district: string;
-    street: string;
-    complement: string | null;
-    number: string;
-    zipCode: string;
-  };
-  products: Array<{
-    id?: string;
-    name: string;
-    description: string;
-    price: number;
-    link: string;
-    featured: boolean;
-    promotion: boolean;
-    photoUrl?: string | null;
-  }>;
-  events: Array<{
-    id?: string;
-    name: string;
-    description: string;
-    date: string;
-    type: string;
-    points: number;
-    totalSpots: number;
-    filledSpots: number;
-    address: {
-      state: string;
-      city: string;
-      district: string;
-      street: string;
-      complement: string | null;
-      number: string;
-      zipCode: string;
-    };
-  }>;
-}
 
 interface SupplierCardProps {
-  supplier: Supplier;
+  supplier: StoreData;
 }
 
 export function SupplierCard({ supplier }: SupplierCardProps) {

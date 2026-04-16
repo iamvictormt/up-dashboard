@@ -1,10 +1,12 @@
 import api from '@/services/api';
+import { PartnerSupplierType } from '@/types/partnerSupplier';
 import { AxiosResponse } from 'axios';
 
-export async function fetchStores(searchQuery?: string, page: number = 1, limit: number = 6): Promise<AxiosResponse> {
+export async function fetchStores(searchQuery?: string, page: number = 1, limit: number = 6, type?: PartnerSupplierType): Promise<AxiosResponse> {
   const params: Record<string, string | number> = {
     page,
     limit,
+    type: type || 'SUPPLIER',
   };
 
   if (searchQuery) {

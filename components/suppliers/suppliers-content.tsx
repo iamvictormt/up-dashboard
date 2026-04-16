@@ -18,7 +18,7 @@ export function SuppliersContent() {
   const loadSuppliersStore = async (query = '', pageNumber = 1) => {
     try {
       setIsLoading(true);
-      const response = await fetchStores(query, pageNumber, limit);
+      const response = await fetchStores(query, pageNumber, limit, 'SUPPLIER');
       setSuppliers(response.data);
       setHasMore(response.data.length === limit);
     } catch (error) {
