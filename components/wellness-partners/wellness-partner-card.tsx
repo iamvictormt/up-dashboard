@@ -1,16 +1,6 @@
 'use client';
 
-import {
-  Star,
-  Store,
-  Package,
-  Calendar,
-  ArrowRight,
-  Heart,
-  ChevronDown,
-  CheckCircle2,
-  Clock,
-} from 'lucide-react';
+import { Star, Store, Package, ArrowRight, Heart, ChevronDown, CheckCircle2, Clock } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -26,52 +16,47 @@ interface WellnessPartnerCardProps {
 }
 
 export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
-  const { id, name, description, rating, openingHours, address, products, events, logoUrl, isVerified, isFavorite } = partner;
+  const { id, name, description, rating, openingHours, address, products, logoUrl, isVerified, isFavorite } = partner;
   const [favorite, setFavorite] = useState(isFavorite);
 
-  const nextEvent = events.length > 0 ? events[0] : null;
-
-  // Parse opening hours
-  const openingHoursList = openingHours ? openingHours.split('|').map((s) => s.trim()) : [];
-  const mainOpeningHour = openingHoursList[0] || 'Horário não disponível';
+  const serviceOfferings = products ?? [];
+  const displayServices = serviceOfferings.slice(0, 2);
+  const remainingServices = Math.max(0, serviceOfferings.length - displayServices.length);
+  const openingHoursList = openingHours ? openingHours.split('|').map((entry) => entry.trim()).filter(Boolean) : [];
+  const mainOpeningHour = openingHoursList[0] || 'Horário não informado';
   const hasMoreHours = openingHoursList.length > 1;
 
-  // Calculate active products count for display
-  const displayProducts = products.slice(0, 2);
-  const remainingProducts = Math.max(0, products.length - 2);
-
-  const hoursList = openingHours
+  const hoursList = (openingHours ?? '')
     .split('|')
-    .map((h) => h.trim())
+    .map((entry) => entry.trim())
     .filter(Boolean);
   const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
-  const todayHours = hoursList.find((h) => h.toLowerCase().includes(today.toLowerCase())) || hoursList[0];
+  const todayHours = hoursList.find((entry) => entry.toLowerCase().includes(today.toLowerCase())) || hoursList[0];
 
   const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinutes = now.getMinutes();
+  const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
 
   const isOpen = (() => {
     if (!todayHours || !todayHours.includes(':')) return false;
 
     const timePart = todayHours.split(':').slice(1).join(':').trim();
-    const times = timePart.split('-');
-    if (times.length < 2) return false;
+    const [startTime, endTime] = timePart.split('-').map((time) => time?.trim());
+    if (!startTime || !endTime) return false;
 
-    const startParts = times[0].trim().split(':');
-    const startHour = parseInt(startParts[0]);
-    const startMin = startParts[1] ? parseInt(startParts[1]) : 0;
+    const [startHour, startMinute = '0'] = startTime.split(':');
+    const [endHour, endMinute = '0'] = endTime.split(':');
+    const startTotalMinutes = Number(startHour) * 60 + Number(startMinute);
+    const endTotalMinutes = Number(endHour) * 60 + Number(endMinute);
 
-    const endParts = times[1].trim().split(':');
-    const endHour = parseInt(endParts[0]);
-    const endMin = endParts[1] ? parseInt(endParts[1]) : 0;
-
-    const currentTotalMin = currentHour * 60 + currentMinutes;
-    const startTotalMin = startHour * 60 + startMin;
-    const endTotalMin = endHour * 60 + endMin;
-
-    return currentTotalMin >= startTotalMin && currentTotalMin < endTotalMin;
+    return currentTotalMinutes >= startTotalMinutes && currentTotalMinutes < endTotalMinutes;
   })();
+
+  const whatsapp = (
+    (partner as any).contact ||
+    (partner as any).partnerSupplier?.contact ||
+    (partner as any).user?.partnerSupplier?.contact ||
+    ''
+  ).replace(/\D/g, '');
 
   const handleToggleFavorite = async () => {
     try {
@@ -87,7 +72,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
     <Card className="group relative flex flex-col h-full overflow-hidden border-border/50 bg-background transition-all duration-300 hover:shadow-xl hover:border-blue-500/20 rounded-2xl">
       <div className="absolute top-3 right-3 z-10 flex gap-2">
         <Button
-          size="icon"
+          size="sm"
           variant="secondary"
           onClick={handleToggleFavorite}
           className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-sm"
@@ -98,7 +83,6 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
       <CardHeader className="relative z-10 pt-6 pb-2 px-4 sm:px-5 flex-none">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
-          {/* Logo */}
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-background bg-white overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               {logoUrl ? (
@@ -115,7 +99,6 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
             )}
           </div>
 
-          {/* Title & Location */}
           <div className="flex-1 w-full min-w-0 pt-1 sm:pt-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
               <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground truncate group-hover:text-blue-600 transition-colors duration-300">
@@ -184,34 +167,33 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
       <CardContent className="flex-1 flex flex-col gap-4 sm:gap-5 px-4 sm:px-5 py-4">
         <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-          {description || 'Conheça nossos serviços de bem-estar.'}
+          {description || 'Conheça experiências e serviços voltados ao seu bem-estar.'}
         </p>
 
-        {/* Services Section */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Package className="w-3.5 h-3.5" />
-              Serviços
+              Serviços Wellness
             </h4>{' '}
-            {remainingProducts > 0 && (
+            {remainingServices > 0 && (
               <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded-md">
-                +{remainingProducts}
+                +{remainingServices}
               </span>
             )}
           </div>
 
-          {products.length > 0 ? (
+          {serviceOfferings.length > 0 ? (
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              {displayProducts.map((product) => (
+              {displayServices.map((service) => (
                 <div
-                  key={product.id || product.name}
+                  key={service.id || service.name}
                   className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-border/50 bg-muted/20 hover:border-blue-500/30 transition-all"
                 >
-                  {product.photoUrl ? (
+                  {service.photoUrl ? (
                     <img
-                      src={product.photoUrl || '/placeholder.svg'}
-                      alt={product.name}
+                      src={service.photoUrl || '/placeholder.svg'}
+                      alt={service.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover/product:scale-110"
                     />
                   ) : (
@@ -223,15 +205,15 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                   <div className="absolute bottom-1.5 left-1.5 right-1.5">
                     <div className="bg-background/90 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-border/50 flex flex-col gap-0.5">
                       <div className="flex items-center justify-between gap-1">
-                        <span className="text-[9px] sm:text-[10px] font-medium truncate">{product.name}</span>
+                        <span className="text-[9px] sm:text-[10px] font-medium truncate">{service.name}</span>
                         <span className="text-[9px] sm:text-[10px] font-bold text-blue-600 whitespace-nowrap">
-                          {formatCurrency(product.price)}
+                          {formatCurrency(service.price)}
                         </span>
                       </div>
-                      {product.duration && (
+                      {service.duration && (
                         <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
                           <Clock className="w-2 h-2" />
-                          {product.duration}
+                          {service.duration}
                         </div>
                       )}
                     </div>
@@ -243,11 +225,11 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div className="aspect-[4/3] rounded-lg border border-dashed border-border/50 bg-muted/10 flex flex-col items-center justify-center text-muted-foreground/30">
                 <Package className="w-6 h-6 mb-1" />
-                <span className="text-[10px]">Sem serviços</span>
+                <span className="text-[10px]">Sem serviços cadastrados</span>
               </div>
               <div className="aspect-[4/3] rounded-lg border border-dashed border-border/50 bg-muted/10 flex flex-col items-center justify-center text-muted-foreground/30">
                 <Package className="w-6 h-6 mb-1" />
-                <span className="text-[10px]">Sem serviços</span>
+                <span className="text-[10px]">Sem serviços cadastrados</span>
               </div>
             </div>
           )}
@@ -255,7 +237,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 sm:p-5 pt-0 gap-2">
-        <Link href={`/suppliers-store/${id}`} className="flex-1">
+        <Link href={`/wellness-partners/${id}`} className="flex-1">
           <Button variant="outline" className="w-full rounded-xl font-semibold transition-all">
             Ver Perfil
           </Button>
@@ -263,15 +245,15 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
         <Button
           className="flex-1 rounded-xl font-semibold shadow-md hover:shadow-xl transition-all group/btn bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600"
           onClick={() => {
-             const whatsapp = partner.address ? (partner as any).user?.address?.whatsapp || (partner as any).contact : '';
-             if (whatsapp) {
-                window.open(`https://wa.me/${whatsapp.replace(/\D/g, '')}`, '_blank');
-             } else {
-                toast.info('Contato via WhatsApp não disponível');
-             }
+            if (!whatsapp) {
+              toast.info('Contato via WhatsApp não disponível');
+              return;
+            }
+
+            window.open(`https://wa.me/${whatsapp}`, '_blank');
           }}
         >
-          Solicitar
+          Agendar
           <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
         </Button>
       </CardFooter>

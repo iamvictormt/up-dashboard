@@ -3,21 +3,34 @@ import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Store, Globe } from 'lucide-react';
 import MapCard from '../map-card';
 import { processStoreHours } from '@/utils/hours';
+import { StoreData } from '@/types';
 
-export default function StoreInfoSection({ storeData }) {
+interface StoreInfoSectionProps {
+  storeData: StoreData;
+  isWellness?: boolean;
+}
+
+export default function StoreInfoSection({ storeData, isWellness = false }: StoreInfoSectionProps) {
   const storeHours = processStoreHours(storeData.openingHours);
+  const title = isWellness ? 'Informações do Espaço Wellness' : 'Informações da Loja';
+  const subtitle = isWellness
+    ? 'Conheça os detalhes do espaço, localização e horários para agendar seus serviços'
+    : 'Conheça mais detalhes sobre nossa loja, localização e horários de funcionamento';
+  const locationSubtitle = isWellness ? 'Onde você pode vivenciar os serviços' : 'Onde nos encontrar';
+  const regionTitle = isWellness ? 'Área de Atendimento' : 'Região';
+  const referenceTitle = isWellness ? 'Ponto de Referência' : 'Referência';
+  const referenceText = `Próximo ao centro de ${storeData.address.district}`;
+  const scheduleTitle = isWellness ? 'Horário de Atendimento' : 'Horário de Funcionamento';
+  const scheduleSubtitle = isWellness ? 'Quando os serviços estão disponíveis' : 'Quando estamos abertos';
 
   return (
     <section>
       <div className="text-center mb-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-4">Informações da Loja</h2>
-        <p className="text-[#511A2B]/70 max-w-2xl mx-auto">
-          Conheça mais detalhes sobre nossa loja, localização e horários de funcionamento
-        </p>
+        <h2 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-4">{title}</h2>
+        <p className="text-[#511A2B]/70 max-w-2xl mx-auto">{subtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Localização */}
         <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
           <CardHeader className="bg-[#46142b] text-white p-6">
             <div className="flex items-center gap-3">
@@ -26,7 +39,7 @@ export default function StoreInfoSection({ storeData }) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Localização</h3>
-                <p className="text-white/90 text-sm">Onde nos encontrar</p>
+                <p className="text-white/90 text-sm">{locationSubtitle}</p>
               </div>
             </div>
           </CardHeader>
@@ -46,33 +59,29 @@ export default function StoreInfoSection({ storeData }) {
                   `${storeData.address.district}, ${storeData.address.city} - ${storeData.address.state}`,
                   `CEP: ${storeData.address.zipCode}`,
                 ]}
-                bg="[#511A2B]/10"
+                iconBackgroundClass="bg-[#511A2B]/10"
               />
 
               <AddressItem
                 icon={<Globe className="w-5 h-5 text-[#D56235]" />}
-                title="Região"
+                title={regionTitle}
                 lines={[
                   `${storeData.address.city} - ${storeData.address.state}`,
                   `Bairro: ${storeData.address.district}`,
                 ]}
-                bg="[#D56235]/10"
+                iconBackgroundClass="bg-[#D56235]/10"
               />
 
               <AddressItem
                 icon={<Store className="w-5 h-5 text-[#FEC460]" />}
-                title="Referência"
-                lines={[
-                  `${storeData.name} - ${storeData.address.street}`,
-                  `Próximo ao centro de ${storeData.address.district}`,
-                ]}
-                bg="[#FEC460]/10"
+                title={referenceTitle}
+                lines={[`${storeData.name} - ${storeData.address.street}`, referenceText]}
+                iconBackgroundClass="bg-[#FEC460]/10"
               />
             </div>
           </CardContent>
         </Card>
 
-        {/* Horário de Funcionamento */}
         <Card className="bg-white border-0 shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
           <CardHeader className="bg-[#46142b] text-white p-6">
             <div className="flex items-center gap-3">
@@ -80,8 +89,8 @@ export default function StoreInfoSection({ storeData }) {
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">Horário de Funcionamento</h3>
-                <p className="text-white/90 text-sm">Quando estamos abertos</p>
+                <h3 className="text-xl font-bold text-white">{scheduleTitle}</h3>
+                <p className="text-white/90 text-sm">{scheduleSubtitle}</p>
               </div>
             </div>
           </CardHeader>
@@ -144,10 +153,19 @@ export default function StoreInfoSection({ storeData }) {
   );
 }
 
-function AddressItem({ icon, title, lines, bg }) {
+interface AddressItemProps {
+  icon: React.ReactNode;
+  title: string;
+  lines: string[];
+  iconBackgroundClass: string;
+}
+
+function AddressItem({ icon, title, lines, iconBackgroundClass }: AddressItemProps) {
   return (
     <div className="flex items-start gap-4">
-      <div className={`w-10 h-10 bg-${bg} rounded-full flex items-center justify-center flex-shrink-0`}>{icon}</div>
+      <div className={`w-10 h-10 ${iconBackgroundClass} rounded-full flex items-center justify-center flex-shrink-0`}>
+        {icon}
+      </div>
       <div>
         <h4 className="font-bold text-[#511A2B] text-lg">{title}</h4>
         {lines.map((line, idx) => (

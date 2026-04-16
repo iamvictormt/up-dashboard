@@ -5,22 +5,7 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Users,
-  Store,
-  Calendar,
-  Briefcase,
-  GraduationCap,
-  HelpCircle,
-  ChevronRight,
-  ChevronLeft,
-  X,
-  Crown,
-  Quote,
-  ShoppingCart,
-  Coins,
-  Heart,
-} from 'lucide-react';
+import { Users, Store, Calendar, HelpCircle, ChevronRight, ChevronLeft, X, Quote, ShoppingCart, Coins, Heart } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
@@ -65,7 +50,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     }
   };
 
-  // Notifica o pai quando o estado de expansão muda
   useEffect(() => {
     if (onExpandedChange) {
       onExpandedChange(isExpanded);
@@ -117,19 +101,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    // {
-    //   title: 'Wellness Parceiros',
-    //   icon: Heart,
-    //   url: '/wellness-partners',
-    //   roles: ['professional', 'loveDecoration'],
-    // },
-    // {
-    //   title: 'Workshops',
-    //   icon: GraduationCap,
-    //   url: '/workshops',
-    //   roles: ['professional'],
-    //   disabled: true,
-    // },
+    {
+      title: 'Parceiros Wellness',
+      icon: Heart,
+      url: '/wellness-partners',
+      roles: ['professional', 'loveDecoration'],
+    },
     {
       title: 'Eventos',
       icon: Calendar,
@@ -235,12 +212,10 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
 
   return (
     <>
-      {/* Mobile Overlay - apenas para mobile */}
       {!isDesktop && isMobileOpen && (
         <div className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm" onClick={() => onToggleMobile()} />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
           fixed top-0 left-0 h-screen bg-background z-50
@@ -250,7 +225,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
           shadow-2xl md:shadow-none
         `}
       >
-        {/* Sidebar Header */}
         <div className="p-4 pt-6 flex items-center justify-between">
           {isExpanded ? (
             <>
@@ -272,7 +246,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
-                {/* Botão de fechar no mobile */}
                 <button
                   onClick={onToggleMobile}
                   className="md:hidden w-8 h-8 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors"
@@ -293,9 +266,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
           )}
         </div>
 
-        {/* Sidebar Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Main Menu */}
           <div className="flex-1 overflow-y-auto py-4 scrollbar-hide">
             {isExpanded && (
               <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3 mt-3">
@@ -304,14 +275,11 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
             )}
             <div className="space-y-1">
               {isLoading
-                ? // Mostra skeletons enquanto carrega
-                  Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
-                : // Mostra itens reais após carregar
-                  mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                ? Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
+                : mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
             </div>
           </div>
 
-          {/* Other Menu */}
           <div className="py-4">
             {isExpanded && (
               <div className="text-gray-400 text-xs font-medium tracking-wider px-6 mb-3">
@@ -320,16 +288,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
             )}
             <div className="space-y-1">
               {isLoading
-                ? // Mostra skeletons para seção "Outros"
-                  Array.from({ length: 2 }).map((_, index) => <MenuItemSkeleton key={`skeleton-other-${index}`} />)
-                : // Mostra itens reais
-                  otherMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                ? Array.from({ length: 2 }).map((_, index) => <MenuItemSkeleton key={`skeleton-other-${index}`} />)
+                : otherMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Tooltips Portal */}
       {!isLoading && !isExpanded && hoveredItem && (
         <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
           {mainMenuItems.concat(otherMenuItems).map((item, index) => {
@@ -358,7 +323,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                   onMouseLeave={handleMouseLeave}
                 >
                   <div className="bg-[#46142b] border border-white/10 rounded-xl shadow-xl min-w-48 py-2">
-                    {/* Header do submenu */}
                     <div className="px-4 py-2 border-b border-white/10">
                       <div className="flex items-center space-x-2">
                         <item.icon className="w-4 h-4 text-white" />
@@ -366,7 +330,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                       </div>
                     </div>
 
-                    {/* Itens do submenu */}
                     <div className="py-1">
                       {item.subItems.map((subItem) => {
                         const isSubActive = subItem.url === pathname;
@@ -403,7 +366,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
                       })}
                     </div>
 
-                    {/* Seta do tooltip */}
                     <div className="absolute left-0 top-6 transform -translate-x-1 w-2 h-2 bg-[#46142b] rotate-45 border-l border-b border-white/10" />
                   </div>
                 </div>

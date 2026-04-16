@@ -22,21 +22,37 @@ interface ProductEditModalProps {
   onProductUpdated: (productData: ProductData) => void;
   onDelete: () => void;
   onClose: () => void;
+  isWellness?: boolean;
 }
 
-export function ProductEditModal({ product, onProductUpdated, onDelete, onClose }: ProductEditModalProps) {
+export function ProductEditModal({
+  product,
+  onProductUpdated,
+  onDelete,
+  onClose,
+  isWellness = false,
+}: ProductEditModalProps) {
   const [productData, setProductData] = useState<ProductData>(product);
   const [errors, setErrors] = useState<Partial<ProductData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const itemLabel = isWellness ? 'Serviço' : 'Produto';
+  const itemPluralLabel = isWellness ? 'serviço' : 'produto';
+  const featuredLabel = isWellness ? 'Serviço em Destaque' : 'Produto em Destaque';
+  const featuredDescription = isWellness
+    ? 'Destacar este serviço no seu perfil'
+    : 'Destacar este produto na sua loja';
+  const promotionLabel = isWellness ? 'Serviço em Promoção' : 'Produto em Promoção';
+  const promotionDescription = isWellness
+    ? 'Marcar como serviço promocional'
+    : 'Marcar como produto promocional';
 
-  const handleInputChange = (field: keyof ProductData, value: string | number | boolean) => {
+  const handleInputChange = (field: keyof ProductData, value: ProductData[keyof ProductData]) => {
     setProductData((prev) => ({
       ...prev,
       [field]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({
         ...prev,
@@ -96,11 +112,11 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
       const response = await updateProduct(product.id, productData);
       if (response.status === 200) {
         onProductUpdated(productData);
-        toast.success('Produto editado com sucesso.');
+        toast.success(`${itemLabel} atualizado com sucesso.`);
       }
     } catch (error) {
-      toast.error('Erro ao editar o produto, atualize a pagina e tente novamente.');
-      console.error('Erro ao atualizar produto:', error);
+      toast.error(`Erro ao editar o ${itemPluralLabel}, atualize a página e tente novamente.`);
+      console.error('Erro ao atualizar item:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -113,11 +129,11 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
       const response = await deleteProduct(product.id);
       if (response.status === 200) {
         onDelete();
-        toast.success('Produto editado com sucesso.');
+        toast.success(`${itemLabel} removido com sucesso.`);
       }
     } catch (error) {
-      toast.error('Erro ao excluir o produto, atualize a pagina e tente novamente.');
-      console.error('Erro ao excluir produto:', error);
+      toast.error(`Erro ao excluir o ${itemPluralLabel}, atualize a página e tente novamente.`);
+      console.error('Erro ao excluir item:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +146,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl md:text-2xl font-bold text-[#511A2B] flex items-center">
               <Package className="w-6 h-6 mr-2" />
-              Editar Produto
+              Editar {itemLabel}
             </DialogTitle>
             <div className="flex items-center space-x-2">
               <Button
@@ -153,18 +169,17 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
           <PhotoUploadSimple
             photo={productData.photoUrl || ``}
             isProduct={true}
-            onPhotoChange={(photo) => handleInputChange('photoUrl', photo)}
+            onPhotoChange={(photo) => handleInputChange('photoUrl', photo ?? undefined)}
           />
-          {/* Nome do Produto */}
           <div>
             <Label htmlFor="name" className="text-[#511A2B] font-medium">
-              Nome do Produto/Serviço *
+              Nome do {itemLabel} *
             </Label>
             <Input
               id="name"
               value={productData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="Ex: Consultoria em TI"
+              placeholder={`Nome do ${itemPluralLabel}`}
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.name ? 'border-red-500' : ''
               }`}
@@ -172,7 +187,6 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
-          {/* Descrição */}
           <div>
             <Label htmlFor="description" className="text-[#511A2B] font-medium">
               Descrição *
@@ -181,7 +195,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               id="description"
               value={productData.description}
               onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Descreva seu produto ou serviço..."
+              placeholder={`Descreva seu ${itemPluralLabel}...`}
               rows={4}
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.description ? 'border-red-500' : ''
@@ -190,7 +204,6 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
           </div>
 
-          {/* Preço */}
           <div>
             <Label htmlFor="price" className="text-[#511A2B] font-medium">
               Preço (R$) *
@@ -201,15 +214,9 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               inputMode="numeric"
               value={formatCurrency(productData.price || 0)}
               onChange={(e) => {
-                // Remove tudo que não for número
                 const raw = e.target.value.replace(/\D/g, '');
-
-                // Converte para número em reais (centavos -> reais)
-                const numberValue = parseFloat(raw) / 100;
-
-                // Limite de R$ 1.000.000,00
+                const numberValue = raw ? parseFloat(raw) / 100 : 0;
                 if (numberValue > 1_000_000) return;
-
                 handleInputChange('price', numberValue);
               }}
               placeholder="R$ 0,00"
@@ -220,7 +227,6 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
           </div>
 
-          {/* Link */}
           <div>
             <Label htmlFor="link" className="text-[#511A2B] font-medium">
               Link (opcional)
@@ -230,7 +236,7 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               type="url"
               value={productData.link}
               onChange={(e) => handleInputChange('link', e.target.value)}
-              placeholder="https://exemplo.com/produto"
+              placeholder="https://exemplo.com/serviço"
               className={`pl-2 mt-1 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40 ${
                 errors.link ? 'border-red-500' : ''
               }`}
@@ -238,13 +244,11 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
           </div>
 
-          {/* Switches */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Produto em Destaque */}
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
               <div>
-                <Label className="text-[#511A2B] font-medium">Produto em Destaque</Label>
-                <p className="text-sm text-gray-600">Destacar este produto na sua loja</p>
+                <Label className="text-[#511A2B] font-medium">{featuredLabel}</Label>
+                <p className="text-sm text-gray-600">{featuredDescription}</p>
               </div>
               <Switch
                 checked={productData.featured}
@@ -253,11 +257,10 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               />
             </div>
 
-            {/* Produto em Promoção */}
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
               <div>
-                <Label className="text-[#511A2B] font-medium">Produto em Promoção</Label>
-                <p className="text-sm text-gray-600">Marcar como produto promocional</p>
+                <Label className="text-[#511A2B] font-medium">{promotionLabel}</Label>
+                <p className="text-sm text-gray-600">{promotionDescription}</p>
               </div>
               <Switch
                 checked={productData.promotion}
@@ -267,7 +270,6 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
             </div>
           </div>
 
-          {/* Botões */}
           <div className="flex space-x-3 pt-4">
             <Button
               type="button"
@@ -300,7 +302,6 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
           </div>
         </form>
 
-        {/* Modal de confirmação de exclusão */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <Card className="bg-white w-full max-w-md rounded-2xl">
@@ -312,7 +313,8 @@ export function ProductEditModal({ product, onProductUpdated, onDelete, onClose 
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-6">
-                  Tem certeza que deseja excluir o produto "{productData.name}"? Esta ação não pode ser desfeita.
+                  Tem certeza que deseja excluir o {itemPluralLabel} "{productData.name}"? Esta ação não pode ser
+                  desfeita.
                 </p>
                 <div className="flex space-x-3">
                   <Button

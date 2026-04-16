@@ -35,7 +35,7 @@ export function UserTypeStep({ selectedType, onSelect }: UserTypeStepProps) {
     {
       id: 'partner-suppliers' as UserType,
       title: 'Lojista Parceiro',
-      description: 'Empresas, lojistas e fornecedores',
+      description: 'Empresas, lojistas e espaços wellness',
       icon: Building2,
       color: 'from-emerald-500 to-teal-500',
       bgColor: 'bg-gradient-to-br from-emerald-50 to-teal-50',

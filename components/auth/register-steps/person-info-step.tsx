@@ -398,8 +398,8 @@ export function PersonalInfoStep({
                       <SelectValue placeholder="Selecione o tipo" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="SUPPLIER">Convencional</SelectItem>
-                      <SelectItem value="WELLNESS">Wellness</SelectItem>
+                      <SelectItem value="SUPPLIER">Lojista</SelectItem>
+                      <SelectItem value="WELLNESS">Wellness (serviços)</SelectItem>
                     </SelectContent>
                   </Select>
                   <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
