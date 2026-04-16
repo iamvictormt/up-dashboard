@@ -6,11 +6,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import type React from 'react';
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import Cookies from 'js-cookie';
-import api from '@/services/api';
-import { Profession } from '@/types';
+import { PartnerSupplierType, Profession } from '@/types';
 import { fetchUserAuthenticated } from '@/lib/user-api';
-import { AddressData } from '@/types/address';
-import { toast } from 'sonner';
 
 interface User {
   id: string;
@@ -40,6 +37,7 @@ interface User {
     addressId: string;
     accessPending: boolean;
     isPaid?: boolean;
+    type: PartnerSupplierType;
     subscription?: {
       id: string;
       partnerSupplier: string;
