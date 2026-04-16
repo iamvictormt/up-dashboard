@@ -1,7 +1,7 @@
 const LOADER_ID = 'global-bee-loader';
 const LOADER_STYLE_ID = 'global-bee-loader-style';
-const SHOW_DELAY_MS = 120;
-const HIDE_DELAY_MS = 80;
+const SHOW_DELAY_MS = 20;
+const HIDE_DELAY_MS = 140;
 
 let showTimeout: ReturnType<typeof setTimeout> | null = null;
 let hideTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -30,7 +30,7 @@ function injectStyles() {
       z-index: 99999;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 160ms ease;
+      transition: opacity 220ms ease;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -38,14 +38,21 @@ function injectStyles() {
       opacity: 1;
     }
 
+    #${LOADER_ID} .up-soft-veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(70,20,43,0.06), rgba(245,177,61,0.04));
+    }
+
     #${LOADER_ID} .up-top-progress {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, rgba(70,20,43,0.08), rgba(245,177,61,0.15), rgba(70,20,43,0.08));
+      height: 4px;
+      background: linear-gradient(90deg, rgba(70,20,43,0.2), rgba(245,177,61,0.28), rgba(70,20,43,0.2));
       overflow: hidden;
+      box-shadow: 0 2px 14px rgba(70,20,43,0.2);
     }
 
     #${LOADER_ID} .up-top-progress::before {
@@ -53,29 +60,29 @@ function injectStyles() {
       position: absolute;
       top: 0;
       left: 0;
-      width: 38%;
+      width: 46%;
       height: 100%;
       background: linear-gradient(90deg, #46142b, #f5b13d, #d56235);
       border-radius: 9999px;
-      animation: up-loader-run 900ms ease-in-out infinite;
+      animation: up-loader-run 820ms ease-in-out infinite;
     }
 
     #${LOADER_ID} .up-loader-chip {
       position: absolute;
-      right: 16px;
-      bottom: 16px;
+      right: 18px;
+      bottom: 18px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(70, 20, 43, 0.9);
+      background: rgba(70, 20, 43, 0.92);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.26);
       border-radius: 9999px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       font-size: 12px;
       font-weight: 600;
-      box-shadow: 0 10px 28px rgba(70, 20, 43, 0.24);
-      backdrop-filter: blur(5px);
+      box-shadow: 0 12px 30px rgba(70, 20, 43, 0.28);
+      backdrop-filter: blur(6px);
     }
 
     #${LOADER_ID} .up-loader-dot {
@@ -97,6 +104,7 @@ function ensureLoaderElement() {
   blocker = document.createElement('div');
   blocker.id = LOADER_ID;
   blocker.innerHTML = `
+    <div class="up-soft-veil"></div>
     <div class="up-top-progress"></div>
     <div class="up-loader-chip">
       <span class="up-loader-dot"></span>
