@@ -50,14 +50,21 @@ function injectStyles() {
       position: fixed;
       inset: 0;
       z-index: 99999;
-      pointer-events: none;
+      pointer-events: none !important;
+      visibility: hidden;
       opacity: 0;
       transition: opacity 220ms ease;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     #${LOADER_ID}[data-visible="true"] {
+      visibility: visible;
       opacity: 1;
+    }
+
+    #${LOADER_ID},
+    #${LOADER_ID} * {
+      pointer-events: none !important;
     }
 
     #${LOADER_ID} .up-soft-veil {
