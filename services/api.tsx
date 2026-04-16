@@ -10,8 +10,13 @@ const api = axios.create({
 let pendingRequests = 0;
 
 api.interceptors.request.use((config) => {
-  pendingRequests += 1;
-  showGlobalBlocker();
+  const skipLoader = config.headers?.['x-skip-loader'] === 'true';
+  (config as any).__skipGlobalLoader = skipLoader;
+
+  if (!skipLoader) {
+    pendingRequests += 1;
+    showGlobalBlocker();
+  }
 
   const token = getCookie('token');
   if (token) {
@@ -23,27 +28,27 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    pendingRequests = Math.max(pendingRequests - 1, 0);
-    setTimeout(() => {
+    if (!(response.config as any).__skipGlobalLoader) {
+      pendingRequests = Math.max(pendingRequests - 1, 0);
       hideGlobalBlocker(pendingRequests);
-    }, 2000);
+    }
 
     return response;
   },
   (error) => {
-    pendingRequests = Math.max(pendingRequests - 1, 0);
-    hideGlobalBlocker(pendingRequests);
+    if (!(error.config as any)?.__skipGlobalLoader) {
+      pendingRequests = Math.max(pendingRequests - 1, 0);
+      hideGlobalBlocker(pendingRequests);
+    }
 
     console.log('error.response: ', error.response);
 
     if (error.response?.status === 401) {
       deleteCookie('token');
 
-      setTimeout(() => {
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
-        }
-      }, 2000);
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
     }
 
     return Promise.reject(error);
