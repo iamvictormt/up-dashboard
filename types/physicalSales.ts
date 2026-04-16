@@ -1,3 +1,6 @@
+import { PartnerSupplierData } from "./partnerSupplier";
+import { ProfessionalData } from "./professional";
+
 export type PhysicalSaleRedeemStatus = 'PENDING' | 'REDEEMED';
 
 export interface PhysicalSale {
@@ -11,6 +14,17 @@ export interface PhysicalSale {
   status: PhysicalSaleRedeemStatus;
   createdAt: string;
   redeemedAt?: string | null;
+}
+
+export interface FetchPhysicalSalesResponse extends PhysicalSale{
+  partner: PartnerSupplierData;
+  professional: ProfessionWithUserEmail;
+}
+
+interface ProfessionWithUserEmail extends ProfessionalData {
+  user: {
+    email: string;
+  };
 }
 
 export interface CreatePhysicalSalePayload {
