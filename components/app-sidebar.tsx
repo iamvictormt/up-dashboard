@@ -125,12 +125,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    // {
-    //   title: 'Wellness Parceiros',
-    //   icon: Heart,
-    //   url: '/wellness-partners',
-    //   roles: ['professional', 'loveDecoration'],
-    // },
+    {
+      title: 'Parceiros Wellness',
+      icon: Heart,
+      url: '/wellness-partners',
+      roles: ['professional', 'loveDecoration', 'admin'],
+    },
     // {
     //   title: 'Workshops',
     //   icon: GraduationCap,

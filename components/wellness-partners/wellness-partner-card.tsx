@@ -31,12 +31,10 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
   const nextEvent = events.length > 0 ? events[0] : null;
 
-  // Parse opening hours
   const openingHoursList = openingHours ? openingHours.split('|').map((s) => s.trim()) : [];
   const mainOpeningHour = openingHoursList[0] || 'Horário não disponível';
   const hasMoreHours = openingHoursList.length > 1;
 
-  // Calculate active products count for display
   const displayProducts = products.slice(0, 2);
   const remainingProducts = Math.max(0, products.length - 2);
 
@@ -98,7 +96,6 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
       <CardHeader className="relative z-10 pt-6 pb-2 px-4 sm:px-5 flex-none">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
-          {/* Logo */}
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-background bg-white overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               {logoUrl ? (
@@ -115,7 +112,6 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
             )}
           </div>
 
-          {/* Title & Location */}
           <div className="flex-1 w-full min-w-0 pt-1 sm:pt-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
               <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground truncate group-hover:text-blue-600 transition-colors duration-300">
@@ -187,7 +183,6 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           {description || 'Conheça nossos serviços de bem-estar.'}
         </p>
 
-        {/* Services Section */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
@@ -255,7 +250,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
       </CardContent>
 
       <CardFooter className="p-4 sm:p-5 pt-0 gap-2">
-        <Link href={`/suppliers-store/${id}`} className="flex-1">
+        <Link href={`/wellness-partners/${id}`} className="flex-1">
           <Button variant="outline" className="w-full rounded-xl font-semibold transition-all">
             Ver Perfil
           </Button>

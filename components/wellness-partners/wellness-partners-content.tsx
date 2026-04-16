@@ -22,7 +22,6 @@ export function WellnessPartnersContent() {
       setPartners(response.data);
       setHasMore(response.data.length === limit);
     } catch (error) {
-      console.error('Error loading wellness partners:', error);
       setPartners([]);
     } finally {
       setIsLoading(false);
@@ -54,25 +53,24 @@ export function WellnessPartnersContent() {
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#1A3B51]/10 shadow-lg w-full">
-        {/* Header com busca */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#1A3B51] mb-2">Parceiros de Bem-estar</h1>
-            <p className="text-[#1A3B51]/70">Descubra serviços e profissionais para o seu bem-estar</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#1A3B51] mb-2">Parceiros Wellness</h1>
+            <p className="text-[#1A3B51]/70">Descubra serviços especializados para o seu bem-estar</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
             <div className="relative w-full sm:w-96">
               <Input
                 placeholder="Buscar por serviços ou parceiros..."
-                className="pl-4 pr-12 w-full h-12 sm:h-14 bg-white/80 border-[#1A3B51]/20 rounded-xl text-[#1A3B51] placeholder:text-[#1A3B51]/50 focus:border-[#1A3B51]/40"
+                className="pl-4 pr-12 w-full h-12 bg-white/80 border-[#1A3B51]/20 rounded-xl text-[#1A3B51] placeholder:text-[#1A3B51]/50 focus:border-[#1A3B51]/40"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
               />
               <button
                 onClick={handleSearchClick}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-3 rounded-lg text-[#1A3B51]/70 hover:text-[#1A3B51] hover:bg-[#1A3B51]/10 transition"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-lg text-[#1A3B51]/70 hover:text-[#1A3B51] transition"
               >
                 <Search className="w-5 h-5" />
               </button>
@@ -80,18 +78,16 @@ export function WellnessPartnersContent() {
           </div>
         </div>
 
-        {/* Loading / Grid */}
         {isLoading ? (
           <div className="text-center py-12 text-[#1A3B51]/70">Carregando parceiros...</div>
         ) : (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {partners.map((partner) => (
                 <WellnessPartnerCard key={partner.id} partner={partner} />
               ))}
             </div>
 
-            {/* Empty State */}
             {partners.length === 0 && searchQuery && (
               <div className="text-center py-12">
                 <p className="text-[#1A3B51] text-lg font-medium mb-2">Nenhum parceiro encontrado</p>
@@ -99,7 +95,6 @@ export function WellnessPartnersContent() {
               </div>
             )}
 
-            {/* Paginação */}
             <div className="flex justify-center items-center mt-8 gap-4">
               <button
                 onClick={handlePrevPage}
