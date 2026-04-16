@@ -113,12 +113,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    // {
-    //   title: 'Parceiros Wellness',
-    //   icon: Sparkles,
-    //   url: '/wellness-partners',
-    //   roles: ['professional', 'loveDecoration'],
-    // },
+    {
+      title: 'Parceiros Wellness',
+      icon: Sparkles,
+      url: '/wellness-partners',
+      roles: ['professional', 'loveDecoration'],
+    },
     {
       title: 'Eventos',
       icon: Calendar,
@@ -137,13 +137,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/benefits',
       roles: ['professional'],
     },
-    // {
-    //   title: 'Conexão Premiada',
-    //   icon: Trophy,
-    //   url: '/physical-sales',
-    //   roles: ['partnerSupplier'],
-    //   disabled: () => user?.partnerSupplier?.type !== 'WELLNESS',
-    // },
+    {
+      title: 'Conexão Premiada',
+      icon: Trophy,
+      url: '/physical-sales',
+      roles: ['partnerSupplier'],
+      disabled: () => user?.partnerSupplier?.type !== 'WELLNESS',
+    },
   ];
 
   const otherMenuItems: SidebarItem[] = [
