@@ -7,5 +7,6 @@ interface WellnessPartnerDetailPageProps {
 }
 
 export default async function WellnessPartnerDetailPage({ params }: WellnessPartnerDetailPageProps) {
-  return <StoreContent supplierId={params.id} viewMode="wellness" />;
+  const { id } = await params;
+  return <StoreContent supplierId={id} viewMode="wellness" />;
 }
