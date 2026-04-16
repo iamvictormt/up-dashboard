@@ -1,14 +1,12 @@
 'use client';
 
-import { Star, Package, ArrowRight, Heart, ChevronDown, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { Star, Package, ArrowRight, ChevronDown, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { cn, formatCurrency } from '@/lib/utils';
 import { WellnessPartnerListItem } from '@/types';
-import { useState } from 'react';
-import { toggleFavoritePartner } from '@/lib/store-api';
 import { toast } from 'sonner';
 
 interface WellnessPartnerCardProps {
@@ -16,8 +14,7 @@ interface WellnessPartnerCardProps {
 }
 
 export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
-  const { id, tradeName, contact, isVerified, isFavorite, store } = partner;
-  const [favorite, setFavorite] = useState(Boolean(isFavorite));
+  const { id, tradeName, contact, isVerified, store } = partner;
   const storeData = store;
 
   if (!id) {
@@ -59,34 +56,9 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
   const whatsapp = (contact || '').replace(/\D/g, '');
 
-  const handleToggleFavorite = async () => {
-    try {
-      await toggleFavoritePartner(id);
-      setFavorite(!favorite);
-      toast.success(favorite ? 'Removido dos favoritos' : 'Adicionado aos favoritos');
-    } catch (error) {
-      toast.error('Erro ao atualizar favorito');
-    }
-  };
-
   return (
     <Card className="group relative flex flex-col h-full overflow-hidden border border-[#1A3B51]/10 bg-white transition-all duration-300 hover:shadow-xl hover:border-[#1A3B51]/20 rounded-2xl">
       <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-[#e8f2f7] via-[#f2f8fb] to-[#eef6ff]" />
-      <div className="absolute top-3 right-3 z-10 flex gap-2">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={handleToggleFavorite}
-          className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-sm"
-        >
-          <Heart
-            className={cn(
-              'h-4 w-4 transition-colors',
-              favorite ? 'fill-red-500 text-red-500' : 'text-muted-foreground hover:text-red-500'
-            )}
-          />
-        </Button>
-      </div>
 
       <CardHeader className="relative z-10 pt-6 pb-2 px-4 sm:px-5 flex-none">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
