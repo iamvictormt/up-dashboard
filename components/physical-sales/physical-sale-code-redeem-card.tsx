@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Gift, Loader2, Ticket } from 'lucide-react';
+import { Gift, Loader2, Ticket, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { redeemPhysicalSaleCode } from '@/lib/physical-sales-api';
 import { Button } from '@/components/ui/button';
@@ -48,9 +48,9 @@ export function PhysicalSaleCodeRedeemCard() {
     <Card className="rounded-2xl border border-[#511A2B]/10 bg-white shadow-sm">
       <CardContent className="p-6">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-[#511A2B]">Resgate de Pontos</h2>
+          <h2 className="text-2xl font-bold text-[#511A2B]">Conexão Premiada</h2>
           <p className="text-sm text-[#511A2B]/70">
-            Digite o código recebido na compra física para adicionar pontos ao seu saldo.
+            Digite o código recebido na loja física para resgatar pontos no seu saldo.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ export function PhysicalSaleCodeRedeemCard() {
               </>
             ) : (
               <>
-                <Gift className="mr-2 h-4 w-4" />
+                <Sparkles className="mr-2 h-4 w-4" />
                 Resgatar pontos
               </>
             )}

@@ -44,7 +44,6 @@ export function AuthLoginPage() {
       toast.success('Login realizado com sucesso!');
       const role = data.role;
       const redirectByRole: Record<string, string> = {
-        admin: appUrl.adminPremiumConnection,
         partnerSupplier: appUrl.mural,
         professional: appUrl.mural,
         loveDecoration: appUrl.mural,

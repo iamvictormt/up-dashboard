@@ -17,8 +17,6 @@ import {
   ShoppingCart,
   Coins,
   Trophy,
-  ChartNoAxesCombined,
-  ScrollText,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
@@ -97,18 +95,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
   };
 
   const mainMenuItems: SidebarItem[] = [
-    {
-      title: 'Dashboard Admin',
-      icon: ChartNoAxesCombined,
-      url: '/admin/conexao-premiada',
-      roles: ['admin'],
-    },
-    {
-      title: 'Histórico Físico',
-      icon: ScrollText,
-      url: '/admin/physical-sales',
-      roles: ['admin'],
-    },
     {
       title: 'Mural da comunidade',
       icon: Quote,

@@ -5,22 +5,12 @@ export interface PhysicalSale {
   code: string;
   customerName: string;
   sellerName?: string | null;
-  invoiceNumber?: string | null;
-  saleAmount: number;
+  invoice?: string | null;
+  value: number;
   pointsAwarded: number;
   status: PhysicalSaleRedeemStatus;
   createdAt: string;
   redeemedAt?: string | null;
-  partnerSupplier?: {
-    id: string;
-    tradeName: string;
-    type?: 'SUPPLIER' | 'WELLNESS';
-  } | null;
-  professional?: {
-    id: string;
-    email: string;
-    name?: string | null;
-  } | null;
 }
 
 export interface CreatePhysicalSalePayload {
@@ -35,26 +25,13 @@ export interface CreatePhysicalSaleResponse {
   code: string;
   pointsAwarded: number;
   customerName: string;
-  saleAmount?: number;
-}
-
-export interface RedeemPhysicalSalePayload {
-  code: string;
+  value?: number;
 }
 
 export interface RedeemPhysicalSaleResponse {
   id: string;
   code: string;
   pointsAwarded: number;
-  professionalId: string;
+  professionalId?: string;
   redeemedAt: string;
-}
-
-export interface AdminDashboardStatistics {
-  totalProfessionals: number;
-  totalPartnerSuppliers: number;
-  totalBenefitsRedeemed: number;
-  totalPointsAwarded?: number;
-  totalPhysicalSales: number;
-  totalPointsAwardedPhysical: number;
 }

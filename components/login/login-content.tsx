@@ -211,7 +211,6 @@ export function LoginContent() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
       toast.success('Login realizado com sucesso!');
       const redirectByRole: Record<string, string> = {
-        admin: appUrl.adminPremiumConnection,
         partnerSupplier: appUrl.mural,
         professional: appUrl.mural,
         loveDecoration: appUrl.mural,

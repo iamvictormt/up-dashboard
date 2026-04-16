@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { CircleCheckBig, Loader2, Sparkles, Ticket } from 'lucide-react';
+import { CircleCheckBig, HelpCircle, Loader2, Sparkles, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 import { createPhysicalSale } from '@/lib/physical-sales-api';
 import { formatCurrency } from '@/lib/utils';
@@ -10,6 +10,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/contexts/user-context';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface FormState {
   customerName: string;
@@ -32,6 +41,7 @@ export function PhysicalSalesRegistrationContent() {
   const [lastGeneratedCode, setLastGeneratedCode] = useState<string | null>(null);
   const [lastPointsAwarded, setLastPointsAwarded] = useState<number | null>(null);
   const [lastSaleAmount, setLastSaleAmount] = useState<number | null>(null);
+  const [isFlowInfoOpen, setIsFlowInfoOpen] = useState(false);
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -91,10 +101,18 @@ export function PhysicalSalesRegistrationContent() {
     <div className="p-6 md:p-8 w-full">
       <div className="mx-auto max-w-4xl rounded-3xl border border-[#511A2B]/10 bg-white/60 p-6 shadow-lg backdrop-blur-sm md:p-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#511A2B] md:text-3xl">Registro de venda - Conexão Premiada</h1>
-          <p className="mt-2 text-[#511A2B]/70">
-            Cadastre vendas físicas para gerar códigos únicos que os profissionais poderão resgatar no app.
-          </p>
+          <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-[#511A2B] md:text-3xl">Registro de venda - Conexão Premiada</h1>
+              <p className="mt-2 text-[#511A2B]/70">
+                Cadastre vendas físicas para gerar códigos únicos que os profissionais poderão resgatar no app.
+              </p>
+            </div>
+            <Button type="button" variant="outline" onClick={() => setIsFlowInfoOpen(true)}>
+              <HelpCircle className="mr-2 h-4 w-4" />
+              Como funciona?
+            </Button>
+          </div>
         </div>
 
         <Card className="rounded-2xl border border-[#511A2B]/10 bg-white/90">
@@ -180,6 +198,39 @@ export function PhysicalSalesRegistrationContent() {
           </div>
         ) : null}
       </div>
+
+      <Dialog open={isFlowInfoOpen} onOpenChange={setIsFlowInfoOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Fluxo da Conexão Premiada</DialogTitle>
+            <DialogDescription>
+              Entenda como registrar vendas físicas e distribuir pontos com segurança.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 text-sm text-[#511A2B]/80">
+            <p>
+              <strong>1. Registre a venda:</strong> preencha cliente, valor e dados opcionais da venda.
+            </p>
+            <p>
+              <strong>2. Entregue o código:</strong> após salvar, um código único é gerado para o cliente/profissional.
+            </p>
+            <p>
+              <strong>3. Resgate no app:</strong> o profissional informa esse código na área "Conexão Premiada" em Benefícios.
+            </p>
+            <p>
+              <strong>4. Pontos creditados:</strong> os pontos entram no saldo do profissional imediatamente após o resgate.
+            </p>
+            <p className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-yellow-800">
+              Dica: compartilhe o código com atenção, pois cada código pode ser resgatado apenas uma vez.
+            </p>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button>Entendi</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export function middleware(request: NextRequest) {
   }
 
   const defaultRouteByRole: Record<string, string> = {
-    admin: '/admin/conexao-premiada',
+    admin: '/mural',
     partnerSupplier: '/mural',
     professional: '/mural',
     loveDecoration: '/mural',
@@ -55,7 +55,7 @@ export function middleware(request: NextRequest) {
       '/benefits',
     ],
     loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
-    admin: ['/admin', '/help'],
+    admin: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/events', '/help', '/benefits'],
   };
 
   const isStatic =
