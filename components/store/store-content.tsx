@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import { fetchMyStore, fetchStoreById } from '@/lib/store-api';
+import { fetchMyStore, fetchPartnerSupplierById, fetchStoreById } from '@/lib/store-api';
 import { ProductEditModal } from './product-edit-modal';
 import { toast } from 'sonner';
 import { StoreData } from '@/types';
@@ -17,10 +17,20 @@ import StoreInfoSection from './store-info-section';
 import { formatCurrency } from '@/lib/utils';
 import { useUser } from '@/contexts/user-context';
 
-const fetchStoreData = async (supplierId: string | undefined): Promise<StoreData | null> => {
+const fetchStoreData = async (
+  supplierId: string | undefined,
+  allowPartnerSupplierFallback: boolean
+): Promise<StoreData | null> => {
   const response = supplierId ? await fetchStoreById(supplierId) : await fetchMyStore();
   if (response.status === 200) {
     return response.data;
+  }
+
+  if (supplierId && allowPartnerSupplierFallback) {
+    const partnerSupplierResponse = await fetchPartnerSupplierById(supplierId);
+    if (partnerSupplierResponse.status === 200) {
+      return partnerSupplierResponse.data?.store ?? null;
+    }
   }
 
   return null;
@@ -46,7 +56,9 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
   const loadStoreData = async () => {
     try {
       setIsLoading(true);
-      const data = await fetchStoreData(supplierId);
+      const role = (user as any)?.role;
+      const allowPartnerSupplierFallback = role === 'professional' || role === 'loveDecoration';
+      const data = await fetchStoreData(supplierId, allowPartnerSupplierFallback);
       setStoreData(data);
     } catch (error) {
       console.error('Erro ao carregar dados da loja:', error);
@@ -86,6 +98,19 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
 
   if (isLoading) {
     return <></>;
+  }
+
+  if (!storeData && supplierId) {
+    return (
+      <div className="p-6 md:p-8 w-full">
+        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-[#1A3B51]/10 shadow-lg w-full text-center">
+          <h2 className="text-2xl font-bold text-[#1A3B51] mb-3">Perfil indisponível</h2>
+          <p className="text-[#1A3B51]/70">
+            Este parceiro ainda não possui um perfil público com serviços/produtos cadastrados.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   if (!storeData) {

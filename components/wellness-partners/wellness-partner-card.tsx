@@ -1,6 +1,6 @@
 'use client';
 
-import { Star, Store, Package, ArrowRight, Heart, ChevronDown, CheckCircle2, Clock } from 'lucide-react';
+import { Star, Package, ArrowRight, Heart, ChevronDown, CheckCircle2, Clock, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,10 @@ interface WellnessPartnerCardProps {
 export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
   const { id, name, description, rating, openingHours, address, products, logoUrl, isVerified, isFavorite } = partner;
   const [favorite, setFavorite] = useState(isFavorite);
+
+  if (!id) {
+    return null;
+  }
 
   const serviceOfferings = products ?? [];
   const displayServices = serviceOfferings.slice(0, 2);
@@ -69,7 +73,8 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
   };
 
   return (
-    <Card className="group relative flex flex-col h-full overflow-hidden border-border/50 bg-background transition-all duration-300 hover:shadow-xl hover:border-blue-500/20 rounded-2xl">
+    <Card className="group relative flex flex-col h-full overflow-hidden border border-[#1A3B51]/10 bg-white transition-all duration-300 hover:shadow-xl hover:border-[#1A3B51]/20 rounded-2xl">
+      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-[#e8f2f7] via-[#f2f8fb] to-[#eef6ff]" />
       <div className="absolute top-3 right-3 z-10 flex gap-2">
         <Button
           size="sm"
@@ -77,7 +82,12 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           onClick={handleToggleFavorite}
           className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background shadow-sm"
         >
-          <Heart className={cn("h-4 w-4 transition-colors", favorite ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-500")} />
+          <Heart
+            className={cn(
+              'h-4 w-4 transition-colors',
+              favorite ? 'fill-red-500 text-red-500' : 'text-muted-foreground hover:text-red-500'
+            )}
+          />
         </Button>
       </div>
 
@@ -86,9 +96,9 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-background bg-white overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               {logoUrl ? (
-                <img src={logoUrl || '/placeholder.svg'} alt={name} className="w-full h-full object-cover" />
+                <img src={logoUrl || '/placeholder.svg'} alt={name || 'Parceiro wellness'} className="w-full h-full object-cover" />
               ) : (
-                <Store className="w-8 h-8 text-muted-foreground/50" />
+                <Sparkles className="w-8 h-8 text-[#1A3B51]/40" />
               )}
             </div>
             {rating > 0 && (
@@ -102,7 +112,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           <div className="flex-1 w-full min-w-0 pt-1 sm:pt-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
               <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground truncate group-hover:text-blue-600 transition-colors duration-300">
-                {name}
+                {name || 'Parceiro Wellness'}
               </h3>
               {isVerified && (
                 <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200 flex items-center gap-0.5 px-1.5 py-0">
@@ -166,13 +176,13 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col gap-4 sm:gap-5 px-4 sm:px-5 py-4">
-        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+        <p className="text-sm text-[#1A3B51]/75 line-clamp-2 leading-relaxed min-h-[40px]">
           {description || 'Conheça experiências e serviços voltados ao seu bem-estar.'}
         </p>
 
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 p-3 rounded-xl border border-[#1A3B51]/10 bg-[#f9fcff]">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+            <h4 className="text-xs font-semibold text-[#1A3B51]/70 uppercase tracking-wider flex items-center gap-1.5">
               <Package className="w-3.5 h-3.5" />
               Serviços Wellness
             </h4>{' '}
@@ -188,7 +198,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
               {displayServices.map((service) => (
                 <div
                   key={service.id || service.name}
-                  className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-border/50 bg-muted/20 hover:border-blue-500/30 transition-all"
+                  className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-[#1A3B51]/10 bg-white hover:border-blue-500/30 transition-all"
                 >
                   {service.photoUrl ? (
                     <img
@@ -197,13 +207,13 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover/product:scale-110"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-muted/50">
-                      <Package className="w-6 h-6 text-muted-foreground/30" />
+                    <div className="w-full h-full flex items-center justify-center bg-[#f2f8fb]">
+                      <Sparkles className="w-6 h-6 text-[#1A3B51]/25" />
                     </div>
                   )}
 
                   <div className="absolute bottom-1.5 left-1.5 right-1.5">
-                    <div className="bg-background/90 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-border/50 flex flex-col gap-0.5">
+                    <div className="bg-white/95 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-[#1A3B51]/10 flex flex-col gap-0.5">
                       <div className="flex items-center justify-between gap-1">
                         <span className="text-[9px] sm:text-[10px] font-medium truncate">{service.name}</span>
                         <span className="text-[9px] sm:text-[10px] font-bold text-blue-600 whitespace-nowrap">
@@ -223,12 +233,12 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              <div className="aspect-[4/3] rounded-lg border border-dashed border-border/50 bg-muted/10 flex flex-col items-center justify-center text-muted-foreground/30">
-                <Package className="w-6 h-6 mb-1" />
+              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#1A3B51]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/35">
+                <Sparkles className="w-6 h-6 mb-1" />
                 <span className="text-[10px]">Sem serviços cadastrados</span>
               </div>
-              <div className="aspect-[4/3] rounded-lg border border-dashed border-border/50 bg-muted/10 flex flex-col items-center justify-center text-muted-foreground/30">
-                <Package className="w-6 h-6 mb-1" />
+              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#1A3B51]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/35">
+                <Sparkles className="w-6 h-6 mb-1" />
                 <span className="text-[10px]">Sem serviços cadastrados</span>
               </div>
             </div>

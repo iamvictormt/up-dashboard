@@ -5,7 +5,7 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Store, Calendar, HelpCircle, ChevronRight, ChevronLeft, X, Quote, ShoppingCart, Coins, Heart } from 'lucide-react';
+import { Users, Store, Calendar, HelpCircle, ChevronRight, ChevronLeft, X, Quote, ShoppingCart, Coins, Sparkles } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
@@ -103,7 +103,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
     },
     {
       title: 'Parceiros Wellness',
-      icon: Heart,
+      icon: Sparkles,
       url: '/wellness-partners',
       roles: ['professional', 'loveDecoration'],
     },
