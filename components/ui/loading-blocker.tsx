@@ -24,6 +24,28 @@ function injectStyles() {
       100% { transform: scale(0.95); opacity: 0.7; }
     }
 
+    @keyframes up-bee-glide-a {
+      0% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+      25% { transform: translate3d(16px, -8px, 0) rotate(4deg); }
+      50% { transform: translate3d(30px, 6px, 0) rotate(-2deg); }
+      75% { transform: translate3d(12px, 12px, 0) rotate(6deg); }
+      100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+    }
+
+    @keyframes up-bee-glide-b {
+      0% { transform: translate3d(0, 0, 0) rotate(5deg); }
+      30% { transform: translate3d(-20px, 8px, 0) rotate(-3deg); }
+      60% { transform: translate3d(-34px, -6px, 0) rotate(7deg); }
+      100% { transform: translate3d(0, 0, 0) rotate(5deg); }
+    }
+
+    @keyframes up-bee-glide-c {
+      0% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+      35% { transform: translate3d(14px, 12px, 0) rotate(8deg); }
+      70% { transform: translate3d(-8px, 18px, 0) rotate(-6deg); }
+      100% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+    }
+
     #${LOADER_ID} {
       position: fixed;
       inset: 0;
@@ -67,6 +89,51 @@ function injectStyles() {
       animation: up-loader-run 820ms ease-in-out infinite;
     }
 
+    #${LOADER_ID} .up-bee-field {
+      position: absolute;
+      right: 22px;
+      bottom: 62px;
+      width: 110px;
+      height: 68px;
+      pointer-events: none;
+      opacity: 0.86;
+    }
+
+    #${LOADER_ID} .up-bee {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 8px rgba(70, 20, 43, 0.28));
+      opacity: 0.85;
+      transform-origin: center;
+      user-select: none;
+    }
+
+    #${LOADER_ID} .up-bee-1 {
+      top: 4px;
+      right: 4px;
+      animation: up-bee-glide-a 2200ms ease-in-out infinite;
+    }
+
+    #${LOADER_ID} .up-bee-2 {
+      top: 26px;
+      right: 44px;
+      width: 19px;
+      height: 19px;
+      opacity: 0.7;
+      animation: up-bee-glide-b 2600ms ease-in-out infinite;
+    }
+
+    #${LOADER_ID} .up-bee-3 {
+      top: 18px;
+      right: 78px;
+      width: 16px;
+      height: 16px;
+      opacity: 0.58;
+      animation: up-bee-glide-c 3000ms ease-in-out infinite;
+    }
+
     #${LOADER_ID} .up-loader-chip {
       position: absolute;
       right: 18px;
@@ -106,6 +173,11 @@ function ensureLoaderElement() {
   blocker.innerHTML = `
     <div class="up-soft-veil"></div>
     <div class="up-top-progress"></div>
+    <div class="up-bee-field" aria-hidden="true">
+      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-1" />
+      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-2" />
+      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-3" />
+    </div>
     <div class="up-loader-chip">
       <span class="up-loader-dot"></span>
       <span>Carregando</span>
