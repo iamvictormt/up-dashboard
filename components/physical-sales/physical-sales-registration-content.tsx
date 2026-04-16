@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { CircleCheckBig, HelpCircle, Loader2, Sparkles, Ticket } from 'lucide-react';
+import { CircleCheckBig, Copy, HelpCircle, Loader2, Sparkles, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 import { createPhysicalSale } from '@/lib/physical-sales-api';
 import { formatCurrency } from '@/lib/utils';
@@ -71,8 +71,8 @@ export function PhysicalSalesRegistrationContent() {
       });
 
       setLastGeneratedCode(response.code);
-      setLastPointsAwarded(response.pointsAwarded);
-      setLastSaleAmount(response.saleAmount ?? saleAmount);
+      setLastPointsAwarded(response.points);
+      setLastSaleAmount(saleAmount);
       setForm(initialState);
       toast.success('Venda física registrada com sucesso.');
     } catch (error: any) {
@@ -187,9 +187,18 @@ export function PhysicalSalesRegistrationContent() {
               <span className="font-semibold">Venda registrada com sucesso</span>
             </div>
             <p className="mb-2 text-sm text-emerald-800">Código único para entregar ao cliente:</p>
-            <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-[#511A2B]">
-              <Ticket className="h-4 w-4" />
-              {lastGeneratedCode}
+            <div className="flex items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-[#511A2B]">
+                <Ticket className="h-4 w-4" />
+                {lastGeneratedCode}
+              </div>
+              <button
+                onClick={() => navigator.clipboard.writeText(lastGeneratedCode)}
+                className="rounded-xl border border-emerald-300 bg-white p-2 text-emerald-700 transition hover:bg-emerald-100"
+                title="Copiar código"
+              >
+                <Copy className="h-4 w-4" />
+              </button>
             </div>
             <p className="mt-2 text-sm text-emerald-800">
               Pontos previstos para resgate: <strong>{lastPointsAwarded ?? 0} pontos</strong> (

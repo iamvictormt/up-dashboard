@@ -30,12 +30,12 @@ export function PhysicalSaleCodeRedeemCard() {
         updateUser({
           professional: {
             ...user.professional,
-            points: (user.professional.points || 0) + response.pointsAwarded,
+            points: (user.professional.points || 0) + response.points,
           },
         });
       }
 
-      toast.success(`Resgate concluído! Você ganhou ${response.pointsAwarded} pontos.`);
+      toast.success(`Resgate concluído! Você ganhou ${response.points} pontos.`);
       setCode('');
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Não foi possível resgatar este código.');

@@ -21,17 +21,12 @@ export interface CreatePhysicalSalePayload {
 }
 
 export interface CreatePhysicalSaleResponse {
-  id: string;
+  message: string;
   code: string;
-  pointsAwarded: number;
-  customerName: string;
-  value?: number;
+  points: number;
 }
 
 export interface RedeemPhysicalSaleResponse {
-  id: string;
-  code: string;
-  pointsAwarded: number;
-  professionalId?: string;
-  redeemedAt: string;
+  message: string;
+  points: number;
 }

@@ -2,6 +2,7 @@ import api from '@/services/api';
 import type {
   CreatePhysicalSalePayload,
   CreatePhysicalSaleResponse,
+  PhysicalSale,
   RedeemPhysicalSalePayload,
   RedeemPhysicalSaleResponse,
 } from '@/types';
@@ -20,3 +21,9 @@ export async function redeemPhysicalSaleCode(payload: RedeemPhysicalSalePayload)
   const response = await api.post<RedeemPhysicalSaleResponse>('conexao-premiada/redeem-code', payload);
   return response.data;
 }
+
+export async function fetchPhysicalSales() {
+  const response = await api.get<PhysicalSale[]>('conexao-premiada/get-sales');
+  return response.data;
+}
+
