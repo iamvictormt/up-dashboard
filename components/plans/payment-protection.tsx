@@ -18,11 +18,19 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
   useEffect(() => {
     if (isLoading) return;
 
-    const alwaysAllowedPaths = ['/auth/login', '/auth/register', '/payment-confirmation', '/payment-confirmed'];
+    const alwaysAllowedPaths = [
+      '/auth/login',
+      '/auth/register',
+      '/payment-confirmation',
+      '/payment-confirmed',
+      '/admin/conexao-premiada',
+      '/admin/physical-sales',
+    ];
     if (alwaysAllowedPaths.includes(pathname)) return;
 
     if (pathname === '/plans') {
       const shouldNotSeePlans =
+        user?.isAdmin ||
         user?.professional ||
         user?.loveDecoration ||
         (user?.partnerSupplier && (user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE' || user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING'));
@@ -31,6 +39,10 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
         router.push('/mural');
         return;
       }
+    }
+
+    if (user?.isAdmin) {
+      return;
     }
 
     if (user?.partnerSupplier) {

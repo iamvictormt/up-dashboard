@@ -5,7 +5,21 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Store, Calendar, HelpCircle, ChevronRight, ChevronLeft, X, Quote, ShoppingCart, Coins, Sparkles } from 'lucide-react';
+import {
+  Users,
+  Store,
+  Calendar,
+  HelpCircle,
+  ChevronRight,
+  ChevronLeft,
+  X,
+  Quote,
+  ShoppingCart,
+  Coins,
+  Trophy,
+  ChartNoAxesCombined,
+  ScrollText,
+} from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
@@ -36,7 +50,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isDesktop = false }: AppSidebarProps) {
   const pathname = usePathname();
-  const { isLoading, role } = useUser();
+  const { isLoading, role, user } = useUser();
   const [isExpanded, setIsExpanded] = useState(true);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -84,6 +98,18 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
 
   const mainMenuItems: SidebarItem[] = [
     {
+      title: 'Dashboard Admin',
+      icon: ChartNoAxesCombined,
+      url: '/admin/conexao-premiada',
+      roles: ['admin'],
+    },
+    {
+      title: 'Histórico Físico',
+      icon: ScrollText,
+      url: '/admin/physical-sales',
+      roles: ['admin'],
+    },
+    {
       title: 'Mural da comunidade',
       icon: Quote,
       url: '/mural',
@@ -124,6 +150,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Coins,
       url: '/benefits',
       roles: ['professional'],
+    },
+    {
+      title: 'Conexão Premiada',
+      icon: Trophy,
+      url: '/physical-sales',
+      roles: ['partnerSupplier'],
+      disabled: () => user?.partnerSupplier?.type !== 'WELLNESS',
     },
   ];
 

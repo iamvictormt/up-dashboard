@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import type { BenefitData, BenefitRedemptionData } from '@/types';
 import { useUser } from '@/contexts/user-context';
 import { RedemptionCard } from './redemption-card';
+import { PhysicalSaleCodeRedeemCard } from '@/components/physical-sales/physical-sale-code-redeem-card';
 
 type ViewMode = 'available' | 'redemptions';
 
@@ -137,7 +138,10 @@ export function BenefitsContent() {
 
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="space-y-6">
+        {user?.professional ? <PhysicalSaleCodeRedeemCard /> : null}
+
+        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
@@ -244,6 +248,7 @@ export function BenefitsContent() {
             )}
           </>
         )}
+        </div>
       </div>
     </div>
   );
