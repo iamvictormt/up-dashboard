@@ -89,55 +89,120 @@ function injectStyles() {
       animation: up-loader-run 820ms ease-in-out infinite;
     }
 
-    #${LOADER_ID} .up-bee-field {
+    #${LOADER_ID} .up-bottom-band {
       position: absolute;
-      right: 22px;
-      bottom: 62px;
-      width: 110px;
-      height: 68px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 140px;
+      padding: 16px 22px 20px;
+      background: linear-gradient(
+        180deg,
+        rgba(70, 20, 43, 0.06) 0%,
+        rgba(70, 20, 43, 0.2) 30%,
+        rgba(70, 20, 43, 0.34) 100%
+      );
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 -12px 34px rgba(70, 20, 43, 0.18);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    #${LOADER_ID} .up-loading-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      text-shadow: 0 4px 16px rgba(70, 20, 43, 0.4);
+    }
+
+    #${LOADER_ID} .up-loading-subtitle {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: -2px;
+      text-shadow: 0 2px 8px rgba(70, 20, 43, 0.35);
+    }
+
+    #${LOADER_ID} .up-bee-field {
+      position: relative;
+      width: 100%;
+      min-height: 52px;
       pointer-events: none;
-      opacity: 0.86;
+      opacity: 0.95;
     }
 
     #${LOADER_ID} .up-bee {
       position: absolute;
-      width: 22px;
-      height: 22px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       filter: drop-shadow(0 3px 8px rgba(70, 20, 43, 0.28));
-      opacity: 0.85;
+      opacity: 0.9;
       transform-origin: center;
       user-select: none;
     }
 
     #${LOADER_ID} .up-bee-1 {
-      top: 4px;
-      right: 4px;
+      top: 2px;
+      left: 6%;
       animation: up-bee-glide-a 2200ms ease-in-out infinite;
     }
 
     #${LOADER_ID} .up-bee-2 {
-      top: 26px;
-      right: 44px;
-      width: 19px;
-      height: 19px;
-      opacity: 0.7;
+      top: 14px;
+      left: 22%;
+      width: 28px;
+      height: 28px;
+      opacity: 0.78;
       animation: up-bee-glide-b 2600ms ease-in-out infinite;
     }
 
     #${LOADER_ID} .up-bee-3 {
-      top: 18px;
-      right: 78px;
-      width: 16px;
-      height: 16px;
-      opacity: 0.58;
+      top: 20px;
+      left: 36%;
+      width: 24px;
+      height: 24px;
+      opacity: 0.7;
       animation: up-bee-glide-c 3000ms ease-in-out infinite;
     }
 
+    #${LOADER_ID} .up-bee-4 {
+      top: 8px;
+      left: 52%;
+      width: 30px;
+      height: 30px;
+      opacity: 0.8;
+      animation: up-bee-glide-a 2800ms ease-in-out infinite;
+    }
+
+    #${LOADER_ID} .up-bee-5 {
+      top: 24px;
+      left: 66%;
+      width: 26px;
+      height: 26px;
+      opacity: 0.74;
+      animation: up-bee-glide-b 3200ms ease-in-out infinite;
+    }
+
+    #${LOADER_ID} .up-bee-6 {
+      top: 10px;
+      left: 80%;
+      width: 32px;
+      height: 32px;
+      opacity: 0.84;
+      animation: up-bee-glide-c 3400ms ease-in-out infinite;
+    }
+
     #${LOADER_ID} .up-loader-chip {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
+      align-self: flex-start;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -173,14 +238,26 @@ function ensureLoaderElement() {
   blocker.innerHTML = `
     <div class="up-soft-veil"></div>
     <div class="up-top-progress"></div>
-    <div class="up-bee-field" aria-hidden="true">
-      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-1" />
-      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-2" />
-      <img src="/logo-abelha.png" alt="" class="up-bee up-bee-3" />
-    </div>
-    <div class="up-loader-chip">
-      <span class="up-loader-dot"></span>
-      <span>Carregando</span>
+    <div class="up-bottom-band">
+      <div>
+        <div class="up-loading-title">
+          <span class="up-loader-dot"></span>
+          <span>Carregando seu conteúdo</span>
+        </div>
+        <div class="up-loading-subtitle">Estamos preparando tudo para você com as nossas abelhas.</div>
+      </div>
+      <div class="up-bee-field" aria-hidden="true">
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-1" />
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-2" />
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-3" />
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-4" />
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-5" />
+        <img src="/logo-abelha.png" alt="" class="up-bee up-bee-6" />
+      </div>
+      <div class="up-loader-chip">
+        <span class="up-loader-dot"></span>
+        <span>Aguarde só mais um instante</span>
+      </div>
     </div>
   `;
 
