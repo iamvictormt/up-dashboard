@@ -170,7 +170,7 @@ export function BenefitsContent() {
             </div>
           </div>
 
-          {user?.professional && (
+          {/* {user?.professional && (
             <div className="mb-6 rounded-2xl border border-[#511A2B]/10 bg-gradient-to-r from-[#511A2B]/10 to-[#FEC460]/10 p-4">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
@@ -187,7 +187,7 @@ export function BenefitsContent() {
                 </Button>
               </div>
             </div>
-          )}
+          )} */}
 
           {user?.professional && showPremiumConnectionRedeem ? (
             <div className="mb-6">
