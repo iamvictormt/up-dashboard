@@ -16,6 +16,8 @@ interface User {
   createdAt: string;
   updatedAt: string;
   profileImage?: string;
+  isAdmin?: boolean;
+  role?: string;
   address: {
     id: string;
     state: string;
@@ -148,7 +150,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const roleFromCookie = Cookies.get('role');
-    if (roleFromCookie) setRole(JSON.parse(roleFromCookie));
+    if (roleFromCookie) {
+      try {
+        setRole(JSON.parse(roleFromCookie));
+      } catch (error) {
+        setRole(roleFromCookie);
+      }
+    }
   }, []);
 
   const logout = () => {

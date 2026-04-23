@@ -1,4 +1,4 @@
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -17,12 +17,28 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const url = request.nextUrl.pathname;
   const isAuthPage = url.startsWith('/auth');
-  const role = request.cookies.get('role')?.value;
+  const roleCookie = request.cookies.get('role')?.value;
+  let parsedRole: string | null = null;
+  if (roleCookie) {
+    try {
+      parsedRole = JSON.parse(roleCookie);
+    } catch (error) {
+      parsedRole = roleCookie;
+    }
+  }
+
+  const defaultRouteByRole: Record<string, string> = {
+    admin: '/mural',
+    partnerSupplier: '/mural',
+    professional: '/mural',
+    loveDecoration: '/mural',
+  };
   const permissions: any = {
     partnerSupplier: [
       '/mural',
       '/service-providers',
       '/store-info',
+      '/physical-sales',
       '/help',
       '/plans',
       '/payment-confirmed',
@@ -39,6 +55,7 @@ export function middleware(request: NextRequest) {
       '/benefits',
     ],
     loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
+    admin: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/events', '/help', '/benefits'],
   };
 
   const isStatic =
@@ -65,18 +82,19 @@ export function middleware(request: NextRequest) {
   }
 
   if (!isAuthPage) {
-    if (!role) {
+    if (!parsedRole) {
       return NextResponse.redirect(new URL('/auth/login', request.url));
     } else {
       if (url === '/') {
         return NextResponse.next();
       }
 
-      const allowedRoutes = permissions[JSON.parse(role)];
+      const allowedRoutes = permissions[parsedRole];
       const isAllowed = allowedRoutes?.some((route: string) => url.startsWith(route));
 
       if (!isAllowed) {
-        return NextResponse.redirect(new URL('/mural', request.url));
+        const fallbackPath = defaultRouteByRole[parsedRole] || '/mural';
+        return NextResponse.redirect(new URL(fallbackPath, request.url));
       }
     }
   }

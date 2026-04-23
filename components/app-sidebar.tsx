@@ -5,7 +5,20 @@ import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Store, Calendar, HelpCircle, ChevronRight, ChevronLeft, X, Quote, ShoppingCart, Coins, Sparkles } from 'lucide-react';
+import {
+  Users,
+  Store,
+  Calendar,
+  HelpCircle,
+  ChevronRight,
+  ChevronLeft,
+  X,
+  Quote,
+  ShoppingCart,
+  Coins,
+  Trophy,
+  Sparkles,
+} from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
 import Image from 'next/image';
@@ -36,7 +49,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isDesktop = false }: AppSidebarProps) {
   const pathname = usePathname();
-  const { isLoading, role } = useUser();
+  const { isLoading, role, user } = useUser();
   const [isExpanded, setIsExpanded] = useState(true);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -101,12 +114,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       url: '/suppliers-store',
       roles: ['professional', 'loveDecoration'],
     },
-    // {
-    //   title: 'Parceiros Wellness',
-    //   icon: Sparkles,
-    //   url: '/wellness-partners',
-    //   roles: ['professional', 'loveDecoration'],
-    // },
+    {
+      title: 'Parceiros Wellness',
+      icon: Sparkles,
+      url: '/wellness-partners',
+      roles: ['professional', 'loveDecoration'],
+    },
     {
       title: 'Eventos',
       icon: Calendar,
@@ -124,6 +137,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Coins,
       url: '/benefits',
       roles: ['professional'],
+    },
+    {
+      title: 'Conexão Premiada',
+      icon: Trophy,
+      url: '/physical-sales',
+      roles: ['partnerSupplier'],
+      disabled: () => user?.partnerSupplier?.type !== 'SUPPLIER',
     },
   ];
 
@@ -276,7 +296,15 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
             <div className="space-y-1">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
-                : mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                : mainMenuItems
+                    .filter((item) => !item.roles || item.roles.includes(role))
+                    .filter((item) => {
+                      if (item.title === 'Conexão Premiada') {
+                        return user?.partnerSupplier?.type === 'SUPPLIER';
+                      }
+                      return true;
+                    })
+                    .map(renderMenuItem)}
             </div>
           </div>
 

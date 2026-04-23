@@ -82,17 +82,23 @@ const mockNotifications = [
 ];
 
 export async function fetchNotifications() {
-  const response = await api.get('notifications');
+  const response = await api.get('notifications', {
+    headers: { 'x-skip-loader': 'true' },
+  });
   return response.data;
 }
 
 export async function markNotificationAsRead(notificationId: string) {
-  await api.patch(`notifications/read/${notificationId}`);
+  await api.patch(`notifications/read/${notificationId}`, null, {
+    headers: { 'x-skip-loader': 'true' },
+  });
   return { success: true };
 }
 
 export async function markAllNotificationsAsRead() {
-  await api.patch('notifications/all-read');
+  await api.patch('notifications/all-read', null, {
+    headers: { 'x-skip-loader': 'true' },
+  });
   return { success: true };
 }
 
