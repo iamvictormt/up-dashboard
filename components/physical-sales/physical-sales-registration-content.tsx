@@ -106,7 +106,7 @@ export function PhysicalSalesRegistrationContent() {
                 Cadastre vendas físicas para gerar códigos únicos que os profissionais poderão resgatar no app.
               </p>
             </div>
-            <Button type="button" variant="outline" onClick={() => setIsFlowInfoOpen(true)}>
+            <Button type="button" variant="outline" className="bg-white/80" onClick={() => setIsFlowInfoOpen(true)}>
               <HelpCircle className="mr-2 h-4 w-4" />
               Como funciona?
             </Button>
