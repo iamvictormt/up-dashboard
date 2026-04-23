@@ -167,7 +167,7 @@ export function BenefitsContent() {
           </div>
         </div>
 
-        <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-[#511A2B]/5 rounded-xl w-full md:w-fit">
+        <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-white/80 rounded-xl w-full md:w-fit">
           <Button
             onClick={() => setViewMode('available')}
             variant={viewMode === 'available' ? 'primary' : 'ghost'}
