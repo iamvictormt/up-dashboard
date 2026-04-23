@@ -82,16 +82,14 @@ export function PhysicalSalesRegistrationContent() {
     }
   };
 
-  const isWellnessPartner = user?.partnerSupplier?.type === 'WELLNESS';
+  const isSupplierPartner = user?.partnerSupplier?.type === 'SUPPLIER';
 
-  if (!isLoading && !isWellnessPartner) {
+  if (!isLoading && !isSupplierPartner) {
     return (
       <div className="p-6 md:p-8 w-full">
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#511A2B]/10 bg-white/60 p-8 text-center shadow-lg backdrop-blur-sm">
           <h1 className="text-2xl font-bold text-[#511A2B]">Conexão Premiada indisponível</h1>
-          <p className="mt-2 text-[#511A2B]/70">
-            Este recurso está disponível apenas para parceiros do tipo wellness.
-          </p>
+          <p className="mt-2 text-[#511A2B]/70">Este recurso está disponível apenas para lojistas parceiros.</p>
         </div>
       </div>
     );

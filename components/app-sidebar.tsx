@@ -143,7 +143,7 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Trophy,
       url: '/physical-sales',
       roles: ['partnerSupplier'],
-      disabled: () => user?.partnerSupplier?.type !== 'WELLNESS',
+      disabled: () => user?.partnerSupplier?.type !== 'SUPPLIER',
     },
   ];
 
@@ -296,7 +296,15 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
             <div className="space-y-1">
               {isLoading
                 ? Array.from({ length: 4 }).map((_, index) => <MenuItemSkeleton key={`skeleton-${index}`} />)
-                : mainMenuItems.filter((item) => !item.roles || item.roles.includes(role)).map(renderMenuItem)}
+                : mainMenuItems
+                    .filter((item) => !item.roles || item.roles.includes(role))
+                    .filter((item) => {
+                      if (item.title === 'Conexão Premiada') {
+                        return user?.partnerSupplier?.type === 'SUPPLIER';
+                      }
+                      return true;
+                    })
+                    .map(renderMenuItem)}
             </div>
           </div>
 
