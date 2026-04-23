@@ -97,7 +97,7 @@ export function PhysicalSalesRegistrationContent() {
 
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="mx-auto max-w-4xl rounded-3xl border border-[#511A2B]/10 bg-white/60 p-6 shadow-lg backdrop-blur-sm md:p-8">
+      <div className="mx-auto max-w-4xl rounded-3xl border border-[#511A2B]/10 bg-[#FFEDC1] p-6 shadow-lg backdrop-blur-sm md:p-8">
         <div className="mb-8">
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div>

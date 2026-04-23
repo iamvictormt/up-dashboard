@@ -159,7 +159,7 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
 
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="bg-[#FFEDC1] backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         <div className="fixed top-32 right-8 md:right-16 z-50 flex flex-col space-y-3">
           {!supplierId && (
             <Button

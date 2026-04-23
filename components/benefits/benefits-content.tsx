@@ -140,7 +140,7 @@ export function BenefitsContent() {
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="space-y-6">
-        <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+        <div className="bg-[#FFEDC1] backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
             <div>
@@ -171,7 +171,7 @@ export function BenefitsContent() {
           </div>
 
           {user?.professional && (
-            <div className="mb-6 rounded-2xl border border-[#511A2B]/10 bg-gradient-to-r from-[#511A2B]/10 to-[#FEC460]/10 p-4">
+            <div className="mb-6 rounded-2xl border border-[#511A2B]/10 bg-white/80 p-4">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-[#511A2B] flex items-center gap-2">
@@ -189,48 +189,20 @@ export function BenefitsContent() {
             </div>
           )}
 
-        <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-white/80 rounded-xl w-full md:w-fit">
-          <Button
-            onClick={() => setViewMode('available')}
-            variant={viewMode === 'available' ? 'primary' : 'ghost'}
-            className={`rounded-lg transition-all duration-300 ${
-              viewMode === 'available'
-                ? 'bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 text-white shadow-md'
-                : 'text-[#511A2B] hover:bg-[#511A2B]/10'
-            }`}
-          >
-            <Package className="w-4 h-4 mr-2" />
-            Disponíveis
-          </Button>
-          <Button
-            onClick={() => setViewMode('redemptions')}
-            variant={viewMode === 'redemptions' ? 'primary' : 'ghost'}
-            className={`rounded-lg transition-all duration-300 ${
-              viewMode === 'redemptions'
-                ? 'bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 text-white shadow-md'
-                : 'text-[#511A2B] hover:bg-[#511A2B]/10'
-            }`}
-          >
-            <History className="w-4 h-4 mr-2" />
-            Meus resgates
-          </Button>
-        </div>
-
           {user?.professional && showPremiumConnectionRedeem ? (
             <div className="mb-6">
               <PhysicalSaleCodeRedeemCard />
             </div>
           ) : null}
 
-          <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-[#511A2B]/5 rounded-xl w-full md:w-fit">
+          <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-white/80 rounded-xl w-full md:w-fit">
             <Button
               onClick={() => setViewMode('available')}
               variant={viewMode === 'available' ? 'primary' : 'ghost'}
-              className={`rounded-lg transition-all duration-300 ${
-                viewMode === 'available'
+              className={`rounded-lg transition-all duration-300 ${viewMode === 'available'
                   ? 'bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 text-white shadow-md'
                   : 'text-[#511A2B] hover:bg-[#511A2B]/10'
-              }`}
+                }`}
             >
               <Package className="w-4 h-4 mr-2" />
               Disponíveis
@@ -238,16 +210,16 @@ export function BenefitsContent() {
             <Button
               onClick={() => setViewMode('redemptions')}
               variant={viewMode === 'redemptions' ? 'primary' : 'ghost'}
-              className={`rounded-lg transition-all duration-300 ${
-                viewMode === 'redemptions'
+              className={`rounded-lg transition-all duration-300 ${viewMode === 'redemptions'
                   ? 'bg-gradient-to-r from-[#511A2B] to-[#511A2B]/90 text-white shadow-md'
                   : 'text-[#511A2B] hover:bg-[#511A2B]/10'
-              }`}
+                }`}
             >
               <History className="w-4 h-4 mr-2" />
               Meus resgates
             </Button>
           </div>
+
 
           {/* Loading / Grid */}
           {isLoading ? (

@@ -35,7 +35,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   // Layout normal para outras páginas
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFEDC1] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-[#F5B13D] relative overflow-hidden">
       <div className="flex flex-1">
         {/* Sidebar apenas para desktop */}
         <div className="hidden md:block">

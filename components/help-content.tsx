@@ -97,7 +97,7 @@ export function HelpContent() {
 
   return (
     <div className="p-6 md:p-8 w-full">
-      <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
+      <div className="bg-[#FFEDC1] backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#511A2B]/10 shadow-lg w-full">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
