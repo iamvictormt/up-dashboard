@@ -40,6 +40,10 @@ export interface CreatePhysicalSaleResponse {
   points: number;
 }
 
+export interface RedeemPhysicalSalePayload {
+  code: string;
+}
+
 export interface RedeemPhysicalSaleResponse {
   message: string;
   points: number;
