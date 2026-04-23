@@ -25,7 +25,9 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
       const shouldNotSeePlans =
         user?.professional ||
         user?.loveDecoration ||
-        (user?.partnerSupplier && (user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE' || user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING'));
+        (user?.partnerSupplier &&
+          (user.partnerSupplier.subscription?.subscriptionStatus === 'ACTIVE' ||
+            user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING'));
 
       if (shouldNotSeePlans) {
         router.push('/mural');

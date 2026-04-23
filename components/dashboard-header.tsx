@@ -50,6 +50,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
   const getProfileImage = () => user?.profileImage || '/placeholder.svg';
 
   const getUserType = () => {
+    if (user?.isAdmin) return 'Administrador';
     if (user?.professional) return `${user.professional.profession.name}`;
     if (user?.partnerSupplier) {
       return user.partnerSupplier.type === 'WELLNESS' ? 'Lojista Parceiro - Wellness' : 'Lojista Parceiro';

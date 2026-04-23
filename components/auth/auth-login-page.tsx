@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import Cookies from 'js-cookie';
 import { appUrl } from '@/constants/appRoutes';
@@ -14,7 +14,6 @@ import { RegisterCarousel } from './register-carousel';
 import api from '@/services/api';
 
 export function AuthLoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,9 +42,15 @@ export function AuthLoginPage() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      window.location.href = appUrl.mural;
-    } catch (error) {
-      toast.error(error.response.data.message);
+      const role = data.role;
+      const redirectByRole: Record<string, string> = {
+        partnerSupplier: appUrl.mural,
+        professional: appUrl.mural,
+        loveDecoration: appUrl.mural,
+      };
+      window.location.href = redirectByRole[role] || appUrl.mural;
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Não foi possível concluir o login.');
     } finally {
       setIsLoading(false);
     }

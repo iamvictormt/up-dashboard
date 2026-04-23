@@ -5,6 +5,7 @@ export const appUrl = {
   mural: `${BASE_URL}/mural`,
   login: `${BASE_URL}/auth/login`,
   dashboard: `${BASE_URL}/dashboard`,
+  physicalSales: `${BASE_URL}/physical-sales`,
   myStore: `${BASE_URL}/store-info`,
   profile: `${BASE_URL}/profile`,
   settings: `${BASE_URL}/settings`,

@@ -11,3 +11,4 @@ export * from './auth';
 export * from './notification';
 export * from './benefit';
 export * from './wellnessPartner';
+export * from './physicalSales';
