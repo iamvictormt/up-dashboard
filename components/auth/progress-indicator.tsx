@@ -7,7 +7,7 @@ interface ProgressIndicatorProps {
   steps: number;
   currentStep: number;
   title: string;
-  userType: 'love-decorations' | 'professionals' | 'partner-suppliers';
+  userType: 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 }
 
 export function ProgressIndicator({ steps, currentStep, title, userType }: ProgressIndicatorProps) {
@@ -25,6 +25,8 @@ export function ProgressIndicator({ steps, currentStep, title, userType }: Progr
                 ? 'Profissionais de Decoração'
                 : userType === 'love-decorations'
                 ? 'Eu amo decoração'
+                : userType === 'wellness-partners'
+                ? 'Parceiro Wellness'
                 : 'Lojista Parceiro'}
               )
             </span>

@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, User, Building2 } from 'lucide-react';
+import { Activity, Heart, User, Building2 } from 'lucide-react';
 
-type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers';
+type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 
 interface UserTypeStepProps {
   selectedType: UserType;
@@ -35,12 +35,22 @@ export function UserTypeStep({ selectedType, onSelect }: UserTypeStepProps) {
     {
       id: 'partner-suppliers' as UserType,
       title: 'Lojista Parceiro',
-      description: 'Empresas, lojistas e espaços wellness',
+      description: 'Empresas, lojistas e fornecedores',
       icon: Building2,
       color: 'from-emerald-500 to-teal-500',
       bgColor: 'bg-gradient-to-br from-emerald-50 to-teal-50',
       borderColor: 'border-emerald-200 hover:border-emerald-300',
       selectedBorder: 'border-emerald-500',
+    },
+    {
+      id: 'wellness-partners' as UserType,
+      title: 'Parceiro Wellness',
+      description: 'Clínicas, studios, terapias e experiências de bem-estar',
+      icon: Activity,
+      color: 'from-cyan-500 to-blue-500',
+      bgColor: 'bg-gradient-to-br from-cyan-50 to-blue-50',
+      borderColor: 'border-cyan-200 hover:border-cyan-300',
+      selectedBorder: 'border-cyan-500',
     },
   ];
 

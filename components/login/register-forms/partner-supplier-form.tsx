@@ -24,6 +24,7 @@ interface PartnerSupplierFormProps {
   registerSuccess: boolean;
   onSwitchToLogin: () => void;
   onSwitchToTypeSelection: () => void;
+  accountType?: 'supplier' | 'wellness';
 }
 
 export function PartnerSupplierForm({
@@ -39,9 +40,11 @@ export function PartnerSupplierForm({
   registerSuccess,
   onSwitchToLogin,
   onSwitchToTypeSelection,
+  accountType = 'supplier',
 }: PartnerSupplierFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const isWellness = accountType === 'wellness';
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -62,7 +65,7 @@ export function PartnerSupplierForm({
                   value={data.tradeName}
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Ex: Padaria Doce Sabor"
+                  placeholder={isWellness ? 'Ex: Studio Vida Leve' : 'Ex: Padaria Doce Sabor'}
                   required
                   disabled={registerSuccess}
                 />
@@ -84,7 +87,7 @@ export function PartnerSupplierForm({
                   value={data.companyName}
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Ex: Padaria e Confeitaria São João LTDA"
+                  placeholder={isWellness ? 'Ex: Studio Vida Leve LTDA' : 'Ex: Padaria e Confeitaria São João LTDA'}
                   required
                   disabled={registerSuccess}
                 />

@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { Profession } from '@/types';
 import { toast } from 'sonner';
 
-type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers';
+type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 
 interface PersonalInfoStepProps {
   userType: UserType;
@@ -69,7 +69,7 @@ export function PersonalInfoStep({
       return (
         data.name && data.officeName && data.document && data.generalRegister && data.registrationAgency && data.phone
       );
-    } else if (userType === 'partner-suppliers') {
+    } else if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
       const data = formData.partnerSupplier;
       return data.tradeName && data.companyName && data.document && data.contact;
     }
@@ -296,7 +296,7 @@ export function PersonalInfoStep({
           </>
         )}
 
-        {userType === 'partner-suppliers' && (
+        {(userType === 'partner-suppliers' || userType === 'wellness-partners') && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -386,23 +386,10 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="type" className="text-sm font-medium">
-                  Tipo de Parceiro
-                </Label>
-                <div className="relative">
-                  <Select
-                    value={formData.partnerSupplier.type}
-                    onValueChange={(value) => handleInputChange('partnerSupplier', 'type', value)}
-                  >
-                    <SelectTrigger id="type" className="pl-11 h-12">
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="SUPPLIER">Lojista</SelectItem>
-                      <SelectItem value="WELLNESS">Wellness (serviços)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Label className="text-sm font-medium">Tipo de Parceiro</Label>
+                <div className="relative h-12 rounded-md border border-input bg-background px-11 flex items-center text-sm font-medium">
+                  {userType === 'wellness-partners' ? 'Parceiro Wellness' : 'Lojista Parceiro'}
+                  <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 </div>
               </div>
             </div>

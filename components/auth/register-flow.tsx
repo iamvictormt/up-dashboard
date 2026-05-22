@@ -11,7 +11,7 @@ import { saveUser, uploadImageCloudinary } from '@/lib/user-api';
 import { toast } from 'sonner';
 import { useSearchParams } from 'next/navigation';
 
-type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers';
+type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 type Step = 'user-type' | 'personal-info' | 'address' | 'credentials';
 
 interface RegisterFlowProps {
@@ -78,6 +78,10 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         return 'professionals';
       case 'partner-supplier':
         return 'partner-suppliers';
+      case 'wellness':
+      case 'wellness-partner':
+      case 'wellness-partners':
+        return 'wellness-partners';
       case 'love-decoration':
         return 'love-decorations';
       default:
@@ -107,6 +111,15 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
 
   const handleUserTypeSelect = (type: UserType) => {
     setUserType(type);
+    if (type === 'partner-suppliers' || type === 'wellness-partners') {
+      setFormData((prev) => ({
+        ...prev,
+        partnerSupplier: {
+          ...prev.partnerSupplier,
+          type: type === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+        },
+      }));
+    }
     handleNext();
   };
 
@@ -121,7 +134,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
     setFormData((prev) => ({
       ...prev,
       [section]: {
-        ...prev[section as keyof typeof prev],
+        ...(prev[section as keyof typeof prev] as Record<string, any>),
         [field]: value,
       },
     }));
@@ -144,19 +157,23 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         },
       };
 
-      if (userType === 'partner-suppliers') {
-        payload.partnerSupplier = formData.partnerSupplier;
+      if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
+        payload.partnerSupplier = {
+          ...formData.partnerSupplier,
+          type: userType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+        };
       } else if (userType === 'professionals') {
         payload.professional = formData.professional;
       } else if (userType === 'love-decorations') {
         payload.loveDecoration = formData.loveDecoration;
       }
 
-      await saveUser(payload, userType);
+      await saveUser(payload, userType === 'wellness-partners' ? 'partner-suppliers' : userType);
       onSuccess();
     } catch (error) {
       console.error('Registration error:', error);
-      toast.error(error.response.data.message);
+      const message = error instanceof Error ? error.message : 'Erro ao realizar cadastro.';
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

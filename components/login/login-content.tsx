@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, type ChangeEvent } from 'react';
+import { useState, useEffect } from 'react';
 import type React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
@@ -22,19 +22,37 @@ import { appUrl } from '@/constants/appRoutes';
 import { fetchProfessions } from '@/lib/professions-api';
 import { saveUser, uploadImageCloudinary } from '@/lib/user-api';
 
-type RegisterType = 'love-decorations' | 'professionals' | 'partner-suppliers';
+type RegisterType = 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 type RegisterStep = 'select-type' | 'fill-form';
+
+const getRegisterTypeFromParam = (param: string | null): RegisterType => {
+  switch (param) {
+    case 'professional':
+      return 'professionals';
+    case 'partner-supplier':
+      return 'partner-suppliers';
+    case 'wellness':
+    case 'wellness-partner':
+    case 'wellness-partners':
+      return 'wellness-partners';
+    case 'love-decoration':
+    default:
+      return 'love-decorations';
+  }
+};
 
 export function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const typeParam = searchParams.get('type');
+  const initialRegisterType = getRegisterTypeFromParam(typeParam);
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
 
   // Navigation state
-  const [activeTab, setActiveTab] = useState('login');
-  const [registerType, setRegisterType] = useState<RegisterType>('love-decorations');
-  const [registerStep, setRegisterStep] = useState<RegisterStep>('select-type');
+  const [activeTab, setActiveTab] = useState(typeParam ? 'register' : 'login');
+  const [registerType, setRegisterType] = useState<RegisterType>(initialRegisterType);
+  const [registerStep, setRegisterStep] = useState<RegisterStep>(typeParam ? 'fill-form' : 'select-type');
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   // Data states
@@ -73,6 +91,7 @@ export function LoginContent() {
     document: '',
     stateRegistration: '',
     contact: '',
+    type: (initialRegisterType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER') as 'SUPPLIER' | 'WELLNESS',
     email: '',
     password: '',
     confirmPassword: '',
@@ -95,10 +114,14 @@ export function LoginContent() {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleTypeSelection = (type: RegisterType) => {
     setRegisterType(type);
+    if (type === 'partner-suppliers' || type === 'wellness-partners') {
+      setPartnerSupplierData((prev) => ({
+        ...prev,
+        type: type === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+      }));
+    }
     setRegisterStep('fill-form');
   };
 
@@ -106,63 +129,8 @@ export function LoginContent() {
     setRegisterStep('select-type');
   };
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
-        return;
-      }
-
-      const imageUrl = URL.createObjectURL(file);
-      const img = new window.Image();
-
-      img.src = imageUrl;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        if (!ctx) {
-          alert('Could not process the image');
-          URL.revokeObjectURL(imageUrl);
-          return;
-        }
-
-        const size = Math.min(img.width, img.height);
-        const offsetX = (img.width - size) / 2;
-        const offsetY = (img.height - size) / 2;
-
-        canvas.width = size;
-        canvas.height = size;
-
-        ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
-
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-
-        setPhoto(dataUrl);
-
-        URL.revokeObjectURL(imageUrl);
-      };
-
-      img.onerror = () => {
-        alert('Error loading the image');
-        URL.revokeObjectURL(imageUrl);
-      };
-    }
-  };
-
   const removePhoto = () => {
     setPhoto(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const triggerFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
   };
 
   // Load professions
@@ -286,7 +254,7 @@ export function LoginContent() {
     const data =
       registerType === 'professionals'
         ? professionalData
-        : registerType === 'partner-suppliers'
+        : registerType === 'partner-suppliers' || registerType === 'wellness-partners'
         ? partnerSupplierData
         : loveDecorationData;
 
@@ -324,6 +292,8 @@ export function LoginContent() {
         document: data.document,
         stateRegistration: data.stateRegistration,
         contact: data.contact,
+        type: registerType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+        isVerified: false,
       };
     } else if (isLoveDecoration(data)) {
       payload.loveDecoration = {
@@ -339,7 +309,7 @@ export function LoginContent() {
     }
 
     try {
-      const response = await saveUser(payload, registerType);
+      const response = await saveUser(payload, registerType === 'wellness-partners' ? 'partner-suppliers' : registerType);
 
       if (response.status !== 201) {
         throw new Error(response.data.message || 'Erro no cadastro.');
@@ -409,6 +379,22 @@ export function LoginContent() {
   }, [registerType]);
 
   useEffect(() => {
+    if (!typeParam) return;
+
+    const nextRegisterType = getRegisterTypeFromParam(typeParam);
+    setActiveTab('register');
+    setRegisterType(nextRegisterType);
+    setRegisterStep('fill-form');
+
+    if (nextRegisterType === 'partner-suppliers' || nextRegisterType === 'wellness-partners') {
+      setPartnerSupplierData((prev) => ({
+        ...prev,
+        type: nextRegisterType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+      }));
+    }
+  }, [typeParam]);
+
+  useEffect(() => {
     if (searchParams.get('expired') === 'true') {
       toast.warning('Seu token expirou. Você foi redirecionado para o login.');
       const current = new URLSearchParams(Array.from(searchParams.entries()));
@@ -422,9 +408,9 @@ export function LoginContent() {
   // Reset step when changing tabs
   useEffect(() => {
     if (activeTab === 'register') {
-      setRegisterStep('select-type');
+      setRegisterStep(typeParam ? 'fill-form' : 'select-type');
     }
-  }, [activeTab]);
+  }, [activeTab, typeParam]);
 
   if (!mounted) {
     return null;
@@ -491,6 +477,8 @@ export function LoginContent() {
                             ? 'Eu amo decoração'
                             : registerType === 'professionals'
                             ? 'Profissional de Decoração'
+                            : registerType === 'wellness-partners'
+                            ? 'Parceiro Wellness'
                             : 'Lojista Parceiro'}
                         </h1>
                         <p className="text-muted-foreground">Preencha seus dados para criar sua conta</p>
@@ -511,10 +499,6 @@ export function LoginContent() {
                           registerSuccess={registerSuccess}
                           onSwitchToTypeSelection={() => handleBackToTypeSelection()}
                           onSwitchToLogin={() => setActiveTab('login')}
-                          fileInputRef={fileInputRef}
-                          handleFileChange={handleFileChange}
-                          removePhoto={removePhoto}
-                          triggerFileInput={triggerFileInput}
                         />
                       )}
 
@@ -535,15 +519,11 @@ export function LoginContent() {
                           registerSuccess={registerSuccess}
                           onSwitchToTypeSelection={() => handleBackToTypeSelection()}
                           onSwitchToLogin={() => setActiveTab('login')}
-                          fileInputRef={fileInputRef}
-                          handleFileChange={handleFileChange}
-                          removePhoto={removePhoto}
-                          triggerFileInput={triggerFileInput}
                         />
                       )}
 
                       {/* Partner Supplier Registration Form */}
-                      {registerType === 'partner-suppliers' && (
+                      {(registerType === 'partner-suppliers' || registerType === 'wellness-partners') && (
                         <PartnerSupplierForm
                           data={partnerSupplierData}
                           onChange={handlePartnerSupplierChange}
@@ -557,10 +537,7 @@ export function LoginContent() {
                           registerSuccess={registerSuccess}
                           onSwitchToTypeSelection={() => handleBackToTypeSelection()}
                           onSwitchToLogin={() => setActiveTab('login')}
-                          fileInputRef={fileInputRef}
-                          handleFileChange={handleFileChange}
-                          removePhoto={removePhoto}
-                          triggerFileInput={triggerFileInput}
+                          accountType={registerType === 'wellness-partners' ? 'wellness' : 'supplier'}
                         />
                       )}
                     </>

@@ -1,10 +1,10 @@
 "use client"
 
-import { Heart, User, Building2, Users } from "lucide-react"
+import { Activity, Heart, User, Building2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 
-type RegisterType = "love-decorations" | "professionals" | "partner-suppliers"
+type RegisterType = "love-decorations" | "professionals" | "partner-suppliers" | "wellness-partners"
 
 interface UserTypeSelectorProps {
   registerType: RegisterType
@@ -43,6 +43,16 @@ export function UserTypeSelector({ registerType, onTypeChange }: UserTypeSelecto
       borderColor: "border-emerald-500/30",
       selectedBg: "bg-gradient-to-br from-emerald-500/10 to-teal-500/10",
     },
+    {
+      id: "wellness-partners" as RegisterType,
+      title: "Parceiro Wellness",
+      description: "Clínicas, studios, terapias e experiências de bem-estar",
+      icon: Activity,
+      gradient: "from-cyan-500/20 to-blue-500/20",
+      iconBg: "bg-gradient-to-br from-cyan-500 to-blue-500",
+      borderColor: "border-cyan-500/30",
+      selectedBg: "bg-gradient-to-br from-cyan-500/10 to-blue-500/10",
+    },
   ]
 
   const container = {
@@ -73,7 +83,7 @@ export function UserTypeSelector({ registerType, onTypeChange }: UserTypeSelecto
       </motion.div>
 
       {/* Cards de seleção */}
-      <motion.div className="grid grid-cols-1 lg:grid-cols-3 gap-6" variants={container}>
+      <motion.div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6" variants={container}>
         {userTypes.map((type) => {
           const Icon = type.icon
           const isSelected = registerType === type.id
