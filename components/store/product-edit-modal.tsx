@@ -172,8 +172,8 @@ export function ProductEditModal({
             onPhotoChange={(photo) => handleInputChange('photoUrl', photo ?? undefined)}
           />
           <div>
-            <Label htmlFor="name" className="text-[#511A2B] font-medium">
-              Nome do {itemLabel} *
+            <Label htmlFor="name" className="text-[#511A2B] font-medium" required>
+              Nome do {itemLabel}
             </Label>
             <Input
               id="name"
@@ -188,8 +188,8 @@ export function ProductEditModal({
           </div>
 
           <div>
-            <Label htmlFor="description" className="text-[#511A2B] font-medium">
-              Descrição *
+            <Label htmlFor="description" className="text-[#511A2B] font-medium" required>
+              Descrição
             </Label>
             <Textarea
               id="description"
@@ -205,8 +205,8 @@ export function ProductEditModal({
           </div>
 
           <div>
-            <Label htmlFor="price" className="text-[#511A2B] font-medium">
-              Preço (R$) *
+            <Label htmlFor="price" className="text-[#511A2B] font-medium" required>
+              Preço (R$)
             </Label>
             <Input
               id="price"
@@ -228,8 +228,8 @@ export function ProductEditModal({
           </div>
 
           <div>
-            <Label htmlFor="link" className="text-[#511A2B] font-medium">
-              Link (opcional)
+            <Label htmlFor="link" className="text-[#511A2B] font-medium" optional>
+              Link
             </Label>
             <Input
               id="link"

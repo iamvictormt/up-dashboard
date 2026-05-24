@@ -152,8 +152,8 @@ export function LoveDecorationEditForm({
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="name">
-              Nome *
+            <Label className="text-[#511A2B]" htmlFor="name" required>
+              Nome
             </Label>
             <div className="relative">
               <Input
@@ -169,8 +169,8 @@ export function LoveDecorationEditForm({
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="contact">
-              Telefone *
+            <Label className="text-[#511A2B]" htmlFor="contact" required>
+              Telefone
             </Label>{' '}
             <div className="relative">
               <Input
@@ -193,7 +193,7 @@ export function LoveDecorationEditForm({
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="instagram">
+            <Label className="text-[#511A2B]" htmlFor="instagram" optional>
               Instagram
             </Label>
             <div className="relative">
@@ -210,7 +210,7 @@ export function LoveDecorationEditForm({
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="tiktok">
+            <Label className="text-[#511A2B]" htmlFor="tiktok" optional>
               TikTok
             </Label>
             <div className="relative">

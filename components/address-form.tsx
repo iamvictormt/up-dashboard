@@ -42,7 +42,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
   isLogin,
 }) => (
   <div className="space-y-2">
-    <Label htmlFor={id} className="text-sm font-medium">
+    <Label htmlFor={id} className="text-sm font-medium" required={required} optional={!required}>
       {label}
     </Label>
     <div className="relative group">

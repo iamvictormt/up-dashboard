@@ -116,7 +116,7 @@ export function ProfessionalForm({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-4">
             <div className="space-y-2">
-              <Label htmlFor="profession" className="text-sm font-medium">
+              <Label htmlFor="profession" className="text-sm font-medium" required>
                 Profissão
               </Label>
               <div className="relative group">

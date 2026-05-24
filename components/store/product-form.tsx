@@ -166,8 +166,8 @@ export function ProductFormModal({
           />
 
           <div>
-            <Label htmlFor="name" className="text-[#511A2B] font-medium">
-              Nome do {itemLabel} *
+            <Label htmlFor="name" className="text-[#511A2B] font-medium" required>
+              Nome do {itemLabel}
             </Label>
             <Input
               id="name"
@@ -182,8 +182,8 @@ export function ProductFormModal({
           </div>
 
           <div>
-            <Label htmlFor="description" className="text-[#511A2B] font-medium">
-              Descrição *
+            <Label htmlFor="description" className="text-[#511A2B] font-medium" required>
+              Descrição
             </Label>
             <Textarea
               id="description"
@@ -199,8 +199,8 @@ export function ProductFormModal({
           </div>
 
           <div>
-            <Label htmlFor="price" className="text-[#511A2B] font-medium">
-              Preço (R$) *
+            <Label htmlFor="price" className="text-[#511A2B] font-medium" required>
+              Preço (R$)
             </Label>
             <Input
               id="price"
@@ -223,8 +223,8 @@ export function ProductFormModal({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="link" className="text-[#511A2B] font-medium">
-                Link (opcional)
+              <Label htmlFor="link" className="text-[#511A2B] font-medium" optional>
+                Link
               </Label>
               <Input
                 id="link"
@@ -240,8 +240,8 @@ export function ProductFormModal({
             </div>
 
             <div>
-              <Label htmlFor="duration" className="text-[#511A2B] font-medium">
-                Duração (opcional, ex: 60 min)
+              <Label htmlFor="duration" className="text-[#511A2B] font-medium" optional>
+                Duração
               </Label>
               <Input
                 id="duration"

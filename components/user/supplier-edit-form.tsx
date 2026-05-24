@@ -158,8 +158,8 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="trade-name">
-              Nome fantasia *
+            <Label className="text-[#511A2B]" htmlFor="trade-name" required>
+              Nome fantasia
             </Label>
             <div className="relative">
               <Input
@@ -175,8 +175,8 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="companyName">
-              Razão Social *
+            <Label className="text-[#511A2B]" htmlFor="companyName" required>
+              Razão Social
             </Label>
             <div className="relative">
               <Input
@@ -194,8 +194,8 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="document">
-              CNPJ *
+            <Label className="text-[#511A2B]" htmlFor="document" required>
+              CNPJ
             </Label>
             <div className="relative">
               <Input
@@ -214,8 +214,8 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="contact">
-              Telefone *
+            <Label className="text-[#511A2B]" htmlFor="contact" required>
+              Telefone
             </Label>
             <div className="relative">
               <Input
@@ -234,7 +234,7 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="stateRegistration">
+            <Label className="text-[#511A2B]" htmlFor="stateRegistration" optional>
               Inscrição Estadual
             </Label>
             <div className="relative">

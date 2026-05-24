@@ -117,7 +117,7 @@ export function PhysicalSalesRegistrationContent() {
           <CardContent className="p-6">
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <Label className="text-[#511A2B]">Nome do cliente *</Label>
+                <Label className="text-[#511A2B]" required>Nome do cliente</Label>
                 <Input
                   value={form.customerName}
                   onChange={(event) => handleChange('customerName', event.target.value)}
@@ -127,7 +127,7 @@ export function PhysicalSalesRegistrationContent() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[#511A2B]">Valor da venda *</Label>
+                <Label className="text-[#511A2B]" required>Valor da venda</Label>
                 <Input
                   type="number"
                   min={0}
@@ -141,7 +141,7 @@ export function PhysicalSalesRegistrationContent() {
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label className="text-[#511A2B]">Vendedor (opcional)</Label>
+                  <Label className="text-[#511A2B]" optional>Vendedor</Label>
                   <Input
                     value={form.sellerName}
                     onChange={(event) => handleChange('sellerName', event.target.value)}
@@ -151,7 +151,7 @@ export function PhysicalSalesRegistrationContent() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[#511A2B]">Nota fiscal (opcional)</Label>
+                  <Label className="text-[#511A2B]" optional>Nota fiscal</Label>
                   <Input
                     value={form.invoiceNumber}
                     onChange={(event) => handleChange('invoiceNumber', event.target.value)}

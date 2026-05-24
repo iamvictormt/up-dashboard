@@ -194,8 +194,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="text-[#511A2B] font-medium">
-                    Nome do Evento *
+                  <Label htmlFor="name" className="text-[#511A2B] font-medium" required>
+                    Nome do Evento
                   </Label>
                   <Input
                     id="name"
@@ -210,7 +210,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="type" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="type" className="text-[#511A2B] font-medium" required>
                     Tipo de Evento
                   </Label>
                   <select
@@ -229,8 +229,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
               </div>
 
               <div>
-                <Label htmlFor="description" className="text-[#511A2B] font-medium">
-                  Descrição *
+                <Label htmlFor="description" className="text-[#511A2B] font-medium" required>
+                  Descrição
                 </Label>
                 <Textarea
                   id="description"
@@ -247,8 +247,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="date" className="text-[#511A2B] font-medium">
-                    Data *
+                  <Label htmlFor="date" className="text-[#511A2B] font-medium" required>
+                    Data
                   </Label>
                   <Input
                     id="date"
@@ -263,8 +263,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="time" className="text-[#511A2B] font-medium">
-                    Horário *
+                  <Label htmlFor="time" className="text-[#511A2B] font-medium" required>
+                    Horário
                   </Label>
                   <Input
                     id="time"
@@ -279,8 +279,8 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="totalSpots" className="text-[#511A2B] font-medium">
-                    Vagas Disponíveis *
+                  <Label htmlFor="totalSpots" className="text-[#511A2B] font-medium" required>
+                    Vagas Disponíveis
                   </Label>
                   <Input
                     id="totalSpots"
@@ -297,7 +297,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
               </div>
 
               <div>
-                <Label htmlFor="points" className="text-[#511A2B] font-medium">
+                <Label htmlFor="points" className="text-[#511A2B] font-medium" required>
                   Pontos de Recompensa
                 </Label>
                 <Input
@@ -341,7 +341,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="zipCode" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="zipCode" className="text-[#511A2B] font-medium" required>
                     CEP
                   </Label>
                   <Input
@@ -353,7 +353,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="city" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="city" className="text-[#511A2B] font-medium" required>
                     Cidade
                   </Label>
                   <Input
@@ -365,7 +365,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="state" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="state" className="text-[#511A2B] font-medium" required>
                     Estado
                   </Label>
                   <Input
@@ -379,7 +379,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
-                  <Label htmlFor="street" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="street" className="text-[#511A2B] font-medium" required>
                     Rua
                   </Label>
                   <Input
@@ -391,7 +391,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="number" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="number" className="text-[#511A2B] font-medium" required>
                     Número
                   </Label>
                   <Input
@@ -403,7 +403,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
                 </div>
 
                 <div>
-                  <Label htmlFor="district" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="district" className="text-[#511A2B] font-medium" required>
                     Bairro
                   </Label>
                   <Input
@@ -416,7 +416,7 @@ export function EventEditModal({ event, storeAddress, onEventUpdated, onDelete, 
               </div>
 
               <div>
-                <Label htmlFor="complement" className="text-[#511A2B] font-medium">
+                <Label htmlFor="complement" className="text-[#511A2B] font-medium" optional>
                   Complemento
                 </Label>
                 <Input

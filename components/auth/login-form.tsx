@@ -40,7 +40,7 @@ export function LoginForm({ formData, isLoading, onInputChange, onSubmit, onForg
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          <Label htmlFor="email">
+          <Label htmlFor="email" required>
             Email
           </Label>
           <div className="relative group">
@@ -62,7 +62,7 @@ export function LoginForm({ formData, isLoading, onInputChange, onSubmit, onForg
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">
+            <Label htmlFor="password" required>
               Senha
             </Label>
             <Button

@@ -88,7 +88,7 @@ export function PersonalInfoStep({
         {userType === 'love-decorations' && (
           <>
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium">
+              <Label htmlFor="name" className="text-sm font-medium" required>
                 Nome completo
               </Label>
               <div className="relative">
@@ -104,7 +104,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="contact" className="text-sm font-medium">
+                <Label htmlFor="contact" className="text-sm font-medium" required>
                   Contato
                 </Label>
                 <div className="relative">
@@ -124,7 +124,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="instagram" className="text-sm font-medium">
+                <Label htmlFor="instagram" className="text-sm font-medium" optional>
                   Instagram
                 </Label>
                 <div className="relative">
@@ -139,7 +139,7 @@ export function PersonalInfoStep({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tiktok" className="text-sm font-medium">
+              <Label htmlFor="tiktok" className="text-sm font-medium" optional>
                 TikTok
               </Label>
               <div className="relative">
@@ -164,7 +164,7 @@ export function PersonalInfoStep({
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="prof-name" className="text-sm font-medium">
+                <Label htmlFor="prof-name" className="text-sm font-medium" required>
                   Nome completo
                 </Label>
                 <div className="relative">
@@ -179,7 +179,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="profession" className="text-sm font-medium">
+                <Label htmlFor="profession" className="text-sm font-medium" required>
                   Profissão
                 </Label>
                 <div className="relative">
@@ -205,7 +205,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="office-name" className="text-sm font-medium">
+                <Label htmlFor="office-name" className="text-sm font-medium" required>
                   Nome do escritório
                 </Label>
                 <div className="relative">
@@ -222,7 +222,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="document" className="text-sm font-medium">
+                <Label htmlFor="document" className="text-sm font-medium" required>
                   CPF/CNPJ
                 </Label>
                 <div className="relative">
@@ -242,7 +242,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="rg" className="text-sm font-medium">
+                <Label htmlFor="rg" className="text-sm font-medium" required>
                   RG
                 </Label>
                 <div className="relative">
@@ -259,7 +259,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="registration" className="text-sm font-medium">
+                <Label htmlFor="registration" className="text-sm font-medium" required>
                   CREA/CAU/ABD
                 </Label>
                 <div className="relative">
@@ -274,7 +274,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-sm font-medium">
+                <Label htmlFor="phone" className="text-sm font-medium" required>
                   WhatsApp
                 </Label>
                 <div className="relative">
@@ -300,7 +300,7 @@ export function PersonalInfoStep({
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="trade-name" className="text-sm font-medium">
+                <Label htmlFor="trade-name" className="text-sm font-medium" required>
                   Nome fantasia
                 </Label>
                 <div className="relative">
@@ -315,7 +315,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="company-name" className="text-sm font-medium">
+                <Label htmlFor="company-name" className="text-sm font-medium" required>
                   Razão social
                 </Label>
                 <div className="relative">
@@ -332,7 +332,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="cnpj" className="text-sm font-medium">
+                <Label htmlFor="cnpj" className="text-sm font-medium" required>
                   CNPJ
                 </Label>
                 <div className="relative">
@@ -350,7 +350,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="state-reg" className="text-sm font-medium">
+                <Label htmlFor="state-reg" className="text-sm font-medium" optional>
                   Inscrição estadual
                 </Label>
                 <div className="relative">
@@ -366,7 +366,7 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="supplier-contact" className="text-sm font-medium">
+                <Label htmlFor="supplier-contact" className="text-sm font-medium" required>
                   Contato
                 </Label>
                 <div className="relative">
@@ -386,7 +386,7 @@ export function PersonalInfoStep({
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Tipo de Parceiro</Label>
+                <Label className="text-sm font-medium" required>Tipo de Parceiro</Label>
                 <div className="relative h-12 rounded-md border border-input bg-background px-11 flex items-center text-sm font-medium">
                   {userType === 'wellness-partners' ? 'Parceiro Wellness' : 'Lojista Parceiro'}
                   <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

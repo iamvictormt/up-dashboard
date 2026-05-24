@@ -42,7 +42,7 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium">
+          <Label htmlFor="email" className="text-sm font-medium" required>
             Email
           </Label>
           <div className="relative">
@@ -59,7 +59,7 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium">
+          <Label htmlFor="password" className="text-sm font-medium" required>
             Senha
           </Label>
           <div className="relative">
@@ -89,7 +89,7 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-sm font-medium">
+          <Label htmlFor="confirmPassword" className="text-sm font-medium" required>
             Confirmar senha
           </Label>
           <div className="relative">
@@ -129,7 +129,7 @@ export function CredentialsStep({ formData, onUpdate, onSubmit, onBack, isLoadin
             className="mt-0.5"
           />
           <div className="space-y-1">
-            <Label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer">
+            <Label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer" required>
               Aceito os termos de uso e política de privacidade
             </Label>
             <p className="text-xs text-muted-foreground">

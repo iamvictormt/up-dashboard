@@ -528,8 +528,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 />
 
                 <div>
-                  <Label htmlFor="name" className="text-[#511A2B] font-medium">
-                    Nome do Perfil *
+                  <Label htmlFor="name" className="text-[#511A2B] font-medium" required>
+                    Nome do Perfil
                   </Label>
                   <div className="relative">
                     <Input
@@ -545,8 +545,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 </div>
 
                 <div>
-                  <Label htmlFor="description" className="text-[#511A2B] font-medium">
-                    Descrição *
+                  <Label htmlFor="description" className="text-[#511A2B] font-medium" required>
+                    Descrição
                   </Label>
                   <Textarea
                     id="description"
@@ -561,7 +561,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="website" className="text-[#511A2B] font-medium">
+                    <Label htmlFor="website" className="text-[#511A2B] font-medium" optional>
                       Website
                     </Label>
                     <div className="relative">
@@ -578,8 +578,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="type" className="text-[#511A2B] font-medium">
-                      Tipo de Perfil *
+                    <Label htmlFor="type" className="text-[#511A2B] font-medium" required>
+                      Tipo de Perfil
                     </Label>
                     <div className="relative">
                       <Select
@@ -600,8 +600,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 </div>
 
                 <div className="z-[1]">
-                  <Label htmlFor="openingHours" className="text-[#511A2B] font-medium">
-                    Horário de Funcionamento *
+                  <Label htmlFor="openingHours" className="text-[#511A2B] font-medium" required>
+                    Horário de Funcionamento
                   </Label>
                   <div className="mt-2">
                     <OpeningHoursInput
@@ -621,8 +621,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="zipCode" className="text-[#511A2B] font-medium">
-                      CEP *
+                    <Label htmlFor="zipCode" className="text-[#511A2B] font-medium" required>
+                      CEP
                     </Label>
                     <div className="relative">
                       <Input
@@ -644,8 +644,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="city" className="text-[#511A2B] font-medium">
-                      Cidade *
+                    <Label htmlFor="city" className="text-[#511A2B] font-medium" required>
+                      Cidade
                     </Label>
                     <div className="relative">
                       <Input
@@ -662,8 +662,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="state" className="text-[#511A2B] font-medium">
-                      Estado *
+                    <Label htmlFor="state" className="text-[#511A2B] font-medium" required>
+                      Estado
                     </Label>
                     <div className="relative">
                       <Input
@@ -682,8 +682,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="md:col-span-2">
-                    <Label htmlFor="street" className="text-[#511A2B] font-medium">
-                      Rua *
+                    <Label htmlFor="street" className="text-[#511A2B] font-medium" required>
+                      Rua
                     </Label>
                     <div className="relative">
                       <Input
@@ -702,8 +702,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="number" className="text-[#511A2B] font-medium">
-                      Número *
+                    <Label htmlFor="number" className="text-[#511A2B] font-medium" required>
+                      Número
                     </Label>
                     <div className="relative">
                       <Input
@@ -721,8 +721,8 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="district" className="text-[#511A2B] font-medium">
-                      Bairro *
+                    <Label htmlFor="district" className="text-[#511A2B] font-medium" required>
+                      Bairro
                     </Label>
                     <div className="relative">
                       <Input
@@ -742,7 +742,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                 </div>
 
                 <div>
-                  <Label htmlFor="complement" className="text-[#511A2B] font-medium">
+                  <Label htmlFor="complement" className="text-[#511A2B] font-medium" optional>
                     Complemento
                   </Label>
                   <div className="relative">

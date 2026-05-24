@@ -198,8 +198,8 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="name">
-              Nome completo *
+            <Label className="text-[#511A2B]" htmlFor="name" required>
+              Nome completo
             </Label>
             <div className="relative">
               <Input
@@ -215,7 +215,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="document">
+            <Label className="text-[#511A2B]" htmlFor="document" optional>
               CPF/CNPJ
             </Label>
             <div className="relative">
@@ -237,8 +237,8 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="phone">
-              Whatsapp *
+            <Label className="text-[#511A2B]" htmlFor="phone" required>
+              Whatsapp
             </Label>
             <div className="relative">
               <Input
@@ -257,7 +257,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="officeName">
+            <Label className="text-[#511A2B]" htmlFor="officeName" optional>
               Nome do Escritório
             </Label>
             <div className="relative">
@@ -277,7 +277,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label className="text-[#511A2B]" htmlFor="professionId">
+            <Label className="text-[#511A2B]" htmlFor="professionId" optional>
               Profissão
             </Label>
             <div className="relative">
@@ -304,7 +304,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
           </div>
 
           <div>
-            <Label className="text-[#511A2B]" htmlFor="generalRegister">
+            <Label className="text-[#511A2B]" htmlFor="generalRegister" optional>
               RG
             </Label>
             <div className="relative">
@@ -320,7 +320,7 @@ export function ProfessionalEditForm({ professional, isLoading, setIsLoading, on
             </div>
           </div>
           <div>
-            <Label className="text-[#511A2B]" htmlFor="registrationAgency">
+            <Label className="text-[#511A2B]" htmlFor="registrationAgency" optional>
               CREA/CAU/ABD
             </Label>
             <div className="relative">

@@ -145,8 +145,8 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
 
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="title">
-              Título (opcional)
+            <Label className="text-[#511A2B]" htmlFor="title" optional>
+              Título
             </Label>
             <div className="relative group">
               <Input
@@ -161,7 +161,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="content">
+            <Label className="text-[#511A2B]" htmlFor="content" required>
               Conteúdo
             </Label>
             <Textarea
@@ -174,7 +174,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="hashtags">
+            <Label className="text-[#511A2B]" htmlFor="hashtags" optional>
               Hashtags
             </Label>
             <div className="relative group">
@@ -210,7 +210,7 @@ export function EditPostModal({ isOpen, onClose, post, onPostUpdated }: EditPost
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="image">
+            <Label className="text-[#511A2B]" htmlFor="image" optional>
               Imagem
             </Label>
             {imagePreview ? (

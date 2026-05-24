@@ -166,7 +166,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="zipCode">CEP</Label>
+            <Label className="text-[#511A2B]" htmlFor="zipCode" required>CEP</Label>
             <div className="relative">
               <Input
                 id="zipCode"
@@ -185,7 +185,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="state">Estado</Label>
+            <Label className="text-[#511A2B]" htmlFor="state" required>Estado</Label>
             <div className="relative">
               <Input
                 id="state"
@@ -200,7 +200,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="city">Cidade</Label>
+            <Label className="text-[#511A2B]" htmlFor="city" required>Cidade</Label>
             <div className="relative">
               <Input
                 id="city"
@@ -217,7 +217,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="district">Bairro</Label>
+            <Label className="text-[#511A2B]" htmlFor="district" required>Bairro</Label>
             <div className="relative">
               <Input
                 id="district"
@@ -232,7 +232,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
           </div>
 
           <div className="relative">
-            <Label className="text-[#511A2B]" htmlFor="street">Rua</Label>
+            <Label className="text-[#511A2B]" htmlFor="street" required>Rua</Label>
             <div className="relative">
               <Input
                 id="street"
@@ -249,7 +249,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="number">Número</Label>
+            <Label className="text-[#511A2B]" htmlFor="number" required>Número</Label>
             <div className="relative">
               <Input
                 id="number"
@@ -263,7 +263,7 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="complement">Complemento</Label>
+            <Label className="text-[#511A2B]" htmlFor="complement" optional>Complemento</Label>
             <div className="relative">
               <Input
                 id="complement"
@@ -287,4 +287,3 @@ export function AddressEditForm({ address, isLoading, setIsLoading, onClose }: A
     </div>
   );
 }
-

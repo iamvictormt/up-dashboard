@@ -251,7 +251,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
+            <Label htmlFor="email" className="text-sm font-medium" required>
               Email
             </Label>
             <div className="relative group">
@@ -381,7 +381,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium">
+          <Label htmlFor="password" className="text-sm font-medium" required>
             Nova senha
           </Label>
           <div className="relative group">
@@ -418,7 +418,7 @@ export function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordModalProp
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="text-sm font-medium">
+          <Label htmlFor="confirmPassword" className="text-sm font-medium" required>
             Confirmar nova senha
           </Label>
           <div className="relative group">

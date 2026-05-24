@@ -60,7 +60,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="zipCode" className="text-sm font-medium">
+          <Label htmlFor="zipCode" className="text-sm font-medium" required>
             CEP
           </Label>
           <div className="relative">
@@ -79,7 +79,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="state" className="text-sm font-medium">
+            <Label htmlFor="state" className="text-sm font-medium" required>
               Estado
             </Label>
             <div className="relative">
@@ -95,7 +95,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="city" className="text-sm font-medium">
+            <Label htmlFor="city" className="text-sm font-medium" required>
               Cidade
             </Label>
             <div className="relative">
@@ -112,7 +112,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="district" className="text-sm font-medium">
+          <Label htmlFor="district" className="text-sm font-medium" required>
             Bairro
           </Label>
           <div className="relative">
@@ -129,7 +129,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="street" className="text-sm font-medium">
+          <Label htmlFor="street" className="text-sm font-medium" required>
             Rua
           </Label>
           <div className="relative">
@@ -147,7 +147,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="number" className="text-sm font-medium">
+            <Label htmlFor="number" className="text-sm font-medium" required>
               Número
             </Label>
             <div className="relative">
@@ -164,7 +164,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="complement" className="text-sm font-medium">
+            <Label htmlFor="complement" className="text-sm font-medium" optional>
               Complemento
             </Label>
             <div className="relative">

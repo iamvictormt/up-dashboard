@@ -106,7 +106,7 @@ export function ReportModal({ isOpen, onClose, targetId, targetType }: ReportMod
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description" className="text-[#511A2B]">Detalhes adicionais (opcional)</Label>
+                <Label htmlFor="description" className="text-[#511A2B]" optional>Detalhes adicionais</Label>
                 <Textarea
                   id="description"
                   placeholder="Descreva o problema com mais detalhes..."
