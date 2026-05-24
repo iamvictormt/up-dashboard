@@ -52,8 +52,8 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
   }, [formData.address.zipCode]);
 
   const isFormValid = () => {
-    const { zipCode, state, city, district, street, number } = formData.address;
-    return zipCode && state && city && district && street && number;
+    const { zipCode, state, city, district, street } = formData.address;
+    return zipCode && state && city && district && street;
   };
 
   return (
@@ -147,7 +147,7 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="number" className="text-sm font-medium" required>
+            <Label htmlFor="number" className="text-sm font-medium" optional>
               Número
             </Label>
             <div className="relative">
@@ -157,7 +157,6 @@ export function AddressStep({ formData, onUpdate, onNext, onBack }: AddressStepP
                 onChange={(e) => handleInputChange('number', e.target.value)}
                 className="pl-10 h-11"
                 placeholder="123"
-                required
               />
               <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>

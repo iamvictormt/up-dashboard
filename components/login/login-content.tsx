@@ -236,15 +236,22 @@ export function LoginContent() {
   };
 
   // Build address helper
-  const buildAddress = (address: any) => ({
-    city: address.city,
-    complement: address.complement,
-    district: address.district,
-    number: address.number,
-    state: address.state,
-    street: address.street,
-    zipCode: address.zipCode,
-  });
+  const buildAddress = (address: any): any => {
+    const payload: Record<string, string> = {
+      city: address.city,
+      complement: address.complement,
+      district: address.district,
+      state: address.state,
+      street: address.street,
+      zipCode: address.zipCode,
+    };
+
+    if (address.number?.trim()) {
+      payload.number = address.number;
+    }
+
+    return payload;
+  };
 
   // Handle register submit
   const handleRegisterSubmit = async (e: React.FormEvent) => {

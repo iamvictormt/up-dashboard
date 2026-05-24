@@ -183,6 +183,7 @@ export const AddressForm: React.FC<AddressFormProps> = ({
           placeholder="Ex: 30"
           maxLength={6}
           disabled={registerSuccess}
+          required={false}
           isLogin={isLogin}
         />
       </div>

@@ -140,6 +140,23 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
     }));
   };
 
+  const buildAddressPayload = (address: typeof formData.address) => {
+    const payload: Record<string, string> = {
+      zipCode: address.zipCode,
+      state: address.state,
+      city: address.city,
+      district: address.district,
+      street: address.street,
+      complement: address.complement,
+    };
+
+    if (address.number.trim()) {
+      payload.number = address.number;
+    }
+
+    return payload;
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
     let cloudinaryImageURL = '';
@@ -153,7 +170,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
           email: formData.email,
           password: formData.password,
           profileImage: cloudinaryImageURL,
-          address: formData.address,
+          address: buildAddressPayload(formData.address),
         },
       };
 
