@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { CircleCheckBig, Copy, HelpCircle, Loader2, Sparkles, Ticket } from 'lucide-react';
+import { CircleCheckBig, Copy, HelpCircle, Loader2, Sparkles, TicketCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { createPhysicalSale } from '@/lib/physical-sales-api';
 import { formatCurrency } from '@/lib/utils';
@@ -187,7 +187,7 @@ export function PhysicalSalesRegistrationContent() {
             <p className="mb-2 text-sm text-emerald-800">Código único para entregar ao cliente:</p>
             <div className="flex items-center gap-2">
               <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-[#511A2B]">
-                <Ticket className="h-4 w-4" />
+                <TicketCheck className="h-4 w-4" />
                 {lastGeneratedCode}
               </div>
               <button

@@ -3,7 +3,14 @@ import { PartnerSupplierType } from '@/types/partnerSupplier';
 import { AxiosResponse } from 'axios';
 import type { WellnessPartnerListItem } from '@/types';
 
-export async function fetchStores(searchQuery?: string, page: number = 1, limit: number = 6, type?: PartnerSupplierType): Promise<AxiosResponse> {
+export async function fetchStores(
+  searchQuery?: string,
+  page: number = 1,
+  limit: number = 6,
+  type?: PartnerSupplierType,
+  state?: string,
+  city?: string
+): Promise<AxiosResponse> {
   const params: Record<string, string | number> = {
     page,
     limit,
@@ -12,6 +19,12 @@ export async function fetchStores(searchQuery?: string, page: number = 1, limit:
 
   if (searchQuery) {
     params['search'] = searchQuery;
+  }
+  if (state) {
+    params['state'] = state;
+  }
+  if (city) {
+    params['city'] = city;
   }
 
   return await api.get('stores', { params });
@@ -40,7 +53,9 @@ export async function updateStore(id: string, data: any): Promise<AxiosResponse>
 export async function fetchWellnessPartners(
   searchQuery?: string,
   page: number = 1,
-  limit: number = 6
+  limit: number = 6,
+  state?: string,
+  city?: string
 ): Promise<AxiosResponse> {
   const params: Record<string, string | number> = {
     page,
@@ -50,6 +65,12 @@ export async function fetchWellnessPartners(
 
   if (searchQuery) {
     params['search'] = searchQuery;
+  }
+  if (state) {
+    params['state'] = state;
+  }
+  if (city) {
+    params['city'] = city;
   }
 
   return await api.get('partner-suppliers', { params });

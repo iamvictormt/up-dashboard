@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { Gift, Loader2, Ticket, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, TicketCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { redeemPhysicalSaleCode } from '@/lib/physical-sales-api';
 import { Button } from '@/components/ui/button';
@@ -58,7 +58,7 @@ export function PhysicalSaleCodeRedeemCard() {
           <div>
             <label className="mb-2 block text-sm font-medium text-[#511A2B]">Código da Conexão Premiada</label>
             <div className="relative">
-              <Ticket className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#511A2B]/40" />
+              <TicketCheck className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#511A2B]/40" />
               <Input
                 value={code}
                 onChange={(event) => setCode(event.target.value.toUpperCase())}
