@@ -171,48 +171,50 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
               {displayServices.map((service) => (
                 <div
                   key={service.id || service.name}
-                  className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-[#4A1730]/10 bg-white hover:border-[#4A1730]/30 transition-all"
+                  className="group/product overflow-hidden rounded-xl border border-[#4A1730]/15 bg-white shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#4A1730]/30 hover:shadow-md"
                 >
-                  {service.photoUrl ? (
-                    <img
-                      src={service.photoUrl || '/placeholder.svg'}
-                      alt={service.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover/product:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-[#FFF7DD]">
-                      <Sparkles className="w-6 h-6 text-[#4A1730]/25" />
-                    </div>
-                  )}
-
-                  <div className="absolute bottom-1.5 left-1.5 right-1.5">
-                    <div className="bg-white/95 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-[#1A3B51]/10 flex flex-col gap-0.5">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-[9px] sm:text-[10px] font-medium truncate">{service.name}</span>
-                        <span className="text-[9px] sm:text-[10px] font-bold text-[#4A1730] whitespace-nowrap">
-                          {formatCurrency(service.price)}
-                        </span>
+                  <div className="aspect-[5/3] overflow-hidden bg-[#FFF7DD]">
+                    {service.photoUrl ? (
+                      <img
+                        src={service.photoUrl || '/placeholder.svg'}
+                        alt={service.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover/product:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Sparkles className="h-6 w-6 text-[#4A1730]/35" />
                       </div>
-                      {service.duration && (
-                        <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
-                          <Clock className="w-2 h-2" />
-                          {service.duration}
-                        </div>
-                      )}
+                    )}
+                  </div>
+
+                  <div className="space-y-1 border-t border-[#4A1730]/10 bg-white px-2.5 py-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="line-clamp-2 min-w-0 text-[11px] font-bold leading-tight text-[#1A3B51]">
+                        {service.name}
+                      </span>
+                      <span className="shrink-0 rounded-md bg-[#FFF7DD] px-1.5 py-0.5 text-[10px] font-bold text-[#4A1730]">
+                        {formatCurrency(service.price)}
+                      </span>
                     </div>
+                    {service.duration && (
+                      <div className="flex items-center gap-1 text-[9px] font-medium text-[#1A3B51]/55">
+                        <Clock className="h-2.5 w-2.5" />
+                        <span className="truncate">{service.duration}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#1A3B51]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/35">
+              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#4A1730]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/55 shadow-sm">
                 <Sparkles className="w-6 h-6 mb-1" />
-                <span className="text-[10px]">Sem serviços cadastrados</span>
+                <span className="text-[10px] font-medium">Sem serviços cadastrados</span>
               </div>
-              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#1A3B51]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/35">
+              <div className="aspect-[4/3] rounded-lg border border-dashed border-[#4A1730]/20 bg-white flex flex-col items-center justify-center text-[#1A3B51]/55 shadow-sm">
                 <Sparkles className="w-6 h-6 mb-1" />
-                <span className="text-[10px]">Sem serviços cadastrados</span>
+                <span className="text-[10px] font-medium">Sem serviços cadastrados</span>
               </div>
             </div>
           )}
