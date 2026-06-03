@@ -99,7 +99,7 @@ export function WellnessPartnersContent() {
 
   return (
     <div className="p-6 md:p-8 w-full ">
-      <div className="bg-[#FFEDC1] backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#1A3B51]/10 shadow-lg w-full">
+      <div className="bg-[#FFEDC1] backdrop-blur-sm rounded-3xl p-6 md:p-8 border border-[#4A1730]/10 shadow-lg w-full">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#1A3B51] mb-2">Parceiros de Bem-estar</h1>
@@ -190,7 +190,7 @@ export function WellnessPartnersContent() {
               <button
                 onClick={handlePrevPage}
                 disabled={page === 1}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#1A3B51] to-[#1A3B51]/90 hover:from-[#1A3B51]/90 hover:to-[#1A3B51]/80 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                className="px-4 py-2 rounded-lg bg-[#4A1730] hover:bg-[#5C1D3B] disabled:opacity-50 disabled:cursor-not-allowed text-white"
               >
                 Anterior
               </button>
@@ -198,7 +198,7 @@ export function WellnessPartnersContent() {
               <button
                 onClick={handleNextPage}
                 disabled={!hasMore}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#1A3B51] to-[#1A3B51]/90 hover:from-[#1A3B51]/90 hover:to-[#1A3B51]/80 disabled:opacity-50 disabled:cursor-not-allowed text-white"
+                className="px-4 py-2 rounded-lg bg-[#4A1730] hover:bg-[#5C1D3B] disabled:opacity-50 disabled:cursor-not-allowed text-white"
               >
                 Próxima
               </button>

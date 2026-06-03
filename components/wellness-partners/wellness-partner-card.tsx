@@ -57,8 +57,8 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
   const whatsapp = (contact || '').replace(/\D/g, '');
 
   return (
-    <Card className="group relative flex flex-col h-full overflow-hidden border border-[#1A3B51]/10 bg-white transition-all duration-300 hover:shadow-xl hover:border-[#1A3B51]/20 rounded-2xl">
-      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-[#e8f2f7] via-[#f2f8fb] to-[#eef6ff]" />
+    <Card className="group relative flex flex-col h-full overflow-hidden border border-[#4A1730]/15 bg-white transition-all duration-300 hover:shadow-xl hover:border-[#4A1730]/25 rounded-2xl">
+      <div className="absolute inset-x-0 top-0 h-24 bg-[#F7E5B0]" />
 
       <CardHeader className="relative z-10 pt-6 pb-2 px-4 sm:px-5 flex-none">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
@@ -71,7 +71,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Sparkles className="w-8 h-8 text-[#1A3B51]/40" />
+                <Sparkles className="w-8 h-8 text-[#4A1730]/40" />
               )}
             </div>
             {Boolean(storeData?.rating && storeData.rating > 0) && (
@@ -84,17 +84,17 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
 
           <div className="flex-1 w-full min-w-0 pt-1 sm:pt-2 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-1 flex-wrap">
-              <h3 className="font-bold text-base sm:text-lg leading-tight text-foreground truncate group-hover:text-blue-600 transition-colors duration-300">
+              <h3 className="font-bold text-base sm:text-lg leading-tight text-[#1A3B51] truncate group-hover:text-[#4A1730] transition-colors duration-300">
                 {storeData?.name || tradeName || 'Parceiro Wellness'}
               </h3>
               {isVerified && (
-                <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-blue-200 flex items-center gap-0.5 px-1.5 py-0">
+                <Badge variant="secondary" className="bg-[#F7E5B0] text-[#4A1730] hover:bg-[#F7E5B0] border-[#4A1730]/15 flex items-center gap-0.5 px-1.5 py-0">
                   <CheckCircle2 className="w-3 h-3" />
                   <span className="text-[10px]">Verificado</span>
                 </Badge>
               )}
             </div>
-            <div className="flex items-center justify-center sm:justify-start gap-1 mt-1 text-muted-foreground text-xs sm:text-sm">
+            <div className="flex items-center justify-center sm:justify-start gap-1 mt-1 text-[#1A3B51]/70 text-xs sm:text-sm">
               <span className="truncate">
                   {storeData?.address?.city || 'Cidade não informada'}, {storeData?.address?.state || '--'}
               </span>
@@ -120,8 +120,8 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
               <Badge
                 variant="secondary"
                 className={cn(
-                  'flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold capitalize tracking-wider border backdrop-blur-sm bg-blue-50 text-blue-700 border-blue-100 transition-colors',
-                  hasMoreHours && 'hover:bg-blue-100 pr-1.5'
+                  'flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold capitalize tracking-wider border backdrop-blur-sm bg-[#F7E5B0]/70 text-[#1A3B51] border-[#4A1730]/10 transition-colors',
+                  hasMoreHours && 'hover:bg-[#F7E5B0] pr-1.5'
                 )}
               >
                 <span className="truncate max-w-[200px] sm:max-w-none">{mainOpeningHour}</span>
@@ -136,7 +136,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                   <div className="space-y-1">
                     {openingHoursList.map((hour, i) => (
                       <div key={i} className="px-2 py-1.5 rounded-md hover:bg-muted/50 flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-blue-500/50" />
+                        <div className="w-1 h-1 rounded-full bg-[#4A1730]/50" />
                         {hour}
                       </div>
                     ))}
@@ -153,7 +153,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           {storeData?.description || 'Conheça experiências e serviços voltados ao seu bem-estar.'}
         </p>
 
-        <div className="space-y-2.5 p-3 rounded-xl border border-[#1A3B51]/10 bg-[#f9fcff]">
+        <div className="space-y-2.5 p-3 rounded-xl border border-[#4A1730]/10 bg-[#FFF7DD]">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-semibold text-[#1A3B51]/70 uppercase tracking-wider flex items-center gap-1.5">
               <Package className="w-3.5 h-3.5" />
@@ -171,7 +171,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
               {displayServices.map((service) => (
                 <div
                   key={service.id || service.name}
-                  className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-[#1A3B51]/10 bg-white hover:border-blue-500/30 transition-all"
+                  className="group/product relative aspect-[4/3] rounded-lg overflow-hidden border border-[#4A1730]/10 bg-white hover:border-[#4A1730]/30 transition-all"
                 >
                   {service.photoUrl ? (
                     <img
@@ -180,8 +180,8 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover/product:scale-110"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-[#f2f8fb]">
-                      <Sparkles className="w-6 h-6 text-[#1A3B51]/25" />
+                    <div className="w-full h-full flex items-center justify-center bg-[#FFF7DD]">
+                      <Sparkles className="w-6 h-6 text-[#4A1730]/25" />
                     </div>
                   )}
 
@@ -189,7 +189,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                     <div className="bg-white/95 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-[#1A3B51]/10 flex flex-col gap-0.5">
                       <div className="flex items-center justify-between gap-1">
                         <span className="text-[9px] sm:text-[10px] font-medium truncate">{service.name}</span>
-                        <span className="text-[9px] sm:text-[10px] font-bold text-blue-600 whitespace-nowrap">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-[#4A1730] whitespace-nowrap">
                           {formatCurrency(service.price)}
                         </span>
                       </div>
@@ -226,7 +226,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
           </Button>
         </Link>
         <Button
-          className="flex-1 rounded-xl font-semibold shadow-md hover:shadow-xl transition-all group/btn bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600"
+          className="flex-1 rounded-xl font-semibold shadow-md hover:shadow-xl transition-all group/btn bg-[#4A1730] hover:bg-[#5C1D3B] text-white"
           onClick={() => {
             if (!whatsapp) {
               toast.info('Contato via WhatsApp não disponível');
