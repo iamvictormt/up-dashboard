@@ -1,6 +1,6 @@
 import { AddressData } from './address';
 import { EventData } from './event';
-import { PartnerSupplierType } from './partnerSupplier';
+import { DocumentType, PartnerSupplierType } from './partnerSupplier';
 import { ProductData } from './product';
 
 export interface WellnessPartnerStore {
@@ -25,6 +25,7 @@ export interface WellnessPartnerListItem {
   tradeName: string;
   companyName: string;
   document: string;
+  documentType: DocumentType;
   stateRegistration: string;
   contact: string;
   type: PartnerSupplierType;

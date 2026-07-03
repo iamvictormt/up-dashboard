@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard, Activity } from 'lucide-react';
 import { applyPhoneMask, applyDocumentMask, applyDocumentCnpjMask } from '@/utils/masks';
+import { isValidDocument, nameLabel } from '@/utils/document';
 import { PhotoUploadSimple } from './photo-upload-simple';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fetchProfessions } from '@/lib/professions-api';
@@ -54,7 +55,8 @@ export function PersonalInfoStep({
     } else if (section === 'partnerSupplier' && field === 'contact') {
       onUpdateNested(section, field, applyPhoneMask(value));
     } else if (section === 'partnerSupplier' && field === 'document') {
-      onUpdateNested(section, field, applyDocumentCnpjMask(value));
+      const docType = userType === 'wellness-partners' ? formData.partnerSupplier.documentType ?? 'CNPJ' : 'CNPJ';
+      onUpdateNested(section, field, docType === 'CPF' ? applyDocumentMask(value) : applyDocumentCnpjMask(value));
     } else {
       onUpdateNested(section, field, value);
     }
@@ -71,7 +73,8 @@ export function PersonalInfoStep({
       );
     } else if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
       const data = formData.partnerSupplier;
-      return data.tradeName && data.companyName && data.document && data.contact;
+      const docType = userType === 'wellness-partners' ? data.documentType ?? 'CNPJ' : 'CNPJ';
+      return data.tradeName && data.companyName && isValidDocument(docType, data.document) && data.contact;
     }
     return false;
   };
@@ -316,13 +319,17 @@ export function PersonalInfoStep({
 
               <div className="space-y-2">
                 <Label htmlFor="company-name" className="text-sm font-medium" required>
-                  Razão social
+                  {userType === 'wellness-partners' ? nameLabel(formData.partnerSupplier.documentType ?? 'CNPJ') : 'Razão social'}
                 </Label>
                 <div className="relative">
                   <Input
                     value={formData.partnerSupplier.companyName}
                     onChange={(e) => handleInputChange('partnerSupplier', 'companyName', e.target.value)}
-                    placeholder="Razão social"
+                    placeholder={
+                      userType === 'wellness-partners' && formData.partnerSupplier.documentType === 'CPF'
+                        ? 'Nome completo'
+                        : 'Razão social'
+                    }
                     required
                   />
                   <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -330,38 +337,72 @@ export function PersonalInfoStep({
               </div>
             </div>
 
+            {userType === 'wellness-partners' && (
+              <div className="space-y-2">
+                <Label className="text-sm font-medium" required>
+                  Tipo de documento
+                </Label>
+                <div className="relative">
+                  <Select
+                    value={formData.partnerSupplier.documentType ?? 'CNPJ'}
+                    onValueChange={(value) => {
+                      onUpdateNested('partnerSupplier', 'documentType', value);
+                      onUpdateNested('partnerSupplier', 'document', '');
+                    }}
+                  >
+                    <SelectTrigger className="pl-11 h-12">
+                      <SelectValue placeholder="Selecione o tipo de documento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CPF">CPF (pessoa física)</SelectItem>
+                      <SelectItem value="CNPJ">CNPJ (pessoa jurídica)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <IdCard className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="cnpj" className="text-sm font-medium" required>
-                  CNPJ
+                  {userType === 'wellness-partners' ? formData.partnerSupplier.documentType ?? 'CNPJ' : 'CNPJ'}
                 </Label>
                 <div className="relative">
                   <Input
                     value={formData.partnerSupplier.document}
                     onChange={(e) => handleInputChange('partnerSupplier', 'document', e.target.value)}
-                    placeholder="00.000.000/0000-00"
+                    placeholder={
+                      userType === 'wellness-partners' && formData.partnerSupplier.documentType === 'CPF'
+                        ? '000.000.000-00'
+                        : '00.000.000/0000-00'
+                    }
                     required
                     onBlur={(e) => {
-                      e.target.value.length !== 18 && handleInputChange('partnerSupplier', 'document', '');
+                      const expected =
+                        userType === 'wellness-partners' && formData.partnerSupplier.documentType === 'CPF' ? 14 : 18;
+                      e.target.value.length !== expected && handleInputChange('partnerSupplier', 'document', '');
                     }}
                   />
                   <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="state-reg" className="text-sm font-medium" optional>
-                  Inscrição estadual
-                </Label>
-                <div className="relative">
-                  <Input
-                    value={formData.partnerSupplier.stateRegistration}
-                    onChange={(e) => handleInputChange('partnerSupplier', 'stateRegistration', e.target.value)}
-                    placeholder="110.042.490.114"
-                  />
-                  <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              {!(userType === 'wellness-partners' && formData.partnerSupplier.documentType === 'CPF') && (
+                <div className="space-y-2">
+                  <Label htmlFor="state-reg" className="text-sm font-medium" optional>
+                    Inscrição estadual
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      value={formData.partnerSupplier.stateRegistration}
+                      onChange={(e) => handleInputChange('partnerSupplier', 'stateRegistration', e.target.value)}
+                      placeholder="110.042.490.114"
+                    />
+                    <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

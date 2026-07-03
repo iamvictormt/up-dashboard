@@ -58,11 +58,12 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       phone: '',
     },
 
-    // Partner Supplier
+    // Partner Supplier / Wellness
     partnerSupplier: {
       tradeName: '',
       companyName: '',
       document: '',
+      documentType: 'CNPJ' as 'CPF' | 'CNPJ',
       stateRegistration: '',
       contact: '',
       type: 'SUPPLIER' as 'SUPPLIER' | 'WELLNESS',
@@ -174,10 +175,17 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         },
       };
 
-      if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
+      if (userType === 'wellness-partners') {
+        // wellness usa o endpoint próprio, com CPF ou CNPJ
+        payload.wellness = {
+          ...formData.partnerSupplier,
+          type: 'WELLNESS',
+        };
+      } else if (userType === 'partner-suppliers') {
         payload.partnerSupplier = {
           ...formData.partnerSupplier,
-          type: userType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+          documentType: 'CNPJ',
+          type: 'SUPPLIER',
         };
       } else if (userType === 'professionals') {
         payload.professional = formData.professional;
@@ -185,7 +193,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         payload.loveDecoration = formData.loveDecoration;
       }
 
-      await saveUser(payload, userType === 'wellness-partners' ? 'partner-suppliers' : userType);
+      await saveUser(payload, userType === 'wellness-partners' ? 'wellness' : userType);
       onSuccess();
     } catch (error) {
       console.error('Registration error:', error);

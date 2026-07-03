@@ -8,7 +8,8 @@ import { AlertCircle, Building, Fingerprint, Phone, Save, Tickets } from 'lucide
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updatePartnerSupplier } from '@/lib/user-api';
-import { applyDocumentCnpjMask, applyPhoneMask } from '@/utils/masks';
+import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask } from '@/utils/masks';
+import { nameLabel } from '@/utils/document';
 
 interface SupplierData {
   tradeName: string;
@@ -32,6 +33,9 @@ interface SupplierEditFormProps {
 export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }: SupplierEditFormProps) {
   const { updateUser } = useUser();
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  // tipo de documento é definido no cadastro; aqui só respeitamos o existente
+  const docType: 'CPF' | 'CNPJ' = supplier?.documentType === 'CPF' ? 'CPF' : 'CNPJ';
+  const isCpf = docType === 'CPF';
 
   const [formData, setFormData] = useState<SupplierData>({
     tradeName: supplier?.tradeName || '',
@@ -49,11 +53,11 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
     }
 
     if (!formData.companyName.trim()) {
-      errors.companyName = 'Razão social é obrigatória';
+      errors.companyName = isCpf ? 'Nome completo é obrigatório' : 'Razão social é obrigatória';
     }
 
     if (!formData.document.trim()) {
-      errors.document = 'CNPJ é obrigatório';
+      errors.document = `${docType} é obrigatório`;
     }
 
     if (!formData.contact.trim()) {
@@ -176,14 +180,14 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
 
           <div className="space-y-2">
             <Label className="text-[#511A2B]" htmlFor="companyName" required>
-              Razão Social
+              {nameLabel(docType)}
             </Label>
             <div className="relative">
               <Input
                 id="companyName"
                 value={formData.companyName}
                 onChange={(e) => setFormData((prev) => ({ ...prev, companyName: e.target.value }))}
-                placeholder="Razão social"
+                placeholder={nameLabel(docType)}
                 className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
               />
               <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -195,18 +199,23 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-2">
             <Label className="text-[#511A2B]" htmlFor="document" required>
-              CNPJ
+              {docType}
             </Label>
             <div className="relative">
               <Input
                 id="document"
                 value={formData.document}
-                onChange={(e) => setFormData((prev) => ({ ...prev, document: applyDocumentCnpjMask(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    document: isCpf ? applyDocumentMask(e.target.value) : applyDocumentCnpjMask(e.target.value),
+                  }))
+                }
                 onBlur={(e) => {
-                  e.target.value.length !== 18 ? setFormData((prev) => ({ ...prev, document: '' })) : '';
+                  e.target.value.length !== (isCpf ? 14 : 18) ? setFormData((prev) => ({ ...prev, document: '' })) : '';
                 }}
                 className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
-                placeholder="00.000.000/0000-00"
+                placeholder={isCpf ? '000.000.000-00' : '00.000.000/0000-00'}
               />{' '}
               <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
             </div>
@@ -233,21 +242,23 @@ export function SupplierEditForm({ supplier, isLoading, setIsLoading, onClose }:
             <FieldError error={validationErrors.contact} />
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-[#511A2B]" htmlFor="stateRegistration" optional>
-              Inscrição Estadual
-            </Label>
-            <div className="relative">
-              <Input
-                id="stateRegistration"
-                value={formData.stateRegistration}
-                onChange={(e) => setFormData((prev) => ({ ...prev, stateRegistration: e.target.value }))}
-                placeholder="Número da inscrição estadual"
-                className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
-              />
-              <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          {!isCpf && (
+            <div className="space-y-2">
+              <Label className="text-[#511A2B]" htmlFor="stateRegistration" optional>
+                Inscrição Estadual
+              </Label>
+              <div className="relative">
+                <Input
+                  id="stateRegistration"
+                  value={formData.stateRegistration}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, stateRegistration: e.target.value }))}
+                  placeholder="Número da inscrição estadual"
+                  className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                />
+                <Tickets className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 

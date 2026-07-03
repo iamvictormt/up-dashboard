@@ -45,6 +45,8 @@ export function PartnerSupplierForm({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const isWellness = accountType === 'wellness';
+  const docType: 'CPF' | 'CNPJ' = isWellness ? data.documentType ?? 'CNPJ' : 'CNPJ';
+  const isCpf = isWellness && docType === 'CPF';
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -77,7 +79,7 @@ export function PartnerSupplierForm({
           <div className="col-span-12 md:col-span-6">
             <div className="space-y-2">
               <Label htmlFor="company-name" className="text-sm font-medium">
-                Razão social
+                {isCpf ? 'Nome completo' : 'Razão social'}
               </Label>
               <div className="relative group">
                 <Input
@@ -87,7 +89,9 @@ export function PartnerSupplierForm({
                   value={data.companyName}
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder={isWellness ? 'Ex: Studio Vida Leve LTDA' : 'Ex: Padaria e Confeitaria São João LTDA'}
+                  placeholder={
+                    isCpf ? 'Ex: Maria Silva' : isWellness ? 'Ex: Studio Vida Leve LTDA' : 'Ex: Padaria e Confeitaria São João LTDA'
+                  }
                   required
                   disabled={registerSuccess}
                 />
@@ -97,11 +101,33 @@ export function PartnerSupplierForm({
           </div>
         </div>
 
+        {isWellness && (
+          <div className="space-y-2">
+            <Label htmlFor="document-type" className="text-sm font-medium">
+              Tipo de documento
+            </Label>
+            <div className="relative group">
+              <select
+                id="document-type"
+                name="documentType"
+                value={docType}
+                onChange={onChange as any}
+                disabled={registerSuccess}
+                className="pl-12 h-12 w-full rounded-md border border-border/50 bg-card/50 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+              >
+                <option value="CPF">CPF (pessoa física)</option>
+                <option value="CNPJ">CNPJ (pessoa jurídica)</option>
+              </select>
+              <Fingerprint className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
           <div className="col-span-12 md:col-span-6">
             <div className="space-y-2">
               <Label htmlFor="document" className="text-sm font-medium">
-                CNPJ
+                {docType}
               </Label>
               <div className="relative group">
                 <Input
@@ -111,7 +137,7 @@ export function PartnerSupplierForm({
                   value={data.document}
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Ex: 00.000.000/0000-00"
+                  placeholder={isCpf ? 'Ex: 000.000.000-00' : 'Ex: 00.000.000/0000-00'}
                   required
                   disabled={registerSuccess}
                 />
@@ -120,27 +146,29 @@ export function PartnerSupplierForm({
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
-            <div className="space-y-2">
-              <Label htmlFor="state-registration" className="text-sm font-medium">
-                Inscrição estadual
-              </Label>
-              <div className="relative group">
-                <Input
-                  id="state-registration"
-                  name="stateRegistration"
-                  type="text"
-                  value={data.stateRegistration}
-                  onChange={onChange}
-                  className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Ex: 110.042.490.114"
-                  maxLength={16}
-                  disabled={registerSuccess}
-                />
-                <Tickets className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          {!isCpf && (
+            <div className="col-span-12 md:col-span-6">
+              <div className="space-y-2">
+                <Label htmlFor="state-registration" className="text-sm font-medium">
+                  Inscrição estadual
+                </Label>
+                <div className="relative group">
+                  <Input
+                    id="state-registration"
+                    name="stateRegistration"
+                    type="text"
+                    value={data.stateRegistration}
+                    onChange={onChange}
+                    className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                    placeholder="Ex: 110.042.490.114"
+                    maxLength={16}
+                    disabled={registerSuccess}
+                  />
+                  <Tickets className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">

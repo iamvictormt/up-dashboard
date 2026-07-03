@@ -89,6 +89,7 @@ export function LoginContent() {
     tradeName: '',
     companyName: '',
     document: '',
+    documentType: 'CNPJ' as 'CPF' | 'CNPJ',
     stateRegistration: '',
     contact: '',
     type: (initialRegisterType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER') as 'SUPPLIER' | 'WELLNESS',
@@ -220,7 +221,13 @@ export function LoginContent() {
     if (name === 'contact') {
       setPartnerSupplierData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
     } else if (name === 'document') {
-      setPartnerSupplierData((prev) => ({ ...prev, [name]: applyDocumentCnpjMask(value) }));
+      setPartnerSupplierData((prev) => ({
+        ...prev,
+        [name]: prev.documentType === 'CPF' ? applyDocumentMask(value) : applyDocumentCnpjMask(value),
+      }));
+    } else if (name === 'documentType') {
+      // troca de documento limpa o campo pra reaplicar a máscara certa
+      setPartnerSupplierData((prev) => ({ ...prev, documentType: value as 'CPF' | 'CNPJ', document: '' }));
     } else {
       setPartnerSupplierData((prev) => ({ ...prev, [name]: value }));
     }
@@ -293,15 +300,21 @@ export function LoginContent() {
         professionId: data.professionId,
       };
     } else if (isPartnerSupplier(data)) {
-      payload.partnerSupplier = {
+      const partnerPayload = {
         tradeName: data.tradeName,
         companyName: data.companyName,
         document: data.document,
+        documentType: (registerType === 'wellness-partners' ? data.documentType ?? 'CNPJ' : 'CNPJ') as 'CPF' | 'CNPJ',
         stateRegistration: data.stateRegistration,
         contact: data.contact,
-        type: registerType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+        type: (registerType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER') as 'SUPPLIER' | 'WELLNESS',
         isVerified: false,
       };
+      if (registerType === 'wellness-partners') {
+        payload.wellness = partnerPayload;
+      } else {
+        payload.partnerSupplier = partnerPayload;
+      }
     } else if (isLoveDecoration(data)) {
       payload.loveDecoration = {
         name: data.name,
@@ -316,7 +329,7 @@ export function LoginContent() {
     }
 
     try {
-      const response = await saveUser(payload, registerType === 'wellness-partners' ? 'partner-suppliers' : registerType);
+      const response = await saveUser(payload, registerType === 'wellness-partners' ? 'wellness' : registerType);
 
       if (response.status !== 201) {
         throw new Error(response.data.message || 'Erro no cadastro.');
