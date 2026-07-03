@@ -72,9 +72,7 @@ export function ProductEditModal({
       newErrors.description = 'Descrição é obrigatória';
     }
 
-    if (productData.price <= 0) {
-      newErrors.price = 'Preço deve ser maior que zero';
-    }
+    // preço é opcional: 0/vazio = "sob consulta"
 
     if (productData.link && !isValidUrl(productData.link)) {
       newErrors.link = 'URL inválida';
@@ -109,9 +107,14 @@ export function ProductEditModal({
         productData.photoUrl = cloudinaryImageURL;
       }
 
-      const response = await updateProduct(product.id, productData);
+      const payload = {
+        ...productData,
+        // sem preço informado = "sob consulta"
+        price: productData.price > 0 ? productData.price : null,
+      };
+      const response = await updateProduct(product.id, payload);
       if (response.status === 200) {
-        onProductUpdated(productData);
+        onProductUpdated(payload as any);
         toast.success(`${itemLabel} atualizado com sucesso.`);
       }
     } catch (error) {
@@ -205,8 +208,8 @@ export function ProductEditModal({
           </div>
 
           <div>
-            <Label htmlFor="price" className="text-[#511A2B] font-medium" required>
-              Preço (R$)
+            <Label htmlFor="price" className="text-[#511A2B] font-medium" optional>
+              Preço (R$) — deixe R$ 0,00 para "Sob consulta"
             </Label>
             <Input
               id="price"

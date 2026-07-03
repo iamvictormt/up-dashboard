@@ -1,12 +1,5 @@
-import { StoreContent } from '@/components/store/store-content';
+import { WellnessProfileContent } from '@/components/wellness-partners/wellness-profile-content';
 
-interface WellnessPartnerDetailPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function WellnessPartnerDetailPage({ params }: WellnessPartnerDetailPageProps) {
-  const { id } = await params;
-  return <StoreContent supplierId={id} viewMode="wellness" />;
+export default function WellnessPartnerDetailPage() {
+  return <WellnessProfileContent />;
 }

@@ -3,7 +3,7 @@ export interface CreateProductData {
   featured: boolean;
   link: string;
   name: string;
-  price: number;
+  price: number | null;
   promotion: boolean;
 }
 

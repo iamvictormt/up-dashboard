@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProfessionalEditForm } from './professional-edit-form';
 import { SupplierEditForm } from './supplier-edit-form';
 import { LoveDecorationEditForm } from './love-decoration-edit-form';
+import { WellnessEditForm } from './wellness-edit-form';
 import { AddressEditForm } from './addres-edit-form';
 
 interface UserEditModalProps {
@@ -42,6 +43,13 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
         icon: <Heart className="w-6 h-6 text-[#511A2B]" />,
         title: 'Editar perfil',
         type: 'loveDecoration' as const,
+      };
+    }
+    if ((user as any)?.wellness) {
+      return {
+        icon: <User className="w-6 h-6 text-[#511A2B]" />,
+        title: 'Editar perfil',
+        type: 'wellness' as const,
       };
     }
     return null;
@@ -106,6 +114,14 @@ export function UserEditModal({ isOpen, onClose }: UserEditModalProps) {
               {userTypeInfo.type === 'loveDecoration' && (
                 <LoveDecorationEditForm
                   loveDecoration={user?.loveDecoration}
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  onClose={onClose}
+                />
+              )}
+              {userTypeInfo.type === 'wellness' && (
+                <WellnessEditForm
+                  wellness={(user as any)?.wellness}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
                   onClose={onClose}

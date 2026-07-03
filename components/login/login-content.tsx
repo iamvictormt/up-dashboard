@@ -14,6 +14,7 @@ import { UserTypeSelector } from './user-type-selector';
 import { LoveDecorationForm } from './register-forms/love-decoration-form';
 import { ProfessionalForm } from './register-forms/profession-form';
 import { PartnerSupplierForm } from './register-forms/partner-supplier-form';
+import { WellnessForm } from './register-forms/wellness-form';
 import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask } from '@/utils/masks';
 import type { Profession, RegisterDTO } from '@/types';
 import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
@@ -92,6 +93,15 @@ export function LoginContent() {
     stateRegistration: '',
     contact: '',
     type: (initialRegisterType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER') as 'SUPPLIER' | 'WELLNESS',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [wellnessData, setWellnessData] = useState({
+    name: '',
+    document: '',
+    contact: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -182,6 +192,7 @@ export function LoginContent() {
         partnerSupplier: appUrl.mural,
         professional: appUrl.mural,
         loveDecoration: appUrl.mural,
+        wellness: appUrl.mural,
       };
       setTimeout(() => {
         window.location.href = redirectByRole[data.role] || appUrl.mural;
@@ -226,6 +237,17 @@ export function LoginContent() {
     }
   };
 
+  const handleWellnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'contact') {
+      setWellnessData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
+    } else if (name === 'document') {
+      setWellnessData((prev) => ({ ...prev, [name]: applyDocumentMask(value) }));
+    } else {
+      setWellnessData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAddressData((prev) => ({ ...prev, [name]: value }));
@@ -261,8 +283,10 @@ export function LoginContent() {
     const data =
       registerType === 'professionals'
         ? professionalData
-        : registerType === 'partner-suppliers' || registerType === 'wellness-partners'
+        : registerType === 'partner-suppliers'
         ? partnerSupplierData
+        : registerType === 'wellness-partners'
+        ? wellnessData
         : loveDecorationData;
 
     if (data.password !== data.confirmPassword) {
@@ -282,7 +306,13 @@ export function LoginContent() {
       },
     };
 
-    if (isProfessional(data)) {
+    if (registerType === 'wellness-partners') {
+      payload.wellness = {
+        name: wellnessData.name,
+        document: wellnessData.document,
+        contact: wellnessData.contact,
+      };
+    } else if (isProfessional(data)) {
       payload.professional = {
         name: data.name,
         officeName: data.officeName,
@@ -299,7 +329,7 @@ export function LoginContent() {
         document: data.document,
         stateRegistration: data.stateRegistration,
         contact: data.contact,
-        type: registerType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+        type: 'SUPPLIER',
         isVerified: false,
       };
     } else if (isLoveDecoration(data)) {
@@ -316,7 +346,7 @@ export function LoginContent() {
     }
 
     try {
-      const response = await saveUser(payload, registerType === 'wellness-partners' ? 'partner-suppliers' : registerType);
+      const response = await saveUser(payload, registerType === 'wellness-partners' ? 'wellness' : registerType);
 
       if (response.status !== 201) {
         throw new Error(response.data.message || 'Erro no cadastro.');
@@ -530,7 +560,7 @@ export function LoginContent() {
                       )}
 
                       {/* Partner Supplier Registration Form */}
-                      {(registerType === 'partner-suppliers' || registerType === 'wellness-partners') && (
+                      {registerType === 'partner-suppliers' && (
                         <PartnerSupplierForm
                           data={partnerSupplierData}
                           onChange={handlePartnerSupplierChange}
@@ -544,7 +574,25 @@ export function LoginContent() {
                           registerSuccess={registerSuccess}
                           onSwitchToTypeSelection={() => handleBackToTypeSelection()}
                           onSwitchToLogin={() => setActiveTab('login')}
-                          accountType={registerType === 'wellness-partners' ? 'wellness' : 'supplier'}
+                          accountType="supplier"
+                        />
+                      )}
+
+                      {/* Wellness Registration Form (MEI: nome + CPF + contato) */}
+                      {registerType === 'wellness-partners' && (
+                        <WellnessForm
+                          data={wellnessData}
+                          onChange={handleWellnessChange}
+                          onSubmit={handleRegisterSubmit}
+                          addressData={addressData}
+                          setAddressData={setAddressData}
+                          handleAddressChange={handleAddressChange}
+                          photo={photo}
+                          onPhotoChange={setPhoto}
+                          isLoading={isRegisterLoading}
+                          registerSuccess={registerSuccess}
+                          onSwitchToTypeSelection={() => handleBackToTypeSelection()}
+                          onSwitchToLogin={() => setActiveTab('login')}
                         />
                       )}
                     </>

@@ -100,13 +100,13 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       title: 'Mural da comunidade',
       icon: Quote,
       url: '/mural',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
     },
     {
       title: 'Prestadores de serviços',
       icon: Users,
       url: '/service-providers',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration'],
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
     },
     {
       title: 'Lojistas parceiros',
@@ -131,6 +131,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: ShoppingCart,
       url: '/store-info',
       roles: ['partnerSupplier'],
+    },
+    {
+      title: 'Meus serviços',
+      icon: Sparkles,
+      url: '/my-services',
+      roles: ['wellness'],
     },
     {
       title: 'Benefícios',

@@ -55,6 +55,10 @@ export function PersonalInfoStep({
       onUpdateNested(section, field, applyPhoneMask(value));
     } else if (section === 'partnerSupplier' && field === 'document') {
       onUpdateNested(section, field, applyDocumentCnpjMask(value));
+    } else if (section === 'wellness' && field === 'contact') {
+      onUpdateNested(section, field, applyPhoneMask(value));
+    } else if (section === 'wellness' && field === 'document') {
+      onUpdateNested(section, field, applyDocumentMask(value));
     } else {
       onUpdateNested(section, field, value);
     }
@@ -69,9 +73,12 @@ export function PersonalInfoStep({
       return (
         data.name && data.officeName && data.document && data.generalRegister && data.registrationAgency && data.phone
       );
-    } else if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
+    } else if (userType === 'partner-suppliers') {
       const data = formData.partnerSupplier;
       return data.tradeName && data.companyName && data.document && data.contact;
+    } else if (userType === 'wellness-partners') {
+      const data = formData.wellness;
+      return data.name && data.document.replace(/\D/g, '').length === 11 && data.contact;
     }
     return false;
   };
@@ -296,7 +303,66 @@ export function PersonalInfoStep({
           </>
         )}
 
-        {(userType === 'partner-suppliers' || userType === 'wellness-partners') && (
+        {userType === 'wellness-partners' && (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="wellness-name" className="text-sm font-medium" required>
+                Nome completo
+              </Label>
+              <div className="relative">
+                <Input
+                  value={formData.wellness.name}
+                  onChange={(e) => handleInputChange('wellness', 'name', e.target.value)}
+                  placeholder="Seu nome completo"
+                  required
+                />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="wellness-cpf" className="text-sm font-medium" required>
+                  CPF
+                </Label>
+                <div className="relative">
+                  <Input
+                    value={formData.wellness.document}
+                    onChange={(e) => handleInputChange('wellness', 'document', e.target.value)}
+                    placeholder="000.000.000-00"
+                    required
+                    onBlur={(e) => {
+                      e.target.value.length !== 14 && handleInputChange('wellness', 'document', '');
+                    }}
+                  />
+                  <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="wellness-contact" className="text-sm font-medium" required>
+                  Contato (WhatsApp)
+                </Label>
+                <div className="relative">
+                  <Input
+                    value={formData.wellness.contact}
+                    onChange={(e) => handleInputChange('wellness', 'contact', e.target.value)}
+                    placeholder="(00) 00000-0000"
+                    required
+                    onBlur={(e) => {
+                      e.target.value.length !== 15 &&
+                        e.target.value.length !== 14 &&
+                        handleInputChange('wellness', 'contact', '');
+                    }}
+                  />
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {userType === 'partner-suppliers' && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -388,7 +454,7 @@ export function PersonalInfoStep({
               <div className="space-y-2">
                 <Label className="text-sm font-medium" required>Tipo de Parceiro</Label>
                 <div className="relative h-12 rounded-md border border-input bg-background px-11 flex items-center text-sm font-medium">
-                  {userType === 'wellness-partners' ? 'Parceiro Wellness' : 'Lojista Parceiro'}
+                  Lojista Parceiro
                   <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 </div>
               </div>

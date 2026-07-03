@@ -58,7 +58,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       phone: '',
     },
 
-    // Partner Supplier
+    // Partner Supplier (lojista)
     partnerSupplier: {
       tradeName: '',
       companyName: '',
@@ -66,6 +66,13 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       stateRegistration: '',
       contact: '',
       type: 'SUPPLIER' as 'SUPPLIER' | 'WELLNESS',
+    },
+
+    // Wellness (MEI: nome + CPF + contato)
+    wellness: {
+      name: '',
+      document: '',
+      contact: '',
     },
   });
 
@@ -174,10 +181,12 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         },
       };
 
-      if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
+      if (userType === 'wellness-partners') {
+        payload.wellness = formData.wellness;
+      } else if (userType === 'partner-suppliers') {
         payload.partnerSupplier = {
           ...formData.partnerSupplier,
-          type: userType === 'wellness-partners' ? 'WELLNESS' : 'SUPPLIER',
+          type: 'SUPPLIER',
         };
       } else if (userType === 'professionals') {
         payload.professional = formData.professional;
@@ -185,7 +194,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
         payload.loveDecoration = formData.loveDecoration;
       }
 
-      await saveUser(payload, userType === 'wellness-partners' ? 'partner-suppliers' : userType);
+      await saveUser(payload, userType === 'wellness-partners' ? 'wellness' : userType);
       onSuccess();
     } catch (error) {
       console.error('Registration error:', error);

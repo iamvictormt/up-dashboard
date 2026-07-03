@@ -223,7 +223,7 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
                     <div className="bg-background/90 backdrop-blur-sm rounded-md px-1.5 sm:px-2 py-1 shadow-sm border border-border/50 flex items-center justify-between gap-1">
                       <span className="text-[9px] sm:text-[10px] font-medium truncate max-w-[60%]">{product.name}</span>
                       <span className="text-[9px] sm:text-[10px] font-bold text-primary whitespace-nowrap">
-                        {formatCurrency(product.price)}
+                        {product.price != null ? formatCurrency(product.price) : 'Sob consulta'}
                       </span>
                     </div>
                   </div>

@@ -47,6 +47,7 @@ export function AuthLoginPage() {
         partnerSupplier: appUrl.mural,
         professional: appUrl.mural,
         loveDecoration: appUrl.mural,
+        wellness: appUrl.mural,
       };
       window.location.href = redirectByRole[role] || appUrl.mural;
     } catch (error: any) {
