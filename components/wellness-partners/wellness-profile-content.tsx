@@ -46,9 +46,9 @@ export function WellnessProfileContent() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Card className="overflow-hidden rounded-2xl border border-[#4A1730]/15">
-        <div className="h-28 bg-[#F7E5B0]" />
-        <CardContent className="p-6 -mt-14">
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4">
+        <div className="h-28 bg-[#46142b]" /> //vinho
+        <CardContent className="p-6 -mt-14 bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 ">
             <div className="w-28 h-28 rounded-2xl border-4 border-white bg-white overflow-hidden flex items-center justify-center shadow">
               {displayLogo ? (
                 <img src={displayLogo} alt={wellness.name} className="w-full h-full object-cover" />
