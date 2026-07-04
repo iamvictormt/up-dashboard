@@ -94,9 +94,7 @@ export function ProductFormModal({
       newErrors.description = 'Descrição é obrigatória';
     }
 
-    if (productData.price <= 0) {
-      newErrors.price = 'Preço deve ser maior que zero';
-    }
+    // preço é opcional: 0/vazio = "sob consulta"
 
     if (productData.link && !isValidUrl(productData.link)) {
       newErrors.link = 'URL inválida';
@@ -131,6 +129,8 @@ export function ProductFormModal({
 
       const newProduct = {
         ...productData,
+        // sem preço informado = "sob consulta"
+        price: productData.price > 0 ? productData.price : null,
         storeId,
       };
 
@@ -199,8 +199,8 @@ export function ProductFormModal({
           </div>
 
           <div>
-            <Label htmlFor="price" className="text-[#511A2B] font-medium" required>
-              Preço (R$)
+            <Label htmlFor="price" className="text-[#511A2B] font-medium" optional>
+              Preço (R$) — deixe R$ 0,00 para "Sob consulta"
             </Label>
             <Input
               id="price"

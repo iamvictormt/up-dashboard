@@ -32,6 +32,7 @@ export function middleware(request: NextRequest) {
     partnerSupplier: '/mural',
     professional: '/mural',
     loveDecoration: '/mural',
+    wellness: '/mural',
   };
   const permissions: any = {
     partnerSupplier: [
@@ -55,6 +56,7 @@ export function middleware(request: NextRequest) {
       '/benefits',
     ],
     loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
+    wellness: ['/mural', '/service-providers', '/my-services', '/help'],
     admin: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/events', '/help', '/benefits'],
   };
 

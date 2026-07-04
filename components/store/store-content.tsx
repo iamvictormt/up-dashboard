@@ -316,7 +316,9 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
                       </p>
 
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                        <div className="text-2xl font-bold text-[#511A2B]">{formatCurrency(product.price || 0)}</div>
+                        <div className="text-2xl font-bold text-[#511A2B]">
+                          {product.price != null && product.price > 0 ? formatCurrency(product.price) : 'Sob consulta'}
+                        </div>
                         <Button
                           variant="primary"
                           onClick={() => window.open(product.link, '_blank')}

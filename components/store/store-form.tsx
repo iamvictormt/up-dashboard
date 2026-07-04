@@ -50,7 +50,7 @@ interface StoreFormData {
   description: string;
   website: string;
   openingHours: string;
-  type: 'SUPPLIER' | 'WELLNESS';
+  whatsappMessage: string;
   address: {
     state: string;
     city: string;
@@ -78,7 +78,7 @@ interface WeekSchedule {
   sunday: DaySchedule;
 }
 
-function OpeningHoursInput({
+export function OpeningHoursInput({
   value,
   onChange,
   error,
@@ -354,7 +354,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
     openingHours:
       storeData?.openingHours ||
       'Segunda-feira: 08:00 - 18:00 | Terça-feira: 08:00 - 18:00 | Quarta-feira: 08:00 - 18:00 | Quinta-feira: 08:00 - 18:00 | Sexta-feira: 08:00 - 18:00 | Sábado: 08:00 - 14:00',
-    type: (storeData as any)?.type || 'SUPPLIER',
+    whatsappMessage: (storeData as any)?.whatsappMessage || '',
     address: {
       state: storeData?.address.state || '',
       city: storeData?.address.city || '',
@@ -578,24 +578,22 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                   </div>
 
                   <div>
-                    <Label htmlFor="type" className="text-[#511A2B] font-medium" required>
-                      Tipo de Perfil
+                    <Label htmlFor="whatsappMessage" className="text-[#511A2B] font-medium" optional>
+                      Mensagem do WhatsApp
                     </Label>
                     <div className="relative">
-                      <Select
-                        value={formData.type}
-                        onValueChange={(value) => handleInputChange('type', value)}
-                      >
-                        <SelectTrigger id="type" className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40 h-10">
-                          <SelectValue placeholder="Selecione o tipo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="SUPPLIER">Convencional</SelectItem>
-                          <SelectItem value="WELLNESS">Wellness</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        id="whatsappMessage"
+                        value={formData.whatsappMessage}
+                        onChange={(e) => handleInputChange('whatsappMessage', e.target.value)}
+                        placeholder="Ex: Olá! Vi sua loja no UP Connection e gostaria de saber mais."
+                        className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+                      />
                       <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                     </div>
+                    <p className="text-xs text-[#511A2B]/50 mt-1">
+                      Texto que chega pré-preenchido quando clicam no seu link de WhatsApp.
+                    </p>
                   </div>
                 </div>
 

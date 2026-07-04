@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search, MapPin } from 'lucide-react';
 import { WellnessPartnerCard } from './wellness-partner-card';
-import { fetchWellnessPartners } from '@/lib/store-api';
-import { WellnessPartnerListItem } from '@/types';
+import { fetchWellnessList } from '@/lib/wellness-api';
+import type { Wellness } from '@/types/wellness';
 import {
   Select,
   SelectContent,
@@ -21,7 +21,7 @@ import {
 
 export function WellnessPartnersContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [partners, setPartners] = useState<WellnessPartnerListItem[]>([]);
+  const [partners, setPartners] = useState<Wellness[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
@@ -42,14 +42,14 @@ export function WellnessPartnersContent() {
   ) => {
     try {
       setIsLoading(true);
-      const response = await fetchWellnessPartners(
+      const response = await fetchWellnessList(
         query,
         pageNumber,
         limit,
         state,
         city,
       );
-      const items = (response.data ?? []) as WellnessPartnerListItem[];
+      const items = (response.data ?? []) as Wellness[];
       setPartners(items);
       setHasMore(items.length === limit);
     } catch (error) {

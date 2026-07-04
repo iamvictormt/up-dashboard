@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard, Activity } from 'lucide-react';
 import { applyPhoneMask, applyDocumentMask, applyDocumentCnpjMask } from '@/utils/masks';
+import { applyDocumentMaskByType, isValidDocument, documentPlaceholder } from '@/utils/document';
 import { PhotoUploadSimple } from './photo-upload-simple';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fetchProfessions } from '@/lib/professions-api';
@@ -55,6 +56,10 @@ export function PersonalInfoStep({
       onUpdateNested(section, field, applyPhoneMask(value));
     } else if (section === 'partnerSupplier' && field === 'document') {
       onUpdateNested(section, field, applyDocumentCnpjMask(value));
+    } else if (section === 'wellness' && field === 'contact') {
+      onUpdateNested(section, field, applyPhoneMask(value));
+    } else if (section === 'wellness' && field === 'document') {
+      onUpdateNested(section, field, applyDocumentMaskByType(formData.wellness.documentType ?? 'CPF', value));
     } else {
       onUpdateNested(section, field, value);
     }
@@ -69,9 +74,12 @@ export function PersonalInfoStep({
       return (
         data.name && data.officeName && data.document && data.generalRegister && data.registrationAgency && data.phone
       );
-    } else if (userType === 'partner-suppliers' || userType === 'wellness-partners') {
+    } else if (userType === 'partner-suppliers') {
       const data = formData.partnerSupplier;
       return data.tradeName && data.companyName && data.document && data.contact;
+    } else if (userType === 'wellness-partners') {
+      const data = formData.wellness;
+      return data.name && isValidDocument(data.documentType ?? 'CPF', data.document) && data.contact;
     }
     return false;
   };
@@ -296,7 +304,90 @@ export function PersonalInfoStep({
           </>
         )}
 
-        {(userType === 'partner-suppliers' || userType === 'wellness-partners') && (
+        {userType === 'wellness-partners' && (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="wellness-name" className="text-sm font-medium" required>
+                Nome do negócio
+              </Label>
+              <div className="relative">
+                <Input
+                  value={formData.wellness.name}
+                  onChange={(e) => handleInputChange('wellness', 'name', e.target.value)}
+                  placeholder="Ex: Espaço Zen Massoterapia"
+                  required
+                />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium" required>
+                  Tipo de documento
+                </Label>
+                <Select
+                  value={formData.wellness.documentType ?? 'CPF'}
+                  onValueChange={(value) => {
+                    onUpdateNested('wellness', 'documentType', value);
+                    onUpdateNested('wellness', 'document', '');
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CPF">CPF (pessoa física)</SelectItem>
+                    <SelectItem value="CNPJ">CNPJ (empresa)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="wellness-document" className="text-sm font-medium" required>
+                  {formData.wellness.documentType === 'CNPJ' ? 'CNPJ' : 'CPF do responsável'}
+                </Label>
+                <div className="relative">
+                  <Input
+                    value={formData.wellness.document}
+                    onChange={(e) => handleInputChange('wellness', 'document', e.target.value)}
+                    placeholder={documentPlaceholder(formData.wellness.documentType ?? 'CPF')}
+                    required
+                    onBlur={(e) => {
+                      const expected = formData.wellness.documentType === 'CNPJ' ? 18 : 14;
+                      e.target.value.length !== expected && handleInputChange('wellness', 'document', '');
+                    }}
+                  />
+                  <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="wellness-contact" className="text-sm font-medium" required>
+                  Contato (WhatsApp)
+                </Label>
+                <div className="relative">
+                  <Input
+                    value={formData.wellness.contact}
+                    onChange={(e) => handleInputChange('wellness', 'contact', e.target.value)}
+                    placeholder="(00) 00000-0000"
+                    required
+                    onBlur={(e) => {
+                      e.target.value.length !== 15 &&
+                        e.target.value.length !== 14 &&
+                        handleInputChange('wellness', 'contact', '');
+                    }}
+                  />
+                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {userType === 'partner-suppliers' && (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -388,7 +479,7 @@ export function PersonalInfoStep({
               <div className="space-y-2">
                 <Label className="text-sm font-medium" required>Tipo de Parceiro</Label>
                 <div className="relative h-12 rounded-md border border-input bg-background px-11 flex items-center text-sm font-medium">
-                  {userType === 'wellness-partners' ? 'Parceiro Wellness' : 'Lojista Parceiro'}
+                  Lojista Parceiro
                   <Activity className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 </div>
               </div>
