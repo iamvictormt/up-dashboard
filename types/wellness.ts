@@ -17,6 +17,8 @@ export interface Wellness {
   contact?: string | null;
   description?: string | null;
   whatsappMessage?: string | null;
+  logoUrl?: string | null;
+  openingHours?: string | null;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   services: WellnessOffering[];
   user?: {

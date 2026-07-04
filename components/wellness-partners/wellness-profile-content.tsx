@@ -37,6 +37,11 @@ export function WellnessProfileContent() {
 
   const whatsapp = (wellness.contact || '').replace(/\D/g, '');
   const address = wellness.user?.address;
+  const displayLogo = wellness.logoUrl || wellness.user?.profileImage;
+  const openingHoursList = (wellness.openingHours ?? '')
+    .split('|')
+    .map((e) => e.trim())
+    .filter(Boolean);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -45,12 +50,8 @@ export function WellnessProfileContent() {
         <CardContent className="p-6 -mt-14">
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4">
             <div className="w-28 h-28 rounded-2xl border-4 border-white bg-white overflow-hidden flex items-center justify-center shadow">
-              {wellness.user?.profileImage ? (
-                <img
-                  src={wellness.user.profileImage}
-                  alt={wellness.name}
-                  className="w-full h-full object-cover"
-                />
+              {displayLogo ? (
+                <img src={displayLogo} alt={wellness.name} className="w-full h-full object-cover" />
               ) : (
                 <Sparkles className="w-10 h-10 text-[#4A1730]/40" />
               )}
@@ -82,6 +83,25 @@ export function WellnessProfileContent() {
 
           {wellness.description && (
             <p className="mt-6 text-[#1A3B51]/80 leading-relaxed">{wellness.description}</p>
+          )}
+
+          {openingHoursList.length > 0 && (
+            <div className="mt-4">
+              <h2 className="mb-2 text-sm font-semibold text-[#1A3B51]/70 uppercase tracking-wider flex items-center gap-1.5">
+                <Clock className="w-4 h-4" />
+                Horário de atendimento
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {openingHoursList.map((hour, i) => (
+                  <span
+                    key={i}
+                    className="text-xs font-medium text-[#1A3B51] bg-[#FFF7DD] border border-[#4A1730]/10 rounded-full px-3 py-1"
+                  >
+                    {hour}
+                  </span>
+                ))}
+              </div>
+            </div>
           )}
 
           <h2 className="mt-8 mb-3 text-lg font-semibold text-[#1A3B51]">Serviços</h2>

@@ -13,7 +13,7 @@ interface WellnessPartnerCardProps {
 }
 
 export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
-  const { id, name, contact, description, services, user, whatsappMessage } = partner;
+  const { id, name, contact, description, services, user, whatsappMessage, logoUrl, openingHours } = partner;
 
   if (!id) {
     return null;
@@ -23,6 +23,8 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
   const remainingServices = Math.max(0, (services ?? []).length - displayServices.length);
   const whatsapp = (contact || '').replace(/\D/g, '');
   const address = user?.address;
+  const displayLogo = logoUrl || user?.profileImage;
+  const mainOpeningHour = (openingHours ?? '').split('|').map((e) => e.trim()).filter(Boolean)[0];
 
   return (
     <Card className="group relative flex flex-col h-full overflow-hidden border border-[#4A1730]/15 bg-white transition-all duration-300 hover:shadow-xl hover:border-[#4A1730]/25 rounded-2xl">
@@ -32,9 +34,9 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
           <div className="relative flex-shrink-0">
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-background bg-white overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-              {user?.profileImage ? (
+              {displayLogo ? (
                 <img
-                  src={user.profileImage || '/placeholder.svg'}
+                  src={displayLogo || '/placeholder.svg'}
                   alt={name || 'Parceiro wellness'}
                   className="w-full h-full object-cover"
                 />
@@ -54,6 +56,12 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
                 {address?.city || 'Cidade não informada'}, {address?.state || '--'}
               </span>
             </div>
+            {mainOpeningHour && (
+              <div className="flex items-center justify-center sm:justify-start gap-1 mt-2 text-[10px] font-bold text-[#1A3B51] bg-[#F7E5B0]/70 border border-[#4A1730]/10 rounded-full px-2 py-0.5 w-fit mx-auto sm:mx-0">
+                <Clock className="w-3 h-3" />
+                <span className="truncate max-w-[200px]">{mainOpeningHour}</span>
+              </div>
+            )}
           </div>
         </div>
       </CardHeader>

@@ -10,6 +10,8 @@ import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updateWellness } from '@/lib/wellness-api';
 import { applyDocumentMask, applyPhoneMask } from '@/utils/masks';
+import { uploadImageCloudinary } from '@/lib/user-api';
+import { PhotoUploadSimple } from '@/components/auth/register-steps/photo-upload-simple';
 
 interface WellnessEditFormProps {
   wellness: any;
@@ -26,7 +28,9 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
     contact: wellness?.contact || '',
     description: wellness?.description || '',
     whatsappMessage: wellness?.whatsappMessage || '',
+    openingHours: wellness?.openingHours || '',
   });
+  const [logo, setLogo] = useState<string | null>(wellness?.logoUrl || null);
 
   const handleSave = async () => {
     if (!formData.name.trim()) {
@@ -40,9 +44,14 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
 
     try {
       setIsLoading(true);
-      const response = await updateWellness(formData);
+      let logoUrl = logo || undefined;
+      if (logo && !logo.includes('res.cloudinary.com')) {
+        logoUrl = (await uploadImageCloudinary(logo)) || undefined;
+      }
+      const payload = { ...formData, logoUrl };
+      const response = await updateWellness(payload);
       if (response.status !== 200) throw new Error('Erro ao salvar');
-      updateUser({ ...wellness, ...formData });
+      updateUser({ ...wellness, ...payload });
       toast.success('Perfil atualizado com sucesso!');
       onClose();
     } catch (error) {
@@ -55,6 +64,13 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
 
   return (
     <div className="space-y-6">
+      <div className="space-y-2">
+        <Label className="text-[#511A2B]" optional>
+          Logo do negócio
+        </Label>
+        <PhotoUploadSimple photo={logo} onPhotoChange={setLogo} />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label className="text-[#511A2B]" htmlFor="wellness-name" required>
@@ -125,6 +141,19 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
             <MessageCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           </div>
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-[#511A2B]" htmlFor="wellness-opening-hours" optional>
+          Horário de atendimento
+        </Label>
+        <Input
+          id="wellness-opening-hours"
+          value={formData.openingHours}
+          onChange={(e) => setFormData((prev) => ({ ...prev, openingHours: e.target.value }))}
+          placeholder="Ex: Segunda a sexta: 08:00 - 18:00 | Sábado: 08:00 - 12:00"
+          className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+        />
       </div>
 
       <div className="space-y-2">
