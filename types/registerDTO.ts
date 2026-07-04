@@ -12,6 +12,6 @@ export interface RegisterDTO {
   };
   professional?: Omit<ProfessionalData, 'email' | 'password' | 'confirmPassword'>;
   partnerSupplier?: Omit<PartnerSupplierData, 'email' | 'password' | 'confirmPassword'>;
-  wellness?: { name: string; document: string; contact?: string };
+  wellness?: { name: string; document: string; documentType?: 'CPF' | 'CNPJ'; contact?: string };
   loveDecoration?: Omit<LoveDecorationData, 'email' | 'password' | 'confirmPassword'>;
 }

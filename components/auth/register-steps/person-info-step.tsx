@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, Building, Phone, Instagram, Fingerprint, TicketIcon as Tickets, IdCard, Activity } from 'lucide-react';
 import { applyPhoneMask, applyDocumentMask, applyDocumentCnpjMask } from '@/utils/masks';
+import { applyDocumentMaskByType, isValidDocument, documentPlaceholder } from '@/utils/document';
 import { PhotoUploadSimple } from './photo-upload-simple';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { fetchProfessions } from '@/lib/professions-api';
@@ -58,7 +59,7 @@ export function PersonalInfoStep({
     } else if (section === 'wellness' && field === 'contact') {
       onUpdateNested(section, field, applyPhoneMask(value));
     } else if (section === 'wellness' && field === 'document') {
-      onUpdateNested(section, field, applyDocumentMask(value));
+      onUpdateNested(section, field, applyDocumentMaskByType(formData.wellness.documentType ?? 'CPF', value));
     } else {
       onUpdateNested(section, field, value);
     }
@@ -78,7 +79,7 @@ export function PersonalInfoStep({
       return data.tradeName && data.companyName && data.document && data.contact;
     } else if (userType === 'wellness-partners') {
       const data = formData.wellness;
-      return data.name && data.document.replace(/\D/g, '').length === 11 && data.contact;
+      return data.name && isValidDocument(data.documentType ?? 'CPF', data.document) && data.contact;
     }
     return false;
   };
@@ -322,23 +323,47 @@ export function PersonalInfoStep({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="wellness-cpf" className="text-sm font-medium" required>
-                  CPF do responsável
+                <Label className="text-sm font-medium" required>
+                  Tipo de documento
+                </Label>
+                <Select
+                  value={formData.wellness.documentType ?? 'CPF'}
+                  onValueChange={(value) => {
+                    onUpdateNested('wellness', 'documentType', value);
+                    onUpdateNested('wellness', 'document', '');
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CPF">CPF (pessoa física)</SelectItem>
+                    <SelectItem value="CNPJ">CNPJ (empresa)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="wellness-document" className="text-sm font-medium" required>
+                  {formData.wellness.documentType === 'CNPJ' ? 'CNPJ' : 'CPF do responsável'}
                 </Label>
                 <div className="relative">
                   <Input
                     value={formData.wellness.document}
                     onChange={(e) => handleInputChange('wellness', 'document', e.target.value)}
-                    placeholder="000.000.000-00"
+                    placeholder={documentPlaceholder(formData.wellness.documentType ?? 'CPF')}
                     required
                     onBlur={(e) => {
-                      e.target.value.length !== 14 && handleInputChange('wellness', 'document', '');
+                      const expected = formData.wellness.documentType === 'CNPJ' ? 18 : 14;
+                      e.target.value.length !== expected && handleInputChange('wellness', 'document', '');
                     }}
                   />
                   <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 </div>
               </div>
+            </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="wellness-contact" className="text-sm font-medium" required>
                   Contato (WhatsApp)

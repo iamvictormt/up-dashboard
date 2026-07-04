@@ -10,10 +10,13 @@ export interface WellnessOffering {
   wellnessId?: string;
 }
 
+export type DocumentType = 'CPF' | 'CNPJ';
+
 export interface Wellness {
   id: string;
   name: string;
-  document: string; // CPF
+  document: string; // CPF ou CNPJ conforme documentType
+  documentType: DocumentType;
   contact?: string | null;
   description?: string | null;
   whatsappMessage?: string | null;
@@ -32,6 +35,7 @@ export interface Wellness {
 export interface WellnessRegisterData {
   name: string;
   document: string;
+  documentType: DocumentType;
   contact: string;
   email: string;
   password: string;

@@ -9,10 +9,12 @@ import { Fingerprint, MessageCircle, Phone, Save, User } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
 import { updateWellness } from '@/lib/wellness-api';
-import { applyDocumentMask, applyPhoneMask } from '@/utils/masks';
+import { applyPhoneMask } from '@/utils/masks';
+import { applyDocumentMaskByType, isValidDocument, documentPlaceholder } from '@/utils/document';
 import { uploadImageCloudinary } from '@/lib/user-api';
 import { PhotoUploadSimple } from '@/components/auth/register-steps/photo-upload-simple';
 import { OpeningHoursInput } from '@/components/store/store-form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface WellnessEditFormProps {
   wellness: any;
@@ -26,6 +28,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
   const [formData, setFormData] = useState({
     name: wellness?.name || '',
     document: wellness?.document || '',
+    documentType: (wellness?.documentType as 'CPF' | 'CNPJ') || 'CPF',
     contact: wellness?.contact || '',
     description: wellness?.description || '',
     whatsappMessage: wellness?.whatsappMessage || '',
@@ -38,8 +41,8 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
       toast.error('Nome é obrigatório.');
       return;
     }
-    if (formData.document.replace(/\D/g, '').length !== 11) {
-      toast.error('CPF inválido.');
+    if (!isValidDocument(formData.documentType, formData.document)) {
+      toast.error(`${formData.documentType} inválido.`);
       return;
     }
 
@@ -90,17 +93,40 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
         </div>
 
         <div className="space-y-2">
+          <Label className="text-[#511A2B]" required>
+            Tipo de documento
+          </Label>
+          <Select
+            value={formData.documentType}
+            onValueChange={(value) =>
+              setFormData((prev) => ({ ...prev, documentType: value as 'CPF' | 'CNPJ', document: '' }))
+            }
+          >
+            <SelectTrigger className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="CPF">CPF (pessoa física)</SelectItem>
+              <SelectItem value="CNPJ">CNPJ (empresa)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
           <Label className="text-[#511A2B]" htmlFor="wellness-document" required>
-            CPF do responsável
+            {formData.documentType === 'CNPJ' ? 'CNPJ' : 'CPF do responsável'}
           </Label>
           <div className="relative">
             <Input
               id="wellness-document"
               value={formData.document}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, document: applyDocumentMask(e.target.value) }))
+                setFormData((prev) => ({
+                  ...prev,
+                  document: applyDocumentMaskByType(prev.documentType, e.target.value),
+                }))
               }
-              placeholder="000.000.000-00"
+              placeholder={documentPlaceholder(formData.documentType)}
               className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
             />
             <Fingerprint className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

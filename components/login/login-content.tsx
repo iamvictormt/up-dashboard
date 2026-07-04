@@ -16,6 +16,7 @@ import { ProfessionalForm } from './register-forms/profession-form';
 import { PartnerSupplierForm } from './register-forms/partner-supplier-form';
 import { WellnessForm } from './register-forms/wellness-form';
 import { applyDocumentCnpjMask, applyDocumentMask, applyPhoneMask } from '@/utils/masks';
+import { applyDocumentMaskByType } from '@/utils/document';
 import type { Profession, RegisterDTO } from '@/types';
 import { isProfessional, isPartnerSupplier, isLoveDecoration } from '@/utils/typeGuards';
 import Cookies from 'js-cookie';
@@ -101,6 +102,7 @@ export function LoginContent() {
   const [wellnessData, setWellnessData] = useState({
     name: '',
     document: '',
+    documentType: 'CPF' as 'CPF' | 'CNPJ',
     contact: '',
     email: '',
     password: '',
@@ -237,12 +239,18 @@ export function LoginContent() {
     }
   };
 
-  const handleWellnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleWellnessChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === 'contact') {
-      setWellnessData((prev) => ({ ...prev, [name]: applyPhoneMask(value) }));
+      setWellnessData((prev) => ({ ...prev, contact: applyPhoneMask(value) }));
+    } else if (name === 'documentType') {
+      // troca de tipo limpa o documento pra reaplicar a máscara certa
+      setWellnessData((prev) => ({ ...prev, documentType: value as 'CPF' | 'CNPJ', document: '' }));
     } else if (name === 'document') {
-      setWellnessData((prev) => ({ ...prev, [name]: applyDocumentMask(value) }));
+      setWellnessData((prev) => ({
+        ...prev,
+        document: applyDocumentMaskByType(prev.documentType, value),
+      }));
     } else {
       setWellnessData((prev) => ({ ...prev, [name]: value }));
     }
@@ -310,6 +318,7 @@ export function LoginContent() {
       payload.wellness = {
         name: wellnessData.name,
         document: wellnessData.document,
+        documentType: wellnessData.documentType,
         contact: wellnessData.contact,
       };
     } else if (isProfessional(data)) {

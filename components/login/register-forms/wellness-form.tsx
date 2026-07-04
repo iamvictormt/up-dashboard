@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 interface WellnessFormProps {
   data: any;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
   addressData: any;
   setAddressData: any;
@@ -68,10 +68,32 @@ export function WellnessForm({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-          <div className="col-span-12 md:col-span-6">
+          <div className="col-span-12 md:col-span-4">
+            <div className="space-y-2">
+              <Label htmlFor="wellness-document-type" className="text-sm font-medium">
+                Tipo de documento
+              </Label>
+              <div className="relative group">
+                <select
+                  id="wellness-document-type"
+                  name="documentType"
+                  value={data.documentType ?? 'CPF'}
+                  onChange={onChange}
+                  disabled={registerSuccess}
+                  className="pl-12 h-12 w-full rounded-md border border-border/50 bg-card/50 text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                >
+                  <option value="CPF">CPF (pessoa física)</option>
+                  <option value="CNPJ">CNPJ (empresa)</option>
+                </select>
+                <Fingerprint className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-12 md:col-span-8">
             <div className="space-y-2">
               <Label htmlFor="wellness-document" className="text-sm font-medium">
-                CPF do responsável
+                {data.documentType === 'CNPJ' ? 'CNPJ' : 'CPF do responsável'}
               </Label>
               <div className="relative group">
                 <Input
@@ -81,7 +103,7 @@ export function WellnessForm({
                   value={data.document}
                   onChange={onChange}
                   className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-                  placeholder="Ex: 000.000.000-00"
+                  placeholder={data.documentType === 'CNPJ' ? 'Ex: 00.000.000/0000-00' : 'Ex: 000.000.000-00'}
                   required
                   disabled={registerSuccess}
                 />
@@ -90,7 +112,7 @@ export function WellnessForm({
             </div>
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          <div className="col-span-12">
             <div className="space-y-2">
               <Label htmlFor="wellness-contact" className="text-sm font-medium">
                 Contato (WhatsApp)

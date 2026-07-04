@@ -68,10 +68,11 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       type: 'SUPPLIER' as 'SUPPLIER' | 'WELLNESS',
     },
 
-    // Wellness (nome do negócio + CPF + contato)
+    // Wellness (nome do negócio + CPF/CNPJ + contato)
     wellness: {
       name: '',
       document: '',
+      documentType: 'CPF' as 'CPF' | 'CNPJ',
       contact: '',
     },
   });

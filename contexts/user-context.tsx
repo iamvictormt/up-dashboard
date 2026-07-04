@@ -82,6 +82,7 @@ interface User {
     id: string;
     name: string;
     document: string;
+    documentType?: 'CPF' | 'CNPJ';
     contact?: string | null;
     description?: string | null;
     whatsappMessage?: string | null;
