@@ -35,10 +35,10 @@ export function SupplierCard({ supplier }: SupplierCardProps) {
   const displayProducts = products.slice(0, 2);
   const remainingProducts = Math.max(0, products.length - 2);
 
-  const hoursList = openingHours
+  const hoursList = openingHours ? openingHours
     .split('|')
     .map((h) => h.trim())
-    .filter(Boolean);
+    .filter(Boolean) : [];
   const today = new Date().toLocaleDateString('pt-BR', { weekday: 'long' });
   const todayHours = hoursList.find((h) => h.toLowerCase().includes(today.toLowerCase())) || hoursList[0];
 
