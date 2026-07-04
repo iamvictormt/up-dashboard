@@ -49,7 +49,7 @@ export function WellnessForm({
 
         <div className="space-y-2">
           <Label htmlFor="wellness-name" className="text-sm font-medium">
-            Nome completo
+            Nome do negócio
           </Label>
           <div className="relative group">
             <Input
@@ -59,7 +59,7 @@ export function WellnessForm({
               value={data.name}
               onChange={onChange}
               className="pl-12 h-12 bg-card/50 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
-              placeholder="Ex: Maria Silva"
+              placeholder="Ex: Espaço Zen Massoterapia"
               required
               disabled={registerSuccess}
             />
@@ -71,7 +71,7 @@ export function WellnessForm({
           <div className="col-span-12 md:col-span-6">
             <div className="space-y-2">
               <Label htmlFor="wellness-document" className="text-sm font-medium">
-                CPF
+                CPF (do responsável/MEI)
               </Label>
               <div className="relative group">
                 <Input

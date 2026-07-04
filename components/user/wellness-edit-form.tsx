@@ -58,14 +58,14 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label className="text-[#511A2B]" htmlFor="wellness-name" required>
-            Nome completo
+            Nome do negócio
           </Label>
           <div className="relative">
             <Input
               id="wellness-name"
               value={formData.name}
               onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              placeholder="Seu nome completo"
+              placeholder="Ex: Espaço Zen Massoterapia"
               className="pl-10 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
             />
             <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -74,7 +74,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
 
         <div className="space-y-2">
           <Label className="text-[#511A2B]" htmlFor="wellness-document" required>
-            CPF
+            CPF (do responsável/MEI)
           </Label>
           <div className="relative">
             <Input
@@ -135,7 +135,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
           id="wellness-description"
           value={formData.description}
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-          placeholder="Conte sobre você e seus serviços"
+          placeholder="Conte sobre o negócio e os serviços oferecidos"
           className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
         />
       </div>

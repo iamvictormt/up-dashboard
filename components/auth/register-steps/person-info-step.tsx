@@ -307,13 +307,13 @@ export function PersonalInfoStep({
           <>
             <div className="space-y-2">
               <Label htmlFor="wellness-name" className="text-sm font-medium" required>
-                Nome completo
+                Nome do negócio
               </Label>
               <div className="relative">
                 <Input
                   value={formData.wellness.name}
                   onChange={(e) => handleInputChange('wellness', 'name', e.target.value)}
-                  placeholder="Seu nome completo"
+                  placeholder="Ex: Espaço Zen Massoterapia"
                   required
                 />
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -323,7 +323,7 @@ export function PersonalInfoStep({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="wellness-cpf" className="text-sm font-medium" required>
-                  CPF
+                  CPF (do responsável/MEI)
                 </Label>
                 <div className="relative">
                   <Input
