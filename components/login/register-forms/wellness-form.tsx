@@ -71,7 +71,7 @@ export function WellnessForm({
           <div className="col-span-12 md:col-span-6">
             <div className="space-y-2">
               <Label htmlFor="wellness-document" className="text-sm font-medium">
-                CPF (do responsável/MEI)
+                CPF do responsável
               </Label>
               <div className="relative group">
                 <Input

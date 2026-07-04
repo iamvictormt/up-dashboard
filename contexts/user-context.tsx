@@ -78,6 +78,25 @@ interface User {
     instagram: string;
     tiktok: string;
   } | null;
+  wellness?: {
+    id: string;
+    name: string;
+    document: string;
+    contact?: string | null;
+    description?: string | null;
+    whatsappMessage?: string | null;
+    logoUrl?: string | null;
+    openingHours?: string | null;
+    status?: string;
+    services?: {
+      id: string;
+      name: string;
+      description?: string | null;
+      price?: number | null;
+      duration?: string | null;
+      photoUrl?: string | null;
+    }[];
+  } | null;
 }
 
 interface UserContextType {
@@ -179,6 +198,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         loveDecoration: userData.loveDecoration
           ? { ...prev.loveDecoration, ...userData.loveDecoration }
           : prev.loveDecoration,
+        wellness: userData.wellness ? { ...prev.wellness, ...userData.wellness } : prev.wellness,
       };
     });
   };

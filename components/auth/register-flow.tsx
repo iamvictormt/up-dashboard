@@ -68,7 +68,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       type: 'SUPPLIER' as 'SUPPLIER' | 'WELLNESS',
     },
 
-    // Wellness (MEI: nome + CPF + contato)
+    // Wellness (nome do negócio + CPF + contato)
     wellness: {
       name: '',
       document: '',

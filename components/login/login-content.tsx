@@ -578,7 +578,7 @@ export function LoginContent() {
                         />
                       )}
 
-                      {/* Wellness Registration Form (MEI: nome + CPF + contato) */}
+                      {/* Wellness Registration Form (nome do negócio + CPF + contato) */}
                       {registerType === 'wellness-partners' && (
                         <WellnessForm
                           data={wellnessData}

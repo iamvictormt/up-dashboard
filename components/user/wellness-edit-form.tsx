@@ -52,7 +52,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
       const payload = { ...formData, logoUrl };
       const response = await updateWellness(payload);
       if (response.status !== 200) throw new Error('Erro ao salvar');
-      updateUser({ ...wellness, ...payload });
+      updateUser({ wellness: { ...wellness, ...payload } });
       toast.success('Perfil atualizado com sucesso!');
       onClose();
     } catch (error) {
@@ -69,7 +69,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
         <Label className="text-[#511A2B]" optional>
           Logo do negócio
         </Label>
-        <PhotoUploadSimple photo={logo} onPhotoChange={setLogo} />
+        <PhotoUploadSimple photo={logo} onPhotoChange={setLogo} isStore label="Logo do negócio" />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -91,7 +91,7 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
 
         <div className="space-y-2">
           <Label className="text-[#511A2B]" htmlFor="wellness-document" required>
-            CPF (do responsável/MEI)
+            CPF do responsável
           </Label>
           <div className="relative">
             <Input
