@@ -78,7 +78,7 @@ interface WeekSchedule {
   sunday: DaySchedule;
 }
 
-function OpeningHoursInput({
+export function OpeningHoursInput({
   value,
   onChange,
   error,

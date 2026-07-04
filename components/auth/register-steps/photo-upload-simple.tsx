@@ -13,9 +13,10 @@ interface PhotoUploadSimpleProps {
   onPhotoChange: (photo: string | null) => void;
   isStore?: boolean;
   isProduct?: boolean;
+  label?: string;
 }
 
-export function PhotoUploadSimple({ photo, onPhotoChange, isStore, isProduct}: PhotoUploadSimpleProps) {
+export function PhotoUploadSimple({ photo, onPhotoChange, isStore, isProduct, label }: PhotoUploadSimpleProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const allowedTypes = ['image/jpeg', 'image/png'];
 
@@ -91,7 +92,7 @@ export function PhotoUploadSimple({ photo, onPhotoChange, isStore, isProduct}: P
 
       <div className="text-center">
         <p className={`${isStore || isProduct ? `text-[#511A2B] font-medium` : `text-sm font-medium text-primary`}`}>
-          {isStore ? `Logo da empresa` : isProduct ? `Foto do produto` : `Foto de perfil`}
+          {label ?? (isStore ? `Logo da empresa` : isProduct ? `Foto do produto` : `Foto de perfil`)}
         </p>
         <p className={`${isStore || isProduct ? `text-[#511A2B] font-medium text-xs` : `text-xs text-muted-foreground`}`}>
           {photo ? 'Clique no X para remover' : 'Opcional'}

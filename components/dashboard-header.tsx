@@ -51,10 +51,9 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
   const getUserType = () => {
     if (user?.isAdmin) return 'Administrador';
-    if (user?.professional) return `${user.professional.profession.name}`;
-    if (user?.partnerSupplier) {
-      return user.partnerSupplier.type === 'WELLNESS' ? 'Lojista Parceiro - Wellness' : 'Lojista Parceiro';
-    }
+    if (user?.professional) return user.professional.profession?.name ?? 'Profissional';
+    if (user?.partnerSupplier) return 'Lojista Parceiro';
+    if ((user as any)?.wellness) return 'Parceiro Wellness';
     if (user?.loveDecoration) return 'Eu amo decoração';
     return 'Usuário';
   };

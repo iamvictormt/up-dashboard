@@ -12,6 +12,7 @@ import { updateWellness } from '@/lib/wellness-api';
 import { applyDocumentMask, applyPhoneMask } from '@/utils/masks';
 import { uploadImageCloudinary } from '@/lib/user-api';
 import { PhotoUploadSimple } from '@/components/auth/register-steps/photo-upload-simple';
+import { OpeningHoursInput } from '@/components/store/store-form';
 
 interface WellnessEditFormProps {
   wellness: any;
@@ -147,12 +148,10 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
         <Label className="text-[#511A2B]" htmlFor="wellness-opening-hours" optional>
           Horário de atendimento
         </Label>
-        <Input
-          id="wellness-opening-hours"
+        {/* mesmo seletor de horário usado pela loja do lojista parceiro */}
+        <OpeningHoursInput
           value={formData.openingHours}
-          onChange={(e) => setFormData((prev) => ({ ...prev, openingHours: e.target.value }))}
-          placeholder="Ex: Segunda a sexta: 08:00 - 18:00 | Sábado: 08:00 - 12:00"
-          className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] placeholder:text-[#511A2B]/50 focus:border-[#511A2B]/40"
+          onChange={(value) => setFormData((prev) => ({ ...prev, openingHours: value }))}
         />
       </div>
 
