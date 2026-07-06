@@ -222,7 +222,7 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
                         Visitar Site
                       </Button>
                     )}
-                    {supplierId && storeData.partner?.contact && (
+                    {/* {supplierId && storeData.partner?.contact && (
                       <Button
                         size="lg"
                         className="bg-[#25D366] text-white hover:bg-[#25D366]/90 rounded-xl px-8 py-4 font-semibold shadow-xl"
@@ -242,7 +242,7 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
                         <MessageCircle className="w-5 h-5 mr-2" />
                         Entrar em contato
                       </Button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
