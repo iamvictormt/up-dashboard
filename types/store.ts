@@ -17,4 +17,6 @@ export interface StoreData {
   type?: PartnerSupplierType;
   isVerified?: boolean;
   isFavorite?: boolean;
+  whatsappMessage?: string | null;
+  partner?: { contact?: string | null } | null;
 }
