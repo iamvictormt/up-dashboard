@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { formatCurrency } from '@/lib/utils';
 import type { Wellness } from '@/types/wellness';
 import { toast } from 'sonner';
-import { buildWhatsAppUrl } from '@/constants/whatsapp';
+import { buildWhatsAppUrl, DEFAULT_WHATSAPP_MESSAGE_WELLNESS } from '@/constants/whatsapp';
 
 interface WellnessPartnerCardProps {
   partner: Wellness;
@@ -153,7 +153,7 @@ export function WellnessPartnerCard({ partner }: WellnessPartnerCardProps) {
               toast.info('Contato via WhatsApp não disponível');
               return;
             }
-            window.open(buildWhatsAppUrl(whatsapp, whatsappMessage), '_blank');
+            window.open(buildWhatsAppUrl(whatsapp, whatsappMessage, DEFAULT_WHATSAPP_MESSAGE_WELLNESS), '_blank');
           }}
         >
           Agendar

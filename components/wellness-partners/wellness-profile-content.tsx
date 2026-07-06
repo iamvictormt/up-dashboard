@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils';
 import type { Wellness } from '@/types/wellness';
 import { fetchWellnessById } from '@/lib/wellness-api';
-import { buildWhatsAppUrl } from '@/constants/whatsapp';
+import { buildWhatsAppUrl, DEFAULT_WHATSAPP_MESSAGE_WELLNESS } from '@/constants/whatsapp';
 
 export function WellnessProfileContent() {
   const params = useParams();
@@ -122,7 +122,7 @@ export function WellnessProfileContent() {
                     toast.info('Contato via WhatsApp não disponível');
                     return;
                   }
-                  window.open(buildWhatsAppUrl(whatsapp, wellness.whatsappMessage), '_blank');
+                  window.open(buildWhatsAppUrl(whatsapp, wellness.whatsappMessage, DEFAULT_WHATSAPP_MESSAGE_WELLNESS), '_blank');
                 }}
               >
                 Agendar

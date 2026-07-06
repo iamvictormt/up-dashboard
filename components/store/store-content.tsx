@@ -16,7 +16,11 @@ import { ProductFormModal } from './product-form';
 import StoreInfoSection from './store-info-section';
 import { formatCurrency } from '@/lib/utils';
 import { useUser } from '@/contexts/user-context';
-import { buildWhatsAppUrl } from '@/constants/whatsapp';
+import {
+  buildWhatsAppUrl,
+  DEFAULT_WHATSAPP_MESSAGE_STORE,
+  DEFAULT_WHATSAPP_MESSAGE_WELLNESS,
+} from '@/constants/whatsapp';
 
 const fetchStoreData = async (
   supplierId: string | undefined,
@@ -224,7 +228,13 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
                         className="bg-[#25D366] text-white hover:bg-[#25D366]/90 rounded-xl px-8 py-4 font-semibold shadow-xl"
                         onClick={() =>
                           window.open(
-                            buildWhatsAppUrl(storeData.partner!.contact!, storeData.whatsappMessage),
+                            buildWhatsAppUrl(
+                              storeData.partner!.contact!,
+                              storeData.whatsappMessage,
+                              isWellnessStore
+                                ? DEFAULT_WHATSAPP_MESSAGE_WELLNESS
+                                : DEFAULT_WHATSAPP_MESSAGE_STORE
+                            ),
                             '_blank'
                           )
                         }
