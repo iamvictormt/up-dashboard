@@ -44,12 +44,12 @@ export function AuthLoginPage() {
       toast.success('Login realizado com sucesso!');
       const role = data.role;
       const redirectByRole: Record<string, string> = {
-        partnerSupplier: appUrl.mural,
-        professional: appUrl.mural,
-        loveDecoration: appUrl.mural,
-        wellness: appUrl.mural,
+        partnerSupplier: appUrl.serviceProviders,
+        professional: appUrl.serviceProviders,
+        loveDecoration: appUrl.serviceProviders,
+        wellness: appUrl.serviceProviders,
       };
-      window.location.href = redirectByRole[role] || appUrl.mural;
+      window.location.href = redirectByRole[role] || appUrl.serviceProviders;
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Não foi possível concluir o login.');
     } finally {

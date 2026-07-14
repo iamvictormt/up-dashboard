@@ -8,7 +8,7 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/mural');
+    router.push('/service-providers');
   }, [router]);
 
   return <></>;

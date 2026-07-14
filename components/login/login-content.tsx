@@ -191,13 +191,13 @@ export function LoginContent() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
       toast.success('Login realizado com sucesso!');
       const redirectByRole: Record<string, string> = {
-        partnerSupplier: appUrl.mural,
-        professional: appUrl.mural,
-        loveDecoration: appUrl.mural,
-        wellness: appUrl.mural,
+        partnerSupplier: appUrl.serviceProviders,
+        professional: appUrl.serviceProviders,
+        loveDecoration: appUrl.serviceProviders,
+        wellness: appUrl.serviceProviders,
       };
       setTimeout(() => {
-        window.location.href = redirectByRole[data.role] || appUrl.mural;
+        window.location.href = redirectByRole[data.role] || appUrl.serviceProviders;
       }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);

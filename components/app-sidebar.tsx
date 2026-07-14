@@ -97,15 +97,15 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
 
   const mainMenuItems: SidebarItem[] = [
     {
-      title: 'Mural da comunidade',
-      icon: Quote,
-      url: '/mural',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
-    },
-    {
       title: 'Prestadores de serviços',
       icon: Users,
       url: '/service-providers',
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
+    },
+    {
+      title: 'Mural da comunidade',
+      icon: Quote,
+      url: '/mural',
       roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
     },
     {

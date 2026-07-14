@@ -30,7 +30,7 @@ export function PaymentProtection({ children }: PaymentProtectionProps) {
             user.partnerSupplier.subscription?.subscriptionStatus === 'TRIALING'));
 
       if (shouldNotSeePlans) {
-        router.push('/mural');
+        router.push('/service-providers');
         return;
       }
     }

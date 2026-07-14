@@ -3,6 +3,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_FRONT_URL || '';
 export const appUrl = {
   base: BASE_URL,
   mural: `${BASE_URL}/mural`,
+  serviceProviders: `${BASE_URL}/service-providers`,
   login: `${BASE_URL}/auth/login`,
   dashboard: `${BASE_URL}/dashboard`,
   physicalSales: `${BASE_URL}/physical-sales`,
