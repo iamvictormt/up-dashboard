@@ -8,12 +8,18 @@ export async function fetchWellnessList(
   limit = 6,
   state?: string,
   city?: string,
+  category?: string,
 ): Promise<AxiosResponse<Wellness[]>> {
   const params: Record<string, string | number> = { page, limit };
   if (searchQuery) params.search = searchQuery;
   if (state) params.state = state;
   if (city) params.city = city;
+  if (category) params.category = category;
   return api.get('wellness', { params });
+}
+
+export async function fetchWellnessCategories(): Promise<AxiosResponse> {
+  return api.get('wellness-categories');
 }
 
 export async function fetchWellnessById(id: string): Promise<AxiosResponse<Wellness>> {

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Tag } from 'lucide-react';
 import { WellnessPartnerCard } from './wellness-partner-card';
-import { fetchWellnessList } from '@/lib/wellness-api';
+import { fetchWellnessList, fetchWellnessCategories } from '@/lib/wellness-api';
 import type { Wellness } from '@/types/wellness';
 import {
   Select,
@@ -19,12 +19,16 @@ import {
   BRAZIL_LOCATION_OPTIONS,
 } from '@/constants/locationOptions';
 
+const ALL_CATEGORIES_VALUE = '__all_categories__';
+
 export function WellnessPartnersContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [partners, setPartners] = useState<Wellness[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [page, setPage] = useState(1);
   const limit = 6;
   const [hasMore, setHasMore] = useState(true);
@@ -32,13 +36,14 @@ export function WellnessPartnersContent() {
   const availableCities =
     BRAZIL_LOCATION_OPTIONS.find((option) => option.state === selectedState)
       ?.cities ?? [];
-  const hasLocationFilter = Boolean(selectedState || selectedCity);
+  const hasLocationFilter = Boolean(selectedState || selectedCity || selectedCategory);
 
   const loadPartners = async (
     query = '',
     pageNumber = 1,
     state = selectedState,
     city = selectedCity,
+    category = selectedCategory,
   ) => {
     try {
       setIsLoading(true);
@@ -48,6 +53,7 @@ export function WellnessPartnersContent() {
         limit,
         state,
         city,
+        category,
       );
       const items = (response.data ?? []) as Wellness[];
       setPartners(items);
@@ -62,11 +68,21 @@ export function WellnessPartnersContent() {
 
   useEffect(() => {
     loadPartners();
+    fetchWellnessCategories()
+      .then((res) => setCategories(res.data))
+      .catch((error) => console.error('Error loading wellness categories:', error));
   }, []);
 
   const handleSearch = () => {
     setPage(1);
     loadPartners(searchQuery, 1);
+  };
+
+  const handleCategoryChange = (value: string) => {
+    const nextCategory = value === ALL_CATEGORIES_VALUE ? '' : value;
+    setSelectedCategory(nextCategory);
+    setPage(1);
+    loadPartners(searchQuery, 1, selectedState, selectedCity, nextCategory);
   };
 
   const handleStateChange = (value: string) => {
@@ -123,6 +139,23 @@ export function WellnessPartnersContent() {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full sm:w-[420px]">
+              <Select
+                value={selectedCategory || ALL_CATEGORIES_VALUE}
+                onValueChange={handleCategoryChange}
+              >
+                <SelectTrigger className="h-12 sm:h-14 bg-white/80 border-[#1A3B51]/20 rounded-xl text-[#1A3B51] focus:border-[#1A3B51]/40 sm:col-span-2">
+                  <Tag className="w-4 h-4 mr-2 text-[#1A3B51]/60" />
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_CATEGORIES_VALUE}>Todas as categorias</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Select
                 value={selectedState || ALL_STATES_VALUE}
                 onValueChange={handleStateChange}

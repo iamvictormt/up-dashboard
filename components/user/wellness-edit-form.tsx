@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Fingerprint, MessageCircle, Phone, Save, User } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { toast } from 'sonner';
-import { updateWellness } from '@/lib/wellness-api';
+import { updateWellness, fetchWellnessCategories } from '@/lib/wellness-api';
 import { applyPhoneMask } from '@/utils/masks';
 import { applyDocumentMaskByType, isValidDocument, documentPlaceholder } from '@/utils/document';
 import { uploadImageCloudinary } from '@/lib/user-api';
@@ -33,8 +33,16 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
     description: wellness?.description || '',
     whatsappMessage: wellness?.whatsappMessage || '',
     openingHours: wellness?.openingHours || '',
+    categoryId: wellness?.categoryId || '',
   });
   const [logo, setLogo] = useState<string | null>(wellness?.logoUrl || null);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    fetchWellnessCategories()
+      .then((res) => setCategories(res.data))
+      .catch((error) => console.error('Error loading wellness categories:', error));
+  }, []);
 
   const handleSave = async () => {
     if (!formData.name.trim()) {
@@ -168,6 +176,27 @@ export function WellnessEditForm({ wellness, isLoading, setIsLoading, onClose }:
             <MessageCircle className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           </div>
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-[#511A2B]" htmlFor="wellness-category" optional>
+          Categoria
+        </Label>
+        <Select
+          value={formData.categoryId || undefined}
+          onValueChange={(value) => setFormData((prev) => ({ ...prev, categoryId: value }))}
+        >
+          <SelectTrigger id="wellness-category" className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B]">
+            <SelectValue placeholder="Selecione a categoria (massagem, yoga...)" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.id}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">

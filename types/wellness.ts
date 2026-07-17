@@ -22,6 +22,8 @@ export interface Wellness {
   whatsappMessage?: string | null;
   logoUrl?: string | null;
   openingHours?: string | null;
+  categoryId?: string | null;
+  category?: { id: string; name: string } | null;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   services: WellnessOffering[];
   user?: {
