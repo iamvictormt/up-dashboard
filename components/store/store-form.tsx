@@ -571,14 +571,14 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
                 <div>
                   <Label htmlFor="categoryId" className="text-[#511A2B] font-medium" optional>
-                    Ramo
+                    Categoria
                   </Label>
                   <Select
                     value={formData.categoryId || undefined}
                     onValueChange={(value) => handleInputChange('categoryId', value)}
                   >
                     <SelectTrigger className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40">
-                      <SelectValue placeholder="Selecione o ramo da loja (móveis, tapetes...)" />
+                      <SelectValue placeholder="Selecione a categoria da loja (móveis, tapetes...)" />
                     </SelectTrigger>
                     <SelectContent>
                       {categories.map((category) => (

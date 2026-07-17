@@ -39,7 +39,6 @@ export function MuralContent() {
                 />
               </h1>
 
-              <p className="text-[#511A2B]/70">Acompanhe as últimas publicações de todas as comunidades.</p>
             </div>
             {/* Mobile Community Menu */}
             <div className="mx-auto py-6">

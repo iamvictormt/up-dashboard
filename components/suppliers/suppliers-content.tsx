@@ -146,10 +146,10 @@ export function SuppliersContent() {
               >
                 <SelectTrigger className="h-12 sm:h-14 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40 sm:col-span-2">
                   <Tag className="w-4 h-4 mr-2 text-[#511A2B]/60" />
-                  <SelectValue placeholder="Ramo" />
+                  <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={ALL_CATEGORIES_VALUE}>Todos os ramos</SelectItem>
+                  <SelectItem value={ALL_CATEGORIES_VALUE}>Todas as categorias</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name}
