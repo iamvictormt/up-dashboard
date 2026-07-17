@@ -190,14 +190,13 @@ export function LoginContent() {
       Cookies.set('token', data.access_token, { expires: 1 / 24 });
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
       toast.success('Login realizado com sucesso!');
-      const redirectByRole: Record<string, string> = {
-        partnerSupplier: appUrl.serviceProviders,
-        professional: appUrl.serviceProviders,
-        loveDecoration: appUrl.serviceProviders,
-        wellness: appUrl.serviceProviders,
-      };
+      // Mesma regra da raiz /: só estes papéis abrem em Lojistas parceiros.
+      const storeRoles = ['professional', 'loveDecoration', 'admin'];
+      const destination = storeRoles.includes(data.role)
+        ? appUrl.suppliersStore
+        : appUrl.serviceProviders;
       setTimeout(() => {
-        window.location.href = redirectByRole[data.role] || appUrl.serviceProviders;
+        window.location.href = destination;
       }, 2000);
     } catch (error: any) {
       console.error('Erro no login:', error);
