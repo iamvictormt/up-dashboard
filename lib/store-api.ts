@@ -9,7 +9,8 @@ export async function fetchStores(
   limit: number = 6,
   type?: PartnerSupplierType,
   state?: string,
-  city?: string
+  city?: string,
+  category?: string
 ): Promise<AxiosResponse> {
   const params: Record<string, string | number> = {
     page,
@@ -26,8 +27,15 @@ export async function fetchStores(
   if (city) {
     params['city'] = city;
   }
+  if (category) {
+    params['category'] = category;
+  }
 
   return await api.get('stores', { params });
+}
+
+export async function fetchStoreCategories(): Promise<AxiosResponse> {
+  return await api.get('store-categories');
 }
 
 export async function fetchStoreById(id: string): Promise<AxiosResponse> {

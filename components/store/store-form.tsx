@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { createStore, updateStore } from '@/lib/store-api';
+import { createStore, updateStore, fetchStoreCategories } from '@/lib/store-api';
 import { useUser } from '@/contexts/user-context';
 import { applyZipCodeMask } from '@/utils/masks';
 import { fetchAddressByZipCode } from '@/lib/address-api';
@@ -27,6 +27,7 @@ interface StoreFormProps {
     website: string;
     openingHours: string;
     logoUrl?: string;
+    categoryId?: string | null;
     address: {
       state: string;
       city: string;
@@ -51,6 +52,7 @@ interface StoreFormData {
   website: string;
   openingHours: string;
   whatsappMessage: string;
+  categoryId: string;
   address: {
     state: string;
     city: string;
@@ -355,6 +357,7 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
       storeData?.openingHours ||
       'Segunda-feira: 08:00 - 18:00 | Terça-feira: 08:00 - 18:00 | Quarta-feira: 08:00 - 18:00 | Quinta-feira: 08:00 - 18:00 | Sexta-feira: 08:00 - 18:00 | Sábado: 08:00 - 14:00',
     whatsappMessage: (storeData as any)?.whatsappMessage || '',
+    categoryId: storeData?.categoryId || '',
     address: {
       state: storeData?.address.state || '',
       city: storeData?.address.city || '',
@@ -368,6 +371,13 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    fetchStoreCategories()
+      .then((res) => setCategories(res.data))
+      .catch((error) => console.error('Error loading store categories:', error));
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     if (field.startsWith('address.')) {
@@ -557,6 +567,27 @@ export function StoreForm({ storeData, onStoreCreated, onStoreUpdated, onClose, 
                     rows={3}
                   />
                   {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                </div>
+
+                <div>
+                  <Label htmlFor="categoryId" className="text-[#511A2B] font-medium" optional>
+                    Ramo
+                  </Label>
+                  <Select
+                    value={formData.categoryId || undefined}
+                    onValueChange={(value) => handleInputChange('categoryId', value)}
+                  >
+                    <SelectTrigger className="bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40">
+                      <SelectValue placeholder="Selecione o ramo da loja (móveis, tapetes...)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

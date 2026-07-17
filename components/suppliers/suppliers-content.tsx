@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Tag } from 'lucide-react';
 import { SupplierCard } from './supplier-card';
-import { fetchStores } from '@/lib/store-api';
+import { fetchStores, fetchStoreCategories } from '@/lib/store-api';
 import { StoreData } from '@/types';
 import {
   Select,
@@ -19,12 +19,16 @@ import {
   BRAZIL_LOCATION_OPTIONS,
 } from '@/constants/locationOptions';
 
+const ALL_CATEGORIES_VALUE = '__all_categories__';
+
 export function SuppliersContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [suppliers, setSuppliers] = useState<StoreData[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(6);
   const [hasMore, setHasMore] = useState(true);
@@ -32,13 +36,14 @@ export function SuppliersContent() {
   const availableCities =
     BRAZIL_LOCATION_OPTIONS.find((option) => option.state === selectedState)
       ?.cities ?? [];
-  const hasLocationFilter = Boolean(selectedState || selectedCity);
+  const hasLocationFilter = Boolean(selectedState || selectedCity || selectedCategory);
 
   const loadSuppliersStore = async (
     query = '',
     pageNumber = 1,
     state = selectedState,
     city = selectedCity,
+    category = selectedCategory,
   ) => {
     try {
       setIsLoading(true);
@@ -49,6 +54,7 @@ export function SuppliersContent() {
         'SUPPLIER',
         state,
         city,
+        category,
       );
       setSuppliers(response.data);
       setHasMore(response.data.length === limit);
@@ -62,7 +68,17 @@ export function SuppliersContent() {
 
   useEffect(() => {
     loadSuppliersStore();
+    fetchStoreCategories()
+      .then((res) => setCategories(res.data))
+      .catch((error) => console.error('Error loading store categories:', error));
   }, []);
+
+  const handleCategoryChange = (value: string) => {
+    const nextCategory = value === ALL_CATEGORIES_VALUE ? '' : value;
+    setSelectedCategory(nextCategory);
+    setPage(1);
+    loadSuppliersStore(searchQuery, 1, selectedState, selectedCity, nextCategory);
+  };
 
   const handleSearchClick = () => {
     setPage(1);
@@ -124,6 +140,23 @@ export function SuppliersContent() {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full sm:w-[420px]">
+              <Select
+                value={selectedCategory || ALL_CATEGORIES_VALUE}
+                onValueChange={handleCategoryChange}
+              >
+                <SelectTrigger className="h-12 sm:h-14 bg-white/80 border-[#511A2B]/20 rounded-xl text-[#511A2B] focus:border-[#511A2B]/40 sm:col-span-2">
+                  <Tag className="w-4 h-4 mr-2 text-[#511A2B]/60" />
+                  <SelectValue placeholder="Ramo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_CATEGORIES_VALUE}>Todos os ramos</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Select
                 value={selectedState || ALL_STATES_VALUE}
                 onValueChange={handleStateChange}
