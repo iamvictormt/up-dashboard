@@ -28,10 +28,10 @@ export function middleware(request: NextRequest) {
   }
 
   const defaultRouteByRole: Record<string, string> = {
-    admin: '/service-providers',
+    admin: '/suppliers-store',
     partnerSupplier: '/service-providers',
-    professional: '/service-providers',
-    loveDecoration: '/service-providers',
+    professional: '/suppliers-store',
+    loveDecoration: '/suppliers-store',
     wellness: '/service-providers',
   };
   const permissions: any = {

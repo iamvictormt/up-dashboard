@@ -97,18 +97,6 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
 
   const mainMenuItems: SidebarItem[] = [
     {
-      title: 'Prestadores de serviços',
-      icon: Users,
-      url: '/service-providers',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
-    },
-    {
-      title: 'Mural da comunidade',
-      icon: Quote,
-      url: '/mural',
-      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
-    },
-    {
       title: 'Lojistas parceiros',
       icon: Store,
       url: '/suppliers-store',
@@ -119,6 +107,18 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Sparkles,
       url: '/wellness-partners',
       roles: ['professional', 'loveDecoration'],
+    },
+    {
+      title: 'Prestadores de serviços',
+      icon: Users,
+      url: '/service-providers',
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
+    },
+    {
+      title: 'Mural da comunidade',
+      icon: Quote,
+      url: '/mural',
+      roles: ['professional', 'partnerSupplier', 'loveDecoration', 'wellness'],
     },
     {
       title: 'Eventos',
