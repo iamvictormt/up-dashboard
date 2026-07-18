@@ -42,14 +42,11 @@ export function AuthLoginPage() {
       Cookies.set('role', JSON.stringify(data.role), { expires: 1 / 24 });
 
       toast.success('Login realizado com sucesso!');
-      const role = data.role;
-      const redirectByRole: Record<string, string> = {
-        partnerSupplier: appUrl.serviceProviders,
-        professional: appUrl.serviceProviders,
-        loveDecoration: appUrl.serviceProviders,
-        wellness: appUrl.serviceProviders,
-      };
-      window.location.href = redirectByRole[role] || appUrl.serviceProviders;
+      // Mesma regra da raiz /: só estes papéis abrem em Lojistas parceiros.
+      const storeRoles = ['professional', 'loveDecoration', 'admin'];
+      window.location.href = storeRoles.includes(data.role)
+        ? appUrl.suppliersStore
+        : appUrl.serviceProviders;
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Não foi possível concluir o login.');
     } finally {
@@ -68,7 +65,7 @@ export function AuthLoginPage() {
       <AuthContainer
         type="login"
         title="Bem-vindo de volta"
-        subtitle="Entre na sua conta para continuar!"
+        subtitle="Entre na sua conta para continuar"
         footerText="Não tem uma conta?"
         footerLinkText="Criar conta gratuita"
         footerLinkHref="/auth/register"
