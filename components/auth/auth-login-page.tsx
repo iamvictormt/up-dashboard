@@ -68,7 +68,7 @@ export function AuthLoginPage() {
       <AuthContainer
         type="login"
         title="Bem-vindo de volta"
-        subtitle="Entre na sua conta para continuar"
+        subtitle="Entre na sua conta para continuar!"
         footerText="Não tem uma conta?"
         footerLinkText="Criar conta gratuita"
         footerLinkHref="/auth/register"
