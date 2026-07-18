@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import { appUrl } from '@/constants/appRoutes';
 import { AuthContainer } from './auth-container';
 import { LoginForm } from './login-form';
-import { ForgotPasswordModal } from '../login/forgot-password-modal';
+import { ForgotPasswordModal } from './forgot-password-modal';
 import { RegisterCarousel } from './register-carousel';
 import api from '@/services/api';
 
