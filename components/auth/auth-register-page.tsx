@@ -5,6 +5,7 @@ import { AuthContainer } from './auth-container';
 import { RegisterFlow } from './register-flow';
 import { RegisterCarousel } from './register-carousel';
 
+
 export function AuthRegisterPage() {
   const router = useRouter();
 
