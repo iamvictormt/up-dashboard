@@ -119,7 +119,6 @@ export function WellnessPartnersContent() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#1A3B51] mb-2">Parceiros de Bem-estar</h1>
-            <p className="text-[#1A3B51]/70">Descubra serviços, terapias e experiências para o seu bem-estar</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">

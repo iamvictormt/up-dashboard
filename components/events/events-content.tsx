@@ -110,7 +110,6 @@ export function EventsContent() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 space-y-4 md:space-y-0">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2">Eventos</h1>
-            <p className="text-[#511A2B]/70">Descubra e participe dos melhores eventos da comunidade</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

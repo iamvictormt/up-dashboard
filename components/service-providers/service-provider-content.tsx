@@ -64,7 +64,6 @@ export function ServiceProvidersContent() {
             <h1 className="text-2xl md:text-3xl font-bold text-[#511A2B] mb-2 flex items-center gap-2">
               Prestadores de serviços
             </h1>
-            <p className="text-[#511A2B]/70">Encontre e conecte-se com profissionais qualificados</p>
           </div>
 
           {/* Search Input */}
