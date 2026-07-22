@@ -64,7 +64,8 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
       const role = (user as any)?.role;
       const allowPartnerSupplierFallback = role === 'professional' || role === 'loveDecoration';
       const data = await fetchStoreData(supplierId, allowPartnerSupplierFallback);
-      setStoreData(data);
+      // ponytail: normaliza products/events pra array — payload de create/edit pode vir sem eles e o render acessa .length/.map sem guard
+      setStoreData(data ? { ...data, products: data.products ?? [], events: data.events ?? [] } : null);
     } catch (error) {
       console.error('Erro ao carregar dados da loja:', error);
     } finally {
@@ -72,16 +73,16 @@ export function StoreContent({ supplierId, viewMode = 'default' }: StoreContentP
     }
   };
 
-  const handleStoreCreated = (newStoreData: StoreData) => {
-    setStoreData(newStoreData);
+  const handleStoreCreated = (_newStoreData: StoreData) => {
     setShowStoreForm(false);
     toast.success('Perfil cadastrado com sucesso.');
+    loadStoreData();
   };
 
-  const handleStoreUpdated = (updatedStoreData: StoreData) => {
-    setStoreData(updatedStoreData);
+  const handleStoreUpdated = (_updatedStoreData: StoreData) => {
     setShowStoreForm(false);
     toast.success('Perfil atualizado com sucesso.');
+    loadStoreData();
   };
 
   const handleProductCreated = async () => {
