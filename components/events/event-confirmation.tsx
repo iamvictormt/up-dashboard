@@ -15,7 +15,7 @@ interface Event {
   points: number
   totalSpots: number
   filledSpots: number
-  storeId: string
+  storeId?: string | null
   address: {
     state: string
     city: string
@@ -25,11 +25,11 @@ interface Event {
     number: string
     zipCode: string
   }
-  store: {
+  store?: {
     id: string
     name: string
     rating: number
-  }
+  } | null
 }
 
 interface EventConfirmationModalProps {
@@ -140,7 +140,7 @@ export function EventConfirmationModal({
               <MapPin className="w-5 h-5 text-[#511A2B]/70" />
               <div>
                 <p className="font-medium text-[#511A2B] text-sm">
-                  {event.store.name}
+                  {event.store?.name ?? 'UP Connection'}
                 </p>
                 <p className="text-xs text-[#511A2B]/70">
                   {formatAddress()}

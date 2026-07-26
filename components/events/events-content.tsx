@@ -18,7 +18,7 @@ interface Event {
   points: number;
   totalSpots: number;
   filledSpots: number;
-  storeId: string;
+  storeId?: string | null;
   address: {
     state: string;
     city: string;
@@ -28,11 +28,11 @@ interface Event {
     number: string;
     zipCode: string;
   };
-  store: {
+  store?: {
     id: string;
     name: string;
     rating: number;
-  };
+  } | null;
   // Adicionar campo para indicar se o usuário está registrado
   isRegistered?: boolean;
 }
@@ -85,7 +85,7 @@ export function EventsContent() {
     (event) =>
       event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.store?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       event.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

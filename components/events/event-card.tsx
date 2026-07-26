@@ -14,7 +14,7 @@ interface Event {
   points: number;
   totalSpots: number;
   filledSpots: number;
-  storeId: string;
+  storeId?: string | null;
   address: {
     state: string;
     city: string;
@@ -24,11 +24,11 @@ interface Event {
     number: string;
     zipCode: string;
   };
-  store: {
+  store?: {
     id: string;
     name: string;
     rating: number;
-  };
+  } | null;
   isRegistered?: boolean;
 }
 
@@ -150,7 +150,7 @@ export function EventCard({ event, onEventClick, onParticipateClick, isRegistere
 
           {/* Store */}
           <div className="text-sm text-[#511A2B]/70 font-medium">
-            Organizado por: <span className="text-[#511A2B]">{event.store.name}</span>
+            Organizado por: <span className="text-[#511A2B]">{event.store?.name ?? 'UP Connection'}</span>
           </div>
         </div>
 

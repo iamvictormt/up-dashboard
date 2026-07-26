@@ -28,7 +28,7 @@ interface Event {
   points: number;
   totalSpots: number;
   filledSpots: number;
-  storeId: string;
+  storeId?: string | null;
   address: {
     state: string;
     city: string;
@@ -38,12 +38,12 @@ interface Event {
     number: string;
     zipCode: string;
   };
-  store: {
+  store?: {
     id: string;
     name: string;
     rating: number;
     logoUrl?: string;
-  };
+  } | null;
   isRegistered?: boolean;
 }
 
@@ -216,15 +216,15 @@ export function EventDetailModal({
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 border border-[#511A2B]/10">
                   <Image
-                    src={event.store.logoUrl || '/placeholder.svg?height=300&width=300'}
-                    alt={event.store.name}
+                    src={event.store?.logoUrl || '/placeholder.svg?height=300&width=300'}
+                    alt={event.store?.name ?? 'UP Connection'}
                     fill
                     className="object-cover"
                   />
                 </div>
 
                 <div>
-                  <h4 className="font-bold text-[#511A2B] text-base sm:text-lg">{event.store.name}</h4>
+                  <h4 className="font-bold text-[#511A2B] text-base sm:text-lg">{event.store?.name ?? 'UP Connection'}</h4>
                   <p className="text-xs sm:text-sm text-[#511A2B]/60">Organizador do evento</p>
                 </div>
               </div>
