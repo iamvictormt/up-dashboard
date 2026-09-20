@@ -9,7 +9,7 @@ import { AddressStep } from './register-steps/address-setp';
 import { CredentialsStep } from './register-steps/credentials-step';
 import { saveUser, uploadImageCloudinary } from '@/lib/user-api';
 import { toast } from 'sonner';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type UserType = 'love-decorations' | 'professionals' | 'partner-suppliers' | 'wellness-partners';
 type Step = 'user-type' | 'personal-info' | 'address' | 'credentials';
@@ -19,6 +19,7 @@ interface RegisterFlowProps {
 }
 
 export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     // Common fields
@@ -197,10 +198,23 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
 
       await saveUser(payload, userType === 'wellness-partners' ? 'wellness' : userType);
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
-      const message = error instanceof Error ? error.message : 'Erro ao realizar cadastro.';
-      toast.error(message);
+
+      if (error?.response?.status === 409) {
+        toast.error('Este e-mail já está cadastrado.', {
+          description:
+            'Acesse sua conta, recupere sua senha ou fale com o suporte em suporte@upconnection.com.',
+          duration: 10000,
+          action: { label: 'Fazer login', onClick: () => router.push('/auth/login') },
+        });
+        return;
+      }
+
+      const detail = error?.response?.data?.message;
+      toast.error(
+        (Array.isArray(detail) ? detail[0] : detail) ?? 'Erro ao realizar cadastro.',
+      );
     } finally {
       setIsLoading(false);
     }
