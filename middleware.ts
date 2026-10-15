@@ -54,6 +54,7 @@ export function middleware(request: NextRequest) {
       '/events',
       '/help',
       '/benefits',
+      '/my-points',
     ],
     loveDecoration: ['/mural', '/service-providers', '/suppliers-store', '/wellness-partners', '/help'],
     wellness: ['/mural', '/service-providers', '/my-services', '/help'],

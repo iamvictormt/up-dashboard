@@ -17,7 +17,7 @@ import { NotificationsDropdown } from './notifications-dropdown';
 import { UserEditModal } from './user/user-edit-modal';
 import { UserImageModal } from './user/user-image-modal';
 import { MyPlanModal } from './plans/my-plan-modal';
-import { PointsHistoryModal } from './user/points-history-modal';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 interface DashboardHeaderProps {
@@ -30,7 +30,6 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
-  const [isPointsModalOpen, setIsPointsModalOpen] = useState(false);
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -130,8 +129,9 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
           {/* Pontos do Profissional - Desktop */}
           {user.professional && (
-            <button
-              onClick={() => setIsPointsModalOpen(true)}
+            <Link
+              href="/my-points"
+              title="Ver meus pontos"
               className="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition-colors rounded-lg px-4 py-2 border border-white/10"
             >
               <Coins className="w-4 h-4 text-yellow-400" />
@@ -140,7 +140,7 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
                 <span className="text-[11px] text-white/70 font-medium hidden md:inline">pontos</span>
                 <span className="text-[11px] text-white/70 font-medium inline md:hidden">pts</span>
               </div>
-            </button>
+            </Link>
           )}
 
           {/* User Menu */}
@@ -191,11 +191,13 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
                 {user.professional && (
                   <DropdownMenuItem
-                    onClick={() => setIsPointsModalOpen(true)}
+                    asChild
                     className="text-gray-700 hover:bg-gray-50 hover:text-[#511A2B] cursor-pointer rounded-md px-2 py-2"
                   >
-                    <Coins className="mr-2 h-4 w-4" />
-                    <span className="text-sm font-medium">Extrato de Pontos</span>
+                    <Link href="/my-points">
+                      <Coins className="mr-2 h-4 w-4" />
+                      <span className="text-sm font-medium">Meus pontos</span>
+                    </Link>
                   </DropdownMenuItem>
                 )}
 
@@ -247,9 +249,6 @@ export function DashboardHeader({ isSidebarExpanded = true }: DashboardHeaderPro
 
       {isImageModalOpen && <UserImageModal isOpen={isImageModalOpen} onClose={() => setIsImageModalOpen(false)} />}
 
-      {isPointsModalOpen && (
-        <PointsHistoryModal isOpen={isPointsModalOpen} onClose={() => setIsPointsModalOpen(false)} />
-      )}
 
       {/* Sidebar Mobile */}
       <div className="lg:hidden">
