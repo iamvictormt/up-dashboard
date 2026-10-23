@@ -260,10 +260,10 @@ export function PaymentConfirmedContent() {
               <p className="text-gray-600">
                 Dúvidas? Entre em contato:{' '}
                 <a
-                  href="mailto:suporte@upconnection.com"
+                  href="mailto:upconnection01@gmail.com"
                   className="text-[#511A2B] font-bold hover:text-[#D56235] transition-colors"
                 >
-                  suporte@upconnection.com
+                  upconnection01@gmail.com
                 </a>
               </p>
             </div>

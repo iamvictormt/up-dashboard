@@ -204,7 +204,7 @@ export function RegisterFlow({ onSuccess }: RegisterFlowProps) {
       if (error?.response?.status === 409) {
         toast.error('Este e-mail já está cadastrado.', {
           description:
-            'Acesse sua conta, recupere sua senha ou fale com o suporte em suporte@upconnection.com.',
+            'Acesse sua conta, recupere sua senha ou fale com o suporte em upconnection01@gmail.com.',
           duration: 10000,
           action: { label: 'Fazer login', onClick: () => router.push('/auth/login') },
         });
