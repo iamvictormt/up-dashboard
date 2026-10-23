@@ -18,6 +18,7 @@ import {
   Coins,
   Trophy,
   Sparkles,
+  Wallet,
 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { Skeleton } from './ui/skeleton';
@@ -137,6 +138,12 @@ export function AppSidebar({ isMobileOpen, onToggleMobile, onExpandedChange, isD
       icon: Sparkles,
       url: '/my-services',
       roles: ['wellness'],
+    },
+    {
+      title: 'Meus pontos',
+      icon: Wallet,
+      url: '/my-points',
+      roles: ['professional'],
     },
     {
       title: 'Benefícios',

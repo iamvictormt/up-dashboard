@@ -1,7 +1,16 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { CircleCheckBig, Copy, HelpCircle, Loader2, Sparkles, TicketCheck } from 'lucide-react';
+import {
+  CircleCheckBig,
+  Copy,
+  HelpCircle,
+  Loader2,
+  PlusCircle,
+  ReceiptText,
+  Sparkles,
+  TicketCheck,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { createPhysicalSale } from '@/lib/physical-sales-api';
 import { formatCurrency } from '@/lib/utils';
@@ -10,6 +19,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUser } from '@/contexts/user-context';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { ProfessionalSearchResult } from '@/types';
+import { ProfessionalSearch } from './professional-search';
+import { PhysicalSalesHistory } from './physical-sales-history';
 import {
   Dialog,
   DialogClose,
@@ -42,12 +55,27 @@ export function PhysicalSalesRegistrationContent() {
   const [lastPointsAwarded, setLastPointsAwarded] = useState<number | null>(null);
   const [lastSaleAmount, setLastSaleAmount] = useState<number | null>(null);
   const [isFlowInfoOpen, setIsFlowInfoOpen] = useState(false);
+  const [professional, setProfessional] = useState<ProfessionalSearchResult | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [creditedTo, setCreditedTo] = useState<string | null>(null);
+  const [historyKey, setHistoryKey] = useState(0);
+  const [tab, setTab] = useState('register');
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (event: FormEvent) => {
+  // Com profissional selecionado, o cliente é ele: o nome fica travado (o backend também força isso)
+  const handleSelectProfessional = (selected: ProfessionalSearchResult | null) => {
+    setProfessional(selected);
+    setForm((prev) => ({ ...prev, customerName: selected ? selected.name : '' }));
+  };
+
+  const saleAmount = Number(form.saleAmount);
+  // 1 real = 1 ponto, arredondando para mais (mesma regra do backend)
+  const expectedPoints = Number.isFinite(saleAmount) ? Math.ceil(saleAmount) : 0;
+
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
     if (!form.customerName.trim()) {
@@ -55,26 +83,47 @@ export function PhysicalSalesRegistrationContent() {
       return;
     }
 
-    const saleAmount = Number(form.saleAmount);
-    if (!Number.isFinite(saleAmount) || saleAmount <= 0) {
-      toast.error('Informe um valor de venda válido.');
+    if (!Number.isFinite(saleAmount) || saleAmount < 1) {
+      toast.error('Informe um valor de venda de pelo menos R$ 1,00.');
       return;
     }
 
+    if (!form.invoiceNumber.trim()) {
+      toast.error('Informe a nota fiscal da venda.');
+      return;
+    }
+
+    // Crédito direto na conta de outra pessoa: confirmar antes
+    if (professional) {
+      setIsConfirmOpen(true);
+      return;
+    }
+
+    registerSale();
+  };
+
+  const registerSale = async () => {
     try {
       setIsSubmitting(true);
       const response = await createPhysicalSale({
         customerName: form.customerName.trim(),
         saleAmount,
         sellerName: form.sellerName.trim() || undefined,
-        invoiceNumber: form.invoiceNumber.trim() || undefined,
+        invoiceNumber: form.invoiceNumber.trim(),
+        professionalId: professional?.id,
       });
 
-      setLastGeneratedCode(response.code);
+      setLastGeneratedCode(response.credited ? null : response.code);
+      setCreditedTo(response.credited ? (response.professionalName ?? professional?.name ?? null) : null);
       setLastPointsAwarded(response.points);
       setLastSaleAmount(saleAmount);
       setForm(initialState);
-      toast.success('Venda física registrada com sucesso.');
+      setProfessional(null);
+      setIsConfirmOpen(false);
+      setHistoryKey((key) => key + 1);
+      toast.success(
+        response.credited ? 'Venda registrada e pontos creditados.' : 'Venda física registrada com sucesso.',
+      );
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Não foi possível registrar a venda física.');
     } finally {
@@ -98,12 +147,12 @@ export function PhysicalSalesRegistrationContent() {
   return (
     <div className="p-6 md:p-8 w-full">
       <div className="mx-auto max-w-4xl rounded-3xl border border-[#511A2B]/10 bg-[#FFEDC1] p-6 shadow-lg backdrop-blur-sm md:p-8">
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-[#511A2B] md:text-3xl">Registro de venda - Conexão Premiada</h1>
+              <h1 className="text-2xl font-bold text-[#511A2B] md:text-3xl">Conexão Premiada</h1>
               <p className="mt-2 text-[#511A2B]/70">
-                Cadastre vendas físicas para gerar códigos únicos que os profissionais poderão resgatar no app.
+                Registre vendas físicas e credite os pontos do profissional na hora. A cada R$ 1,00 em compras, 1 ponto.
               </p>
             </div>
             <Button type="button" variant="outline" className="bg-white/80" onClick={() => setIsFlowInfoOpen(true)}>
@@ -113,122 +162,227 @@ export function PhysicalSalesRegistrationContent() {
           </div>
         </div>
 
-        <Card className="rounded-2xl border border-[#511A2B]/10 bg-white/90">
-          <CardContent className="p-6">
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="space-y-2">
-                <Label className="text-[#511A2B]" required>Nome do cliente</Label>
-                <Input
-                  value={form.customerName}
-                  onChange={(event) => handleChange('customerName', event.target.value)}
-                  className="h-11 border-[#511A2B]/20 bg-white text-[#511A2B]"
-                  placeholder="Ex: Maria da Silva"
-                />
-              </div>
+        <Tabs value={tab} onValueChange={setTab}>
+          <TabsList variant="light" className="mb-6 grid w-full grid-cols-2 md:inline-grid md:w-auto">
+            <TabsTrigger value="register" variant="light">
+              <PlusCircle className="h-4 w-4" />
+              Registrar venda
+            </TabsTrigger>
+            <TabsTrigger value="history" variant="light">
+              <ReceiptText className="h-4 w-4" />
+              Extrato
+            </TabsTrigger>
+          </TabsList>
 
-              <div className="space-y-2">
-                <Label className="text-[#511A2B]" required>Valor da venda</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  step="0.01"
-                  value={form.saleAmount}
-                  onChange={(event) => handleChange('saleAmount', event.target.value)}
-                  className="h-11 border-[#511A2B]/20 bg-white text-[#511A2B]"
-                  placeholder="Ex: 350.00"
-                />
-              </div>
+          <TabsContent value="register" className="mt-0">
+            <Card className="rounded-2xl border border-[#511A2B]/10 bg-white/90">
+              <CardContent className="p-6">
+                <form className="space-y-5" onSubmit={handleSubmit}>
+                  <ProfessionalSearch selected={professional} onSelect={handleSelectProfessional} />
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-[#511A2B]" optional>Vendedor</Label>
-                  <Input
-                    value={form.sellerName}
-                    onChange={(event) => handleChange('sellerName', event.target.value)}
-                    className="h-11 border-[#511A2B]/20 bg-white text-[#511A2B]"
-                    placeholder="Ex: João"
-                  />
+                  <div className="space-y-2">
+                    <Label variant="light" required>
+                      Nome do cliente
+                    </Label>
+                    <Input
+                      value={form.customerName}
+                      onChange={(event) => handleChange('customerName', event.target.value)}
+                      variant="light"
+                      placeholder="Ex: Maria da Silva"
+                      readOnly={!!professional}
+                      aria-readonly={!!professional}
+                      className={professional ? 'cursor-not-allowed bg-[#511A2B]/5 text-[#511A2B]/70' : undefined}
+                    />
+                    {professional ? (
+                      <p className="text-xs text-[#511A2B]/60">Preenchido com o profissional selecionado.</p>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label variant="light" required>
+                      Valor da venda
+                    </Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      value={form.saleAmount}
+                      onChange={(event) => handleChange('saleAmount', event.target.value)}
+                      variant="light"
+                      placeholder="Ex: 350.00"
+                    />
+                    {expectedPoints >= 1 ? (
+                      <p className="text-xs text-[#511A2B]/60">
+                        Equivale a {expectedPoints.toLocaleString('pt-BR')} pontos.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label variant="light" optional>
+                        Vendedor
+                      </Label>
+                      <Input
+                        value={form.sellerName}
+                        onChange={(event) => handleChange('sellerName', event.target.value)}
+                        variant="light"
+                        placeholder="Ex: João"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label variant="light" required>
+                        Nota fiscal
+                      </Label>
+                      <Input
+                        value={form.invoiceNumber}
+                        onChange={(event) => handleChange('invoiceNumber', event.target.value)}
+                        variant="light"
+                        placeholder="Ex: NF-10293"
+                      />
+                    </div>
+                  </div>
+
+                  <Button type="submit" className="h-11 px-6" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Registrando...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        {professional ? 'Registrar e creditar pontos' : 'Gerar código de pontos'}
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {creditedTo ? (
+              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                <div className="mb-2 flex items-center gap-2 text-emerald-700">
+                  <CircleCheckBig className="h-5 w-5" />
+                  <span className="font-semibold">Pontos creditados</span>
                 </div>
+                <p className="text-sm text-emerald-800">
+                  <strong>{(lastPointsAwarded ?? 0).toLocaleString('pt-BR')} pontos</strong> creditados para{' '}
+                  <strong>{creditedTo}</strong> ({formatCurrency(lastSaleAmount || 0)} na venda).
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab('history')}
+                  className="mt-3 text-sm font-medium text-emerald-800 underline"
+                >
+                  Ver no extrato
+                </button>
+              </div>
+            ) : null}
 
-                <div className="space-y-2">
-                  <Label className="text-[#511A2B]" optional>Nota fiscal</Label>
-                  <Input
-                    value={form.invoiceNumber}
-                    onChange={(event) => handleChange('invoiceNumber', event.target.value)}
-                    className="h-11 border-[#511A2B]/20 bg-white text-[#511A2B]"
-                    placeholder="Ex: NF-10293"
-                  />
+            {lastGeneratedCode ? (
+              <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                <div className="mb-3 flex items-center gap-2 text-emerald-700">
+                  <CircleCheckBig className="h-5 w-5" />
+                  <span className="font-semibold">Venda registrada com sucesso</span>
                 </div>
+                <p className="mb-2 text-sm text-emerald-800">Código único para entregar ao cliente:</p>
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-[#511A2B]">
+                    <TicketCheck className="h-4 w-4" />
+                    {lastGeneratedCode}
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(lastGeneratedCode)}
+                    className="rounded-xl border border-emerald-300 bg-white p-2 text-emerald-700 transition hover:bg-emerald-100"
+                    title="Copiar código"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </button>
+                </div>
+                <p className="mt-2 text-sm text-emerald-800">
+                  Pontos previstos para resgate: <strong>{lastPointsAwarded ?? 0} pontos</strong> (
+                  {formatCurrency(lastSaleAmount || 0)} na venda).
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setTab('history')}
+                  className="mt-3 text-sm font-medium text-emerald-800 underline"
+                >
+                  Ver no extrato
+                </button>
               </div>
+            ) : null}
+          </TabsContent>
 
-              <Button type="submit" className="h-11 px-6" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Registrando...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Gerar código de pontos
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+          <TabsContent value="history" className="mt-0">
+            <PhysicalSalesHistory refreshKey={historyKey} />
+          </TabsContent>
+        </Tabs>
+      </div>
 
-        {lastGeneratedCode ? (
-          <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-            <div className="mb-3 flex items-center gap-2 text-emerald-700">
-              <CircleCheckBig className="h-5 w-5" />
-              <span className="font-semibold">Venda registrada com sucesso</span>
-            </div>
-            <p className="mb-2 text-sm text-emerald-800">Código único para entregar ao cliente:</p>
-            <div className="flex items-center gap-2">
-              <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-4 py-2 font-mono text-lg font-bold tracking-widest text-[#511A2B]">
-                <TicketCheck className="h-4 w-4" />
-                {lastGeneratedCode}
-              </div>
-              <button
-                onClick={() => navigator.clipboard.writeText(lastGeneratedCode)}
-                className="rounded-xl border border-emerald-300 bg-white p-2 text-emerald-700 transition hover:bg-emerald-100"
-                title="Copiar código"
-              >
-                <Copy className="h-4 w-4" />
-              </button>
-            </div>
-            <p className="mt-2 text-sm text-emerald-800">
-              Pontos previstos para resgate: <strong>{lastPointsAwarded ?? 0} pontos</strong> (
-              {formatCurrency(lastSaleAmount || 0)} na venda).
+      <Dialog open={isConfirmOpen} onOpenChange={(open) => !isSubmitting && setIsConfirmOpen(open)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-[#511A2B]">Confirmar crédito de pontos</DialogTitle>
+            <DialogDescription>
+              Confira os dados antes de confirmar. Os pontos entram na hora na conta do profissional.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 rounded-xl bg-[#FFEDC1]/60 p-4 text-sm text-[#511A2B]">
+            <p>
+              Profissional: <strong>{professional?.name}</strong>
+              {professional?.document ? <span className="text-[#511A2B]/70"> ({professional.document})</span> : null}
+            </p>
+            <p>
+              Cliente: <strong>{form.customerName}</strong>
+            </p>
+            <p>
+              Valor da venda: <strong>{formatCurrency(saleAmount || 0)}</strong>
+            </p>
+            <p>
+              Pontos: <strong>{expectedPoints.toLocaleString('pt-BR')}</strong>
             </p>
           </div>
-        ) : null}
-      </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="outline" disabled={isSubmitting}>
+                Voltar
+              </Button>
+            </DialogClose>
+            <Button type="button" onClick={registerSale} disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              Confirmar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isFlowInfoOpen} onOpenChange={setIsFlowInfoOpen}>
         <DialogContent className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>Fluxo da Conexão Premiada</DialogTitle>
+            <DialogTitle className="text-[#511A2B]">Fluxo da Conexão Premiada</DialogTitle>
             <DialogDescription>
               Entenda como registrar vendas físicas e distribuir pontos com segurança.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-[#511A2B]/80">
             <p>
-              <strong>1. Registre a venda:</strong> preencha cliente, valor e dados opcionais da venda.
+              <strong>1. Busque o profissional:</strong> digite o CPF ou o nome dele e selecione na lista.
             </p>
             <p>
-              <strong>2. Entregue o código:</strong> após salvar, um código único é gerado para o cliente/profissional.
+              <strong>2. Registre a venda:</strong> preencha cliente e valor. A cada R$ 1,00, 1 ponto.
             </p>
             <p>
-              <strong>3. Resgate no app:</strong> o profissional informa esse código na área "Conexão Premiada" em Benefícios.
+              <strong>3. Pontos creditados:</strong> ao confirmar, os pontos entram na hora no saldo do profissional.
             </p>
             <p>
-              <strong>4. Pontos creditados:</strong> os pontos entram no saldo do profissional imediatamente após o resgate.
+              <strong>Profissional não encontrado?</strong> Registre a venda sem selecionar ninguém. Será gerado um
+              código para ele resgatar na área &quot;Conexão Premiada&quot; em Benefícios depois de se cadastrar.
             </p>
             <p className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-yellow-800">
-              Dica: compartilhe o código com atenção, pois cada código pode ser resgatado apenas uma vez.
+              Todas as vendas ficam no extrato abaixo do formulário, para seu controle.
             </p>
           </div>
           <DialogFooter>
