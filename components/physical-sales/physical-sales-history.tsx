@@ -111,7 +111,7 @@ export function PhysicalSalesHistory({ refreshKey }: { refreshKey: number }) {
                       <p>{sale.customerName}</p>
                     )}
                     {sale.sellerName ? <p className="text-xs text-[#511A2B]/60">Vendedor: {sale.sellerName}</p> : null}
-                    {sale.invoice ? <p className="text-xs text-[#511A2B]/60">NF: {sale.invoice}</p> : null}
+                    {sale.invoice ? <p className="text-xs text-[#511A2B]/60">Pedido: {sale.invoice}</p> : null}
                   </TableCell>
                   <TableCell>
                     {sale.professional ? (
@@ -230,7 +230,7 @@ function EditSaleDialog({
     if (!sale) return;
     if (!form.customerName.trim()) return toast.error('Informe o nome do cliente.');
     if (!Number.isFinite(value) || value < 1) return toast.error('Informe um valor de pelo menos R$ 1,00.');
-    if (!form.invoice.trim()) return toast.error('Informe a nota fiscal da venda.');
+    if (!form.invoice.trim()) return toast.error('Informe o número do pedido de venda.');
 
     try {
       setIsSaving(true);
@@ -310,7 +310,7 @@ function EditSaleDialog({
               </div>
               <div className="space-y-2">
                 <Label variant="light" required>
-                  Nota fiscal
+                  Pedido de venda
                 </Label>
                 <Input
                   variant="light"

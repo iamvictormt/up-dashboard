@@ -89,7 +89,7 @@ export function PhysicalSalesRegistrationContent() {
     }
 
     if (!form.invoiceNumber.trim()) {
-      toast.error('Informe a nota fiscal da venda.');
+      toast.error('Informe o número do pedido de venda.');
       return;
     }
 
@@ -233,13 +233,13 @@ export function PhysicalSalesRegistrationContent() {
 
                     <div className="space-y-2">
                       <Label variant="light" required>
-                        Nota fiscal
+                        Pedido de venda
                       </Label>
                       <Input
                         value={form.invoiceNumber}
                         onChange={(event) => handleChange('invoiceNumber', event.target.value)}
                         variant="light"
-                        placeholder="Ex: NF-10293"
+                        placeholder="Ex: 10293"
                       />
                     </div>
                   </div>
