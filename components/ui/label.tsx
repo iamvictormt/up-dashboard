@@ -6,8 +6,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+// default: superfícies escuras (tema global). light: cartões e modais claros.
 const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  {
+    variants: {
+      variant: {
+        default: "text-muted-foreground",
+        light: "text-[#511A2B]",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  }
 )
 
 type LabelIndicator = "required" | "optional" | "none"
@@ -22,7 +32,7 @@ type LabelProps = React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   LabelProps
->(({ className, children, required, optional, indicator, htmlFor, ...props }, ref) => {
+>(({ className, children, required, optional, indicator, htmlFor, variant, ...props }, ref) => {
   const [inferredIndicator, setInferredIndicator] = React.useState<LabelIndicator>("none")
 
   React.useEffect(() => {
@@ -43,7 +53,7 @@ const Label = React.forwardRef<
     indicator ?? (required ? "required" : optional ? "optional" : inferredIndicator)
 
   return (
-    <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), "inline-flex items-center gap-1", className)} htmlFor={htmlFor} {...props}>
+    <LabelPrimitive.Root ref={ref} className={cn(labelVariants({ variant }), "inline-flex items-center gap-1", className)} htmlFor={htmlFor} {...props}>
       {children}
       {resolvedIndicator === "required" && (
         <span className="font-semibold text-destructive" aria-label="obrigatório">
@@ -51,7 +61,10 @@ const Label = React.forwardRef<
         </span>
       )}
       {resolvedIndicator === "optional" && (
-        <span className="text-xs font-normal text-muted-foreground/70" aria-label="opcional">
+        <span
+          className={cn("text-xs font-normal", variant === "light" ? "text-[#511A2B]/50" : "text-muted-foreground/70")}
+          aria-label="opcional"
+        >
           (opcional)
         </span>
       )}

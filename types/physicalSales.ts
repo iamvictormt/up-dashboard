@@ -1,8 +1,3 @@
-import { PartnerSupplierData } from "./partnerSupplier";
-import { ProfessionalData } from "./professional";
-
-export type PhysicalSaleRedeemStatus = 'PENDING' | 'REDEEMED';
-
 export interface PhysicalSale {
   id: string;
   code: string;
@@ -10,34 +5,36 @@ export interface PhysicalSale {
   sellerName?: string | null;
   invoice?: string | null;
   value: number;
-  pointsAwarded: number;
-  status: PhysicalSaleRedeemStatus;
+  points: number;
   createdAt: string;
   redeemedAt?: string | null;
+  cancelledAt?: string | null;
+  editableUntil: string;
+  professional: { name: string; document: string | null } | null;
 }
 
-export interface FetchPhysicalSalesResponse extends PhysicalSale{
-  partner: PartnerSupplierData;
-  professional: ProfessionWithUserEmail;
-}
-
-interface ProfessionWithUserEmail extends ProfessionalData {
-  user: {
-    email: string;
-  };
+export interface ProfessionalSearchResult {
+  id: string;
+  name: string;
+  officeName: string | null;
+  profession: string | null;
+  document: string | null;
 }
 
 export interface CreatePhysicalSalePayload {
   customerName: string;
   saleAmount: number;
   sellerName?: string;
-  invoiceNumber?: string;
+  invoiceNumber: string;
+  professionalId?: string;
 }
 
 export interface CreatePhysicalSaleResponse {
   message: string;
   code: string;
   points: number;
+  credited: boolean;
+  professionalName?: string;
 }
 
 export interface RedeemPhysicalSalePayload {
@@ -47,4 +44,22 @@ export interface RedeemPhysicalSalePayload {
 export interface RedeemPhysicalSaleResponse {
   message: string;
   points: number;
+}
+
+export interface UpdatePhysicalSalePayload {
+  customerName?: string;
+  value?: number;
+  sellerName?: string;
+  invoice?: string;
+}
+
+// Compra vista pelo profissional: só o nome da loja, sem dados do cliente
+export interface MyPurchase {
+  id: string;
+  value: number;
+  points: number;
+  createdAt: string;
+  redeemedAt: string | null;
+  cancelledAt: string | null;
+  partner: { tradeName: string };
 }

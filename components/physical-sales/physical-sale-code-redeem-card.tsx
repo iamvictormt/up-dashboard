@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useUser } from '@/contexts/user-context';
 
-export function PhysicalSaleCodeRedeemCard() {
+export function PhysicalSaleCodeRedeemCard({ onRedeemed }: { onRedeemed?: () => void }) {
   const { user, updateUser } = useUser();
   const [code, setCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +37,7 @@ export function PhysicalSaleCodeRedeemCard() {
 
       toast.success(`Resgate concluído! Você ganhou ${response.points} pontos.`);
       setCode('');
+      onRedeemed?.();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Não foi possível resgatar este código.');
     } finally {
@@ -62,8 +63,9 @@ export function PhysicalSaleCodeRedeemCard() {
               <Input
                 value={code}
                 onChange={(event) => setCode(event.target.value.toUpperCase())}
-                placeholder="Ex: UP-ABC12345"
-                className="h-11 border-[#511A2B]/20 bg-white pl-10 text-[#511A2B]"
+                placeholder="Ex: A3F9C21B7E4D0F58"
+                variant="light"
+                className="pl-10 font-mono tracking-wider"
               />
             </div>
           </div>

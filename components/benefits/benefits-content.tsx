@@ -3,14 +3,15 @@
 import { useState, useEffect } from 'react';
 import { BenefitCard } from '@/components/benefits/benefit-card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { Search, Gift, Sparkles, Package, History, Trophy } from 'lucide-react';
 import { fetchAvailableBenefits, fetchMyRedemptions, redeemBenefit } from '@/lib/benefits-api';
 import { toast } from 'sonner';
 import type { BenefitData, BenefitRedemptionData } from '@/types';
 import { useUser } from '@/contexts/user-context';
 import { RedemptionCard } from './redemption-card';
-import { PhysicalSaleCodeRedeemCard } from '@/components/physical-sales/physical-sale-code-redeem-card';
+import Link from 'next/link';
 
 type ViewMode = 'available' | 'redemptions';
 
@@ -24,7 +25,6 @@ export function BenefitsContent() {
   const [filteredBenefits, setFilteredBenefits] = useState<BenefitData[]>([]);
   const [filteredRedemptions, setFilteredRedemptions] = useState<BenefitRedemptionData[]>([]);
   const [redeemingBenefitId, setRedeemingBenefitId] = useState<string | null>(null);
-  const [showPremiumConnectionRedeem, setShowPremiumConnectionRedeem] = useState(false);
 
   const loadBenefits = async () => {
     try {
@@ -179,21 +179,16 @@ export function BenefitsContent() {
                     Conexão Premiada
                   </h2>
                   <p className="text-sm text-[#511A2B]/70">
-                    Resgate códigos recebidos nas lojas físicas e ganhe pontos no seu saldo.
+                    Veja seu extrato e suas compras nas lojas parceiras. Recebeu um código da loja? Resgate por lá.
                   </p>
                 </div>
-                <Button onClick={() => setShowPremiumConnectionRedeem((prev) => !prev)} className="w-full md:w-auto">
-                  {showPremiumConnectionRedeem ? 'Fechar resgate' : 'Abrir fluxo de resgate'}
-                </Button>
+                <Link href="/my-points" className={cn(buttonVariants(), 'w-full md:w-auto')}>
+                  Ver meus pontos
+                </Link>
               </div>
             </div>
           )}
 
-          {user?.professional && showPremiumConnectionRedeem ? (
-            <div className="mb-6">
-              <PhysicalSaleCodeRedeemCard />
-            </div>
-          ) : null}
 
           <div className="inline-grid md:flex gap-1 md:gap-3 mb-6 p-1.5 bg-white/80 rounded-xl w-full md:w-fit">
             <Button
